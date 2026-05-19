@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import { IMAGES } from '../config/assets';
+
+const fleetSpecs = [
+  { label: 'Semirremolques', value: 'Capacidad de 28 y 30 pallets (14.50m / 15.30m). Curtain Sider / Barandas volcables con trabas para contenedor.' },
+  { label: 'Unidades Tractoras', value: '320 / 330 / 380 / 410 / 420 CV. Distintas potencias para cada servicio.' },
+  { label: 'Gestión de la Flota', value: 'Optimización en tiempo real y monitoreo satelital.' },
+  { label: 'Antigüedad Promedio', value: '5 Años. Renovación constante.' },
+];
+---
+
+<section id="unidades" class="py-20 lg:py-28 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-3">Nuestra flota</p>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900">
+        Unidades
+      </h2>
+      <p class="mt-4 text-lg text-neutral-600 max-w-2xl mx-auto">
+        Conózcanos en imágenes.
+      </p>
+    </div>
+
+    <!-- Gallery grid -->
+    <div id="screen" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+      {IMAGES.fleet.map((img) => (
+        <div class="group relative overflow-hidden rounded-2xl shadow-lg">
+          <Image
+            src={img.src}
+            alt={img.alt}
+            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+            widths={[400, 600]}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            loading="lazy"
+            quality={75}
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-neutral-900/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <p class="absolute bottom-4 left-4 text-white font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
+            {img.label}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <!-- Fleet specs -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      {fleetSpecs.map((spec) => (
+        <div class="bg-neutral-50 rounded-xl p-4 text-center border border-neutral-200">
+          <p class="text-xs font-bold text-brand-red uppercase tracking-wide mb-1">{spec.label}</p>
+          <p class="text-xs text-neutral-600 leading-tight">{spec.value}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

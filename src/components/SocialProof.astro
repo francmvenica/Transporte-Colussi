@@ -1,0 +1,50 @@
+---
+import { Image } from 'astro:assets';
+import cliente1 from '../assets/images/cliente-1.svg';
+import cliente2 from '../assets/images/cliente-2.png';
+import cliente3 from '../assets/images/cliente-3.svg';
+---
+
+<section id="clientes" class="bg-neutral-50 border-y border-neutral-200 py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl sm:text-4xl font-bold text-neutral-900 mb-4">Nuestros Clientes</h2>
+      <p class="text-lg text-neutral-600 max-w-3xl mx-auto">
+        Los clientes ocupan la posición más importante en la empresa, hacemos lo que es mejor para ellos siempre.
+      </p>
+    </div>
+
+    <!-- Client logos -->
+    <div class="flex flex-wrap items-center justify-center gap-10 md:gap-16 mb-14">
+      <div class="group flex items-center justify-center h-16 opacity-60 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0">
+        <img src={cliente1.src} alt="Cliente 1" class="h-14 w-auto object-contain" />
+      </div>
+
+      <div class="group flex items-center justify-center h-16 opacity-60 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0">
+        <Image src={cliente2} alt="Cliente 2" class="h-14 w-auto object-contain" />
+      </div>
+
+      <div class="group flex items-center justify-center h-16 opacity-60 hover:opacity-100 transition-all duration-300 grayscale hover:grayscale-0">
+        <img src={cliente3.src} alt="Cliente 3" class="h-14 w-auto object-contain" />
+      </div>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="flex flex-wrap items-center justify-center gap-8 md:gap-16 pt-8 border-t border-neutral-200">
+      <div class="text-center group cursor-default">
+        <p class="text-3xl font-bold text-brand-red transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110">24/7</p>
+        <p class="text-xs font-medium text-neutral-600 uppercase tracking-wide transition-colors duration-300 group-hover:text-neutral-900">Monitoreo Satelital</p>
+      </div>
+      <div class="w-px h-10 bg-neutral-300 hidden md:block"></div>
+      <div class="text-center group cursor-default">
+        <p class="text-3xl font-bold text-brand-red transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110">100%</p>
+        <p class="text-xs font-medium text-neutral-600 uppercase tracking-wide transition-colors duration-300 group-hover:text-neutral-900">Flota Propia</p>
+      </div>
+      <div class="w-px h-10 bg-neutral-300 hidden md:block"></div>
+      <div class="text-center group cursor-default">
+        <p class="text-3xl font-bold text-brand-red transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110">NEA</p>
+        <p class="text-xs font-medium text-neutral-600 uppercase tracking-wide transition-colors duration-300 group-hover:text-neutral-900">Base Operativa</p>
+      </div>
+    </div>
+  </div>
+</section>

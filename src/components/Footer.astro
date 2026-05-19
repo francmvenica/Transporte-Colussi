@@ -1,0 +1,88 @@
+---
+import { SITE } from '../config/site';
+import Logo from './Logo.astro';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-neutral-900 text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <!-- Brand -->
+      <div class="lg:col-span-1">
+        <a href="/" class="inline-flex items-center mb-4 h-14 bg-white px-3 py-1 rounded shadow group" aria-label="Transporte Colussi - Inicio">
+          <Logo class="h-full w-auto" />
+        </a>
+        <p class="text-neutral-400 text-sm leading-relaxed">
+          Transporte de cargas a nivel nacional. Logística y distribución en el NEA.
+        </p>
+      </div>
+
+      <!-- Nav -->
+      <div>
+        <h3 class="font-semibold text-sm uppercase tracking-wider text-neutral-400 mb-4">Navegación</h3>
+        <ul class="space-y-3">
+          {SITE.nav.map((item) => (
+            <li>
+              <a href={item.href} class="text-neutral-300 hover:text-white transition-colors text-sm">
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h3 class="font-semibold text-sm uppercase tracking-wider text-neutral-400 mb-4">Contacto</h3>
+        <ul class="space-y-3 text-sm">
+          <li>
+            <a href={`mailto:${SITE.contact.email}`} class="text-neutral-300 hover:text-white transition-colors">
+              {SITE.contact.email}
+            </a>
+          </li>
+          <li>
+            <a href={`tel:${SITE.contact.phoneRaw}`} class="text-neutral-300 hover:text-white transition-colors">
+              {SITE.contact.phone}
+            </a>
+          </li>
+          <li class="text-neutral-400">{SITE.sedes[0].address}</li>
+        </ul>
+      </div>
+
+      <!-- Social -->
+      <div>
+        <h3 class="font-semibold text-sm uppercase tracking-wider text-neutral-400 mb-4">Seguinos</h3>
+        <div class="flex gap-3">
+          <a
+            href={SITE.social.facebook}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-brand-red hover:text-white transition-all"
+            aria-label="Facebook de Transporte Colussi"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+            </svg>
+          </a>
+        </div>
+        <!-- RRHH -->
+        <div class="mt-6">
+          <h4 class="font-semibold text-sm text-neutral-400 mb-2">Trabajá con nosotros</h4>
+          <a href="mailto:trafico@transportecolussi.com.ar" class="text-sm text-neutral-300 hover:text-brand-red transition-colors">
+            Enviá tu CV →
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="border-t border-neutral-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <p class="text-center text-sm text-neutral-500">
+        © {currentYear} {SITE.name}. Todos los derechos reservados.
+      </p>
+    </div>
+  </div>
+</footer>

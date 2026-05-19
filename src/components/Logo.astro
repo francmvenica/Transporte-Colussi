@@ -1,0 +1,28 @@
+---
+import { Image } from 'astro:assets';
+import logoImg from '../assets/images/logo-real.png';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<!-- Wrapper div to handle the color transition filter for the dark hero -->
+<div class={`logo-container ${className}`}>
+  <Image 
+    src={logoImg} 
+    alt="Transporte Colussi Logo" 
+    class="w-full h-full object-contain"
+    loading="eager"
+  />
+</div>
+
+<style>
+  /* When the header is transparent (header-text-color text-white is active on links), 
+     we apply a white drop shadow so the black text remains visible on the dark hero image. */
+  :global(.bg-transparent) .logo-container {
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.8)) drop-shadow(0 0 20px rgba(255,255,255,0.5));
+  }
+</style>

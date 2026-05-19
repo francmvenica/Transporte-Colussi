@@ -1,0 +1,111 @@
+---
+// SVG Map of Argentina with NEA provinces highlighted and route lines
+const neaProvinces = ['chaco', 'formosa', 'misiones', 'corrientes', 'entre-rios', 'santa-fe'];
+---
+
+<section id="cobertura" class="py-20 lg:py-28 bg-neutral-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <!-- Map -->
+      <div class="flex justify-center">
+        <svg viewBox="0 0 400 600" class="w-full max-w-sm" xmlns="http://www.w3.org/2000/svg">
+          <!-- Argentina simplified outline -->
+          <g fill="#E5E7EB" stroke="#9CA3AF" stroke-width="0.5">
+            <!-- Northern region (non-NEA) -->
+            <path d="M200,20 L260,30 L280,60 L300,80 L290,120 L270,130 L250,125 L230,130 L200,128 L180,130 L160,125 L140,130 L120,120 L130,80 L150,50 L170,30 Z" />
+            <!-- Central -->
+            <path d="M120,120 L140,130 L160,125 L180,130 L200,128 L230,130 L250,125 L270,130 L290,120 L300,160 L295,200 L280,240 L260,270 L250,300 L240,340 L230,360 L200,380 L180,370 L160,340 L150,300 L140,260 L130,220 L120,180 Z" />
+            <!-- Patagonia -->
+            <path d="M150,300 L160,340 L180,370 L200,380 L230,360 L240,340 L250,380 L240,420 L230,450 L220,480 L210,510 L200,540 L190,560 L180,570 L170,560 L165,530 L160,500 L155,460 L150,420 L145,380 L140,340 Z" />
+          </g>
+
+          <!-- NEA provinces highlighted -->
+          <g fill="#DC2626" fill-opacity="0.2" stroke="#DC2626" stroke-width="1.5">
+            <!-- Formosa -->
+            <path d="M200,30 L260,35 L280,60 L275,85 L250,90 L230,85 L210,80 L200,70 L195,50 Z" />
+            <!-- Chaco -->
+            <path d="M195,50 L200,70 L210,80 L230,85 L250,90 L275,85 L270,110 L250,120 L230,118 L210,115 L195,110 L185,90 Z" />
+            <!-- Misiones -->
+            <path d="M260,35 L280,40 L295,55 L290,75 L280,60 L260,35 Z" />
+            <!-- Corrientes -->
+            <path d="M250,90 L275,85 L290,75 L285,100 L270,110 L250,120 L240,115 L235,100 Z" />
+            <!-- Santa Fe -->
+            <path d="M195,110 L210,115 L230,118 L250,120 L245,150 L235,175 L220,190 L200,195 L185,185 L180,160 L185,135 Z" />
+            <!-- Entre Ríos -->
+            <path d="M250,120 L270,110 L280,130 L275,155 L260,170 L245,175 L245,150 L250,120 Z" />
+          </g>
+
+          <!-- Route lines -->
+          <g stroke="#DC2626" stroke-width="2" stroke-dasharray="6,4" fill="none" opacity="0.6">
+            <!-- Guadalupe Norte to Buenos Aires -->
+            <path d="M200,160 L220,200 L240,240 L250,270" />
+            <!-- Guadalupe Norte to Chaco -->
+            <path d="M200,160 L210,130 L230,100" />
+            <!-- Guadalupe Norte to Misiones -->
+            <path d="M200,160 L230,130 L260,90 L275,65" />
+          </g>
+
+          <!-- Location markers -->
+          <!-- Guadalupe Norte (HQ) -->
+          <g transform="translate(200, 160)">
+            <circle r="8" fill="#DC2626" stroke="white" stroke-width="2" />
+            <circle r="3" fill="white" />
+          </g>
+          <!-- Fontana, Chaco (CD) -->
+          <g transform="translate(230, 100)">
+            <circle r="6" fill="#DC2626" stroke="white" stroke-width="2" />
+            <circle r="2" fill="white" />
+          </g>
+
+          <!-- Labels -->
+          <text x="210" y="175" font-size="10" font-weight="bold" fill="#111827" font-family="Inter, sans-serif">Guadalupe Norte</text>
+          <text x="210" y="186" font-size="8" fill="#4B5563" font-family="Inter, sans-serif">Casa Central</text>
+          <text x="240" y="96" font-size="9" font-weight="bold" fill="#111827" font-family="Inter, sans-serif">Fontana</text>
+          <text x="240" y="106" font-size="8" fill="#4B5563" font-family="Inter, sans-serif">CD Noreste</text>
+        </svg>
+      </div>
+
+      <!-- Info -->
+      <div>
+        <p class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-3">Cobertura</p>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
+          Alcance nacional,<br />raíces en el NEA
+        </h2>
+        <p class="text-lg text-neutral-600 mb-8 leading-relaxed">
+          Con base operativa en Guadalupe Norte (Santa Fe) y centro de distribución en Fontana (Chaco), cubrimos las principales rutas troncales del país.
+        </p>
+
+        <div class="space-y-4">
+          <div class="flex items-start gap-3">
+            <div class="w-2 h-2 rounded-full bg-brand-red mt-2 flex-shrink-0"></div>
+            <div>
+              <p class="font-semibold text-neutral-900">Gestión Inteligente</p>
+              <p class="text-neutral-600 text-sm">Unidades conectadas permanentemente a nuestro centro de tráfico para optimizar la logística.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-2 h-2 rounded-full bg-brand-red mt-2 flex-shrink-0"></div>
+            <div>
+              <p class="font-semibold text-neutral-900">Rutas troncales nacionales</p>
+              <p class="text-neutral-600 text-sm">Conexión directa con Buenos Aires, Rosario y principales centros logísticos</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-2 h-2 rounded-full bg-brand-red mt-2 flex-shrink-0"></div>
+            <div>
+              <p class="font-semibold text-neutral-900">NEA completo</p>
+              <p class="text-neutral-600 text-sm">Chaco, Formosa, Misiones, Corrientes, Entre Ríos, Santa Fe</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-2 h-2 rounded-full bg-brand-red mt-2 flex-shrink-0"></div>
+            <div>
+              <p class="font-semibold text-neutral-900">Transporte internacional</p>
+              <p class="text-neutral-600 text-sm">Operaciones con Brasil y Paraguay</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+import { IMAGES } from '../config/assets';
+---
+
+<section id="empresa" class="py-20 lg:py-28 bg-neutral-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+      <!-- Text -->
+      <div>
+        <p class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-3">Organización</p>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 mb-6">
+          Quiénes Somos
+        </h2>
+        <p class="text-lg text-neutral-600 mb-6 leading-relaxed">
+          Brindar el mejor servicio no solo es una filosofía, es el trabajo de todos los días, que se valora gracias al talento y dedicación de nuestros colaboradores que se integran trabajando en equipo profesionalmente.
+        </p>
+        <p class="text-lg text-neutral-600 mb-8 leading-relaxed">
+          Nacimos, crecimos y nos desarrollamos en el NEA. Know How, unidades de última generación y una base de cross-docking ubicada en el corazón mismo del noreste argentino.
+        </p>
+
+        <!-- Values -->
+        <div class="space-y-6">
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.64 0 8.577 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.64 0-8.577-3.007-9.963-7.178z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-neutral-900 mb-1">Visión</h3>
+              <p class="text-neutral-600">Lograr el reconocimiento del Cliente como la mejor empresa de transporte de la región.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-neutral-900 mb-1">Misión</h3>
+              <p class="text-neutral-600">Brindar al cliente soluciones que contribuyan a su cadena de valor.</p>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <div class="flex-shrink-0 w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center">
+              <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-bold text-neutral-900 mb-2">Valores</h3>
+              <ul class="text-neutral-600 space-y-1">
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-brand-red flex-shrink-0"></span>
+                  Escuchar al cliente
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-brand-red flex-shrink-0"></span>
+                  Atentos a las oportunidades de mejoras
+                </li>
+                <li class="flex items-start gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-brand-red flex-shrink-0 mt-2"></span>
+                  <span>Respeto por la palabra, las personas y el medio ambiente</span>
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-brand-red flex-shrink-0"></span>
+                  Honestidad
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-brand-red flex-shrink-0"></span>
+                  Responsabilidad
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image -->
+      <div class="relative">
+        <Image
+          src={IMAGES.about.src}
+          alt={IMAGES.about.alt}
+          class="w-full h-auto rounded-2xl shadow-2xl"
+          widths={[400, 800]}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          loading="lazy"
+          quality={80}
+        />
+        <div class="absolute -bottom-6 -left-6 bg-brand-red text-white p-6 rounded-2xl shadow-lg hidden lg:block">
+          <p class="text-4xl font-extrabold">NEA</p>
+          <p class="text-sm font-medium text-white/80">Base operativa</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
