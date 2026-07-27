@@ -1,13 +1,18 @@
 ---
 import { SITE } from '../config/site';
 import Logo from './Logo.astro';
+
+// BASE_URL puede venir sin slash final (p. ej. "/Transporte-Colussi") — se normaliza
+// para que `${base}${href}` nunca pegue el path con lo que sigue.
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 ---
 
 <header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-20">
       <!-- Logo -->
-      <a href="/" class="flex items-center group h-12" aria-label="Transporte Colussi - Inicio">
+      <a href={base} class="flex items-center group h-12" aria-label="Transporte Colussi - Inicio">
         <Logo class="h-full w-auto" />
       </a>
 
@@ -15,12 +20,18 @@ import Logo from './Logo.astro';
       <nav class="hidden lg:flex items-center gap-8" aria-label="Navegación principal">
         {SITE.nav.map((item) => (
           <a
-            href={item.href}
+            href={`${base}${item.href}`}
             class="text-sm font-medium text-neutral-900 hover:text-brand-red transition-colors duration-200"
           >
             {item.label}
           </a>
         ))}
+        <a
+          href={`${base}historia`}
+          class="text-sm font-medium text-neutral-900 hover:text-brand-red transition-colors duration-200"
+        >
+          Nuestra Historia
+        </a>
         <a
           href={SITE.whatsapp.link}
           target="_blank"
@@ -51,12 +62,18 @@ import Logo from './Logo.astro';
     <nav class="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1" aria-label="Navegación móvil">
       {SITE.nav.map((item) => (
         <a
-          href={item.href}
+          href={`${base}${item.href}`}
           class="mobile-nav-link block px-4 py-3 text-neutral-800 font-medium rounded-lg hover:bg-neutral-100 transition-colors"
         >
           {item.label}
         </a>
       ))}
+      <a
+        href={`${base}historia`}
+        class="mobile-nav-link block px-4 py-3 text-neutral-800 font-medium rounded-lg hover:bg-neutral-100 transition-colors"
+      >
+        Nuestra Historia
+      </a>
       <a
         href={SITE.whatsapp.link}
         target="_blank"

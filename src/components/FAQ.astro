@@ -1,0 +1,51 @@
+---
+import { FAQ } from '../config/faq';
+
+// Schema FAQPage generado a partir del mismo array que se renderiza abajo,
+// para que el texto visible y el structured data nunca se desincronicen.
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer,
+    },
+  })),
+};
+---
+
+<section id="faq" class="py-20 lg:py-28 bg-neutral-50">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-3">Dudas frecuentes</p>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900">
+        Preguntas frecuentes
+      </h2>
+    </div>
+
+    <div class="space-y-4">
+      {FAQ.map((item) => (
+        <details class="group bg-white border border-neutral-200 rounded-2xl p-6 open:border-brand-red/30 open:shadow-md transition-all duration-300">
+          <summary class="flex items-center justify-between gap-4 font-bold text-neutral-900 cursor-pointer list-none">
+            {item.question}
+            <svg
+              class="w-5 h-5 text-brand-red flex-shrink-0 transition-transform duration-300 group-open:rotate-45"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+          </summary>
+          <p class="text-neutral-600 mt-4 leading-relaxed">{item.answer}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />

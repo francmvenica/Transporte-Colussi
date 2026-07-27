@@ -1,0 +1,26 @@
+---
+import { CORRIDORS } from '../config/corridors';
+---
+
+<section id="corredores" class="py-20 lg:py-28 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <p class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-3">Rutas y corredores</p>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 max-w-3xl mx-auto">
+        Transporte de cargas desde Buenos Aires al NEA y Mercosur
+      </h2>
+      <p class="mt-4 text-lg text-neutral-600 max-w-2xl mx-auto">
+        Cobertura regular por corredor, con base operativa en Guadalupe Norte (Santa Fe) y centro de distribución en Fontana (Chaco).
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {CORRIDORS.map((corridor) => (
+        <article class="bg-neutral-50 border border-neutral-200 rounded-2xl p-6 hover:border-brand-red/20 hover:shadow-lg transition-all duration-300">
+          <h3 class="text-lg font-bold text-neutral-900 mb-2">{corridor.title}</h3>
+          <p class="text-neutral-600 text-sm leading-relaxed">{corridor.description}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

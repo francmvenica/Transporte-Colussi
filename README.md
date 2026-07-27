@@ -13,15 +13,9 @@ npm run preview    # Preview del build
 
 ## Deploy
 
-Listo para deploy en **Vercel** o **Netlify**. Incluye `vercel.json` configurado.
+**Interino (actual):** GitHub Actions despliega a **GitHub Pages** en cada push a `main` (`.github/workflows/deploy.yml`). El sitio se sirve bajo el path `/Transporte-Colussi` (ver `base` en `astro.config.mjs`) — **un push a `main` publica el sitio en vivo**, trabajar siempre en una rama aparte.
 
-```bash
-# Vercel
-npx vercel
-
-# Netlify
-npx netlify deploy --build
-```
+**Definitivo (pendiente de migración):** **Cloudflare Pages** sobre `https://www.transportecolussi.com.ar`. El `site` de `astro.config.mjs` ya apunta a ese dominio (de ahí derivan sitemap, canonical y `og:image`), pero el `base` de GitHub Pages se mantiene hasta que se ejecute la migración — no se saca antes de tiempo.
 
 ## Dónde editar
 
@@ -30,8 +24,13 @@ npx netlify deploy --build
 | Datos de contacto, WhatsApp, sedes | `src/config/site.ts` |
 | Imágenes (rutas centralizadas) | `src/config/assets.ts` |
 | Servicios (títulos, descripciones) | `src/config/services.ts` |
+| Clientes y sectores atendidos | `src/config/clients.ts` |
+| Corredores / rutas (home) | `src/config/corridors.ts` |
+| Preguntas frecuentes (FAQ + schema) | `src/config/faq.ts` |
+| Specs de flota | `src/config/fleet.ts` |
+| Texto de "Nuestra Historia" | `src/pages/historia.astro` |
 | Textos de secciones | Cada componente en `src/components/` |
-| Meta tags (SEO) | `src/layouts/Layout.astro` |
+| Meta tags, canonical, JSON-LD (SEO/GEO) | `src/layouts/Layout.astro` |
 
 ## Multimedia pendiente de reemplazo
 
@@ -64,20 +63,18 @@ Las imágenes actuales fueron **generadas por IA** como versión inicial de alta
 
 ## Stack
 
-- **Astro** — framework estático con islands architecture
-- **React** — formulario de contacto (react-hook-form)
+- **Astro** — framework estático con islands architecture, con `@astrojs/sitemap` para el sitemap
+- **React** (`@astrojs/react`) — integración instalada, hoy sin ninguna isla activa (el formulario de contacto se reemplazó por un CTA de WhatsApp estático). Se mantiene por si aparece una necesidad real de interactividad (carrusel, mapa, etc.)
 - **Tailwind CSS v4** — estilos utility-first
-- **Framer Motion** — animaciones (disponible, no activado aún)
-- **Lucide React** — iconografía (disponible)
 
 ## Estructura
 
 ```
 src/
 ├── assets/images/    # Imágenes (procesadas por Astro)
-├── components/       # Componentes Astro + React
+├── components/       # Componentes Astro
 ├── config/           # Configuración centralizada
 ├── layouts/          # Layout base
-├── pages/            # Páginas (index.astro)
+├── pages/            # Páginas (index.astro, historia.astro)
 └── styles/           # CSS global + Tailwind
 ```

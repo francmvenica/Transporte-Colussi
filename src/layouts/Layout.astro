@@ -9,6 +9,98 @@ interface Props {
 
 const { title = SITE.name, description = SITE.description } = Astro.props;
 const pageTitle = title === SITE.name ? title : `${title} | ${SITE.name}`;
+
+// Canonical: siempre derivado de SITE.url (el dominio final), nunca del base path
+// de GitHub Pages. Se le saca el prefijo de base a Astro.url.pathname antes de
+// combinarlo, para que /historia bajo GH Pages siga resolviendo a
+// https://www.transportecolussi.com.ar/historia y no a la ruta con base incluido.
+// BASE_URL puede venir con o sin slash final según cómo se declaró `base` en
+// astro.config.mjs — se normaliza a mano para no terminar con "//" duplicado
+// (eso rompe `new URL`, que interpreta "//" como URL protocol-relative).
+const basePath = import.meta.env.BASE_URL;
+let cleanPath = Astro.url.pathname.startsWith(basePath)
+  ? Astro.url.pathname.slice(basePath.length)
+  : Astro.url.pathname;
+if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
+const canonicalURL = new URL(cleanPath, SITE.url).toString();
+const ogImageURL = `${SITE.url}/images/og-image.png`;
+
+// JSON-LD (schema.org): Organization + 2 LocalBusiness (Casa Central / CDNoreste)
+// subordinados via parentOrganization. Generado a partir de SITE para no duplicar
+// datos a mano. OMISIONES OBLIGATORIAS (cruce-brief-vs-alcance.md, 2026-07-26):
+// - taxID: NO confirmado por Romualdo. Publicar el CUIT equivocado ata el sitio
+//   a la empresa equivocada — es justo el problema que este trabajo viene a resolver.
+// - legalName ("COLUSSI S.A."): sin confirmar; puede venir de la misma fuente
+//   contaminada que hizo que ChatGPT los describiera como cerealeros.
+// - geo (coordenadas -28.938237,-59.561470): sin verificar contra la dirección real.
+// No agregar ninguno de estos tres campos sin confirmación explícita de Romualdo.
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${SITE.url}/#empresa`,
+      name: SITE.name,
+      // legalName: OMITIDO — pendiente de confirmación de Romualdo
+      description: SITE.description,
+      url: SITE.url,
+      logo: `${SITE.url}/images/logo.png`,
+      image: ogImageURL,
+      email: SITE.contact.email,
+      telephone: SITE.contact.phoneRaw,
+      // taxID: OMITIDO — pendiente de confirmación de Romualdo
+      areaServed: [
+        { '@type': 'State', name: 'Chaco' },
+        { '@type': 'State', name: 'Formosa' },
+        { '@type': 'State', name: 'Corrientes' },
+        { '@type': 'State', name: 'Misiones' },
+        { '@type': 'State', name: 'Santa Fe' },
+        { '@type': 'Country', name: 'Brasil' },
+        { '@type': 'Country', name: 'Paraguay' },
+      ],
+      knowsAbout: [
+        'Transporte de cargas generales',
+        'Transporte de contenedores',
+        'Logística y distribución en el NEA',
+        'Transporte internacional al Mercosur',
+        'Semirremolques curtain sider',
+      ],
+      sameAs: [SITE.social.facebook],
+    },
+    {
+      '@type': 'LocalBusiness',
+      '@id': `${SITE.url}/#casa-central`,
+      name: `${SITE.name} - Casa Central`,
+      parentOrganization: { '@id': `${SITE.url}/#empresa` },
+      telephone: SITE.sedes[0].phoneRaw,
+      email: SITE.sedes[0].email,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Ruta Nacional 11 Km 814',
+        addressLocality: 'Guadalupe Norte',
+        addressRegion: 'Santa Fe',
+        postalCode: '3574',
+        addressCountry: 'AR',
+      },
+      // geo: OMITIDO — coordenadas sin verificar contra la dirección real
+    },
+    {
+      '@type': 'LocalBusiness',
+      '@id': `${SITE.url}/#cd-noreste`,
+      name: `${SITE.name} - Centro de Distribución Noreste (CDNoreste)`,
+      parentOrganization: { '@id': `${SITE.url}/#empresa` },
+      telephone: SITE.sedes[1].phoneRaw,
+      email: SITE.sedes[1].email,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Calle 31 N° 770',
+        addressLocality: 'Fontana',
+        addressRegion: 'Chaco',
+        addressCountry: 'AR',
+      },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -18,17 +110,25 @@ const pageTitle = title === SITE.name ? title : `${title} | ${SITE.name}`;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonicalURL} />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={SITE.url} />
-    <meta property="og:image" content={`${SITE.url}/images/og-image.png`} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
     <meta property="og:locale" content="es_AR" />
 
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${basePath}${basePath.endsWith('/') ? '' : '/'}favicon.svg`} />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -39,6 +139,8 @@ const pageTitle = title === SITE.name ? title : `${title} | ${SITE.name}`;
     />
 
     <title>{pageTitle}</title>
+
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} is:inline />
   </head>
   <body class="bg-white antialiased">
     <slot />

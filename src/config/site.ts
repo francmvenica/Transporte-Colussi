@@ -2,7 +2,7 @@ export const SITE = {
   name: 'Transporte Colussi',
   tagline: 'Transporte de cargas a nivel nacional',
   description:
-    'Transporte de cargas generales, contenedores, logística y distribución en el NEA. Cobertura nacional con flota propia y monitoreo satelital 24/7.',
+    'Transporte de cargas generales y contenedores desde Buenos Aires hacia el NEA (Chaco, Formosa, Corrientes, Misiones y norte de Santa Fe) y al Mercosur. Flota propia con monitoreo satelital 24/7.',
   url: 'https://www.transportecolussi.com.ar',
   whatsapp: {
     number: '5493482549842',
