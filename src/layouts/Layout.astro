@@ -143,11 +143,19 @@ const organizationSchema = {
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href={`${basePath}${basePath.endsWith('/') ? '' : '/'}favicon.svg`} />
 
-    <!-- Fonts -->
+    <!-- Fonts: Archivo (Omnibus-Type), manual de marca 27/07. Reemplaza a Inter.
+         Roman: rango variable wght 400-800 / wdth 75-108% (los 4 roles de marca
+         viven en ese rectángulo, ver global.css). Itálica: PIN a un solo punto
+         exacto (wght 800 / wdth 100%, lo único que pide "Itálica de marca") en
+         vez de rango — medido: pinear el punto baja ese archivo de ~99 KB a
+         ~15,6 KB (-84%). El rango de roman, en cambio, no se pudo achicar más
+         ahí: Google sirve el mismo binario tanto si se pide 400-800/75-108 como
+         si se pide el rango completo 100-900/62-125 (probado con curl antes de
+         cerrar esta URL) — la ganancia real de peso está toda en la itálica. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,75..108,400..800;1,100,800&display=swap"
       rel="stylesheet"
     />
 
