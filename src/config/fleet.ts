@@ -1,5 +1,7 @@
-// Specs de flota. Fuente: brief de la empresa (2026-07-26), con la corrección de Romualdo
-// sobre la antigüedad (14/07: "5 es muy mentiroso", son 7).
+// Specs de flota. Fuente: brief de la empresa (2026-07-26).
+// Antigüedad: historial completo para que nadie la "corrija" de nuevo — el brief
+// original decía 5 años, Romualdo corrigió a 7 el 14/07 ("5 es muy mentiroso"),
+// y el cliente confirmó 6 el 27/07. Vale el último dato: 6 años.
 export interface FleetSpec {
   label: string;
   value: string;
@@ -21,6 +23,6 @@ export const FLEET_SPECS: FleetSpec[] = [
   },
   {
     label: 'Antigüedad Promedio',
-    value: '7 años. Renovación constante.',
+    value: '6 años. Renovación constante.',
   },
 ];

@@ -27,13 +27,22 @@ const ogImageURL = `${SITE.url}/images/og-image.png`;
 
 // JSON-LD (schema.org): Organization + 2 LocalBusiness (Casa Central / CDNoreste)
 // subordinados via parentOrganization. Generado a partir de SITE para no duplicar
-// datos a mano. OMISIONES OBLIGATORIAS (cruce-brief-vs-alcance.md, 2026-07-26):
-// - taxID: NO confirmado por Romualdo. Publicar el CUIT equivocado ata el sitio
-//   a la empresa equivocada — es justo el problema que este trabajo viene a resolver.
-// - legalName ("COLUSSI S.A."): sin confirmar; puede venir de la misma fuente
-//   contaminada que hizo que ChatGPT los describiera como cerealeros.
-// - geo (coordenadas -28.938237,-59.561470): sin verificar contra la dirección real.
-// No agregar ninguno de estos tres campos sin confirmación explícita de Romualdo.
+// datos a mano.
+//
+// taxID, legalName y foundingDate: CONFIRMADOS por el cliente el 27/07 (venían
+// omitidos a propósito hasta esa fecha). Importan porque el taxID y la dirección
+// exacta son la señal más fuerte para desambiguar la entidad: hay tres "Colussi"
+// homónimos (Gálvez con otro CUIT, General Pico de pasajeros, y varias en Brasil)
+// que los motores generativos venían fusionando.
+//
+// Dirección de Casa Central CORREGIDA 27/07: streetAddress pasa a 'Calle 7 351'
+// (reemplaza a 'Ruta Nacional 11 Km 814', que era un dato equivocado del brief
+// original). El postalCode 3574 no cambia: es el de la localidad, no de la calle.
+//
+// geo: sigue OMITIDO. Las coordenadas que había (-28.938237,-59.561470) estaban
+// puestas para la dirección vieja y quedaron desactualizadas con el cambio de
+// sede. NO inventar coordenadas nuevas — falta geolocalizar Calle 7 351,
+// Guadalupe Norte contra Google Maps.
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -41,14 +50,16 @@ const organizationSchema = {
       '@type': 'Organization',
       '@id': `${SITE.url}/#empresa`,
       name: SITE.name,
-      // legalName: OMITIDO — pendiente de confirmación de Romualdo
+      legalName: 'COLUSSI S.A.', // confirmado por el cliente 27/07
       description: SITE.description,
       url: SITE.url,
       logo: `${SITE.url}/images/logo.png`,
       image: ogImageURL,
       email: SITE.contact.email,
       telephone: SITE.contact.phoneRaw,
-      // taxID: OMITIDO — pendiente de confirmación de Romualdo
+      taxID: '30-71137821-5', // confirmado por el cliente 27/07
+      // 2000 → 2026 son 26 años. No redondear al reutilizar este dato en texto visible.
+      foundingDate: '2000', // confirmado por el cliente 27/07
       areaServed: [
         { '@type': 'State', name: 'Chaco' },
         { '@type': 'State', name: 'Formosa' },
@@ -76,13 +87,15 @@ const organizationSchema = {
       email: SITE.sedes[0].email,
       address: {
         '@type': 'PostalAddress',
-        streetAddress: 'Ruta Nacional 11 Km 814',
+        streetAddress: 'Calle 7 351',
         addressLocality: 'Guadalupe Norte',
         addressRegion: 'Santa Fe',
         postalCode: '3574',
         addressCountry: 'AR',
       },
-      // geo: OMITIDO — coordenadas sin verificar contra la dirección real
+      // geo: OMITIDO — las coordenadas viejas correspondían a "Ruta 11 Km 814" y
+      // no son válidas para Calle 7 351. NO inventar coordenadas nuevas; pendiente
+      // de geolocalizar la dirección real. Ver comentario de maps.embedUrl en site.ts.
     },
     {
       '@type': 'LocalBusiness',
