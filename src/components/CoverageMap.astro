@@ -1,6 +1,9 @@
 ---
 // SVG Map of Argentina with NEA provinces highlighted and route lines
-const neaProvinces = ['chaco', 'formosa', 'misiones', 'corrientes', 'entre-rios', 'santa-fe'];
+// Entre Ríos sacada de la lista (2026-07-27): el mapa oficial de rutas troncales
+// de la empresa no marca ninguna ciudad de Entre Ríos como destino — es zona de
+// tránsito, no de cobertura. Ver Temp/Colussi-material/Troncales/rutasmapa.jpg.
+const neaProvinces = ['chaco', 'formosa', 'misiones', 'corrientes', 'santa-fe'];
 ---
 
 <section id="cobertura" class="py-20 lg:py-28 bg-neutral-50">
@@ -88,7 +91,7 @@ const neaProvinces = ['chaco', 'formosa', 'misiones', 'corrientes', 'entre-rios'
             <div class="w-2 h-2 rounded-full bg-brand-red mt-2 flex-shrink-0"></div>
             <div>
               <p class="font-semibold text-neutral-900">NEA completo</p>
-              <p class="text-neutral-600 text-sm">Chaco, Formosa, Misiones, Corrientes, Entre Ríos, Santa Fe</p>
+              <p class="text-neutral-600 text-sm">Chaco, Formosa, Misiones, Corrientes, Santa Fe</p>
             </div>
           </div>
           <div class="flex items-start gap-3">

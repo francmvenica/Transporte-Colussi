@@ -1,29 +1,49 @@
 // Rutas centralizadas de imágenes.
 // Para reemplazar una imagen: cambiar el archivo en src/assets/images/ manteniendo el mismo nombre.
+//
+// Fotos reales del cliente (2026-07-27) — reemplazan los montajes de IA que traía
+// el sitio. Origen: material entregado por Romualdo (Temp/Colussi-material/Fotos/),
+// ya triado contra sus criterios (unidades Iveco Hi-Road de frente negro = flota
+// actual; sin marcas de clientes visibles; sin semi de 3 ejes). No se sabe dónde
+// fue tomada cada foto: los `alt` no mencionan ubicación.
+//
+// Una 4ª foto de flota (contenedores, IMG-20260506-WA0009.jpg) quedó afuera de esta
+// galería: con 4 items el grid de 3 columnas de Fleet.astro deja un hueco vacío en
+// la última fila. No se tocó el grid (no es parte de esta tanda). La foto queda
+// disponible en Temp/Colussi-material/Fotos/ si se agrega una 4ª columna a futuro.
 
 // Astro image imports (processed by build pipeline)
-import heroRuta from '../assets/images/hero-ruta.png';
-import heroPuente from '../assets/images/hero-puente.png';
-import heroBranded from '../assets/images/hero-branded.png';
-import aboutInstalaciones from '../assets/images/about-instalaciones.png';
-import flotaIveco01 from '../assets/images/flota-iveco-01.png';
-import flotaRuta01 from '../assets/images/flota-ruta-01.png';
-import flotaCarga01 from '../assets/images/flota-carga-01.png';
+import heroCamiones from '../assets/images/hero-camiones-contenedores-ruta.jpg';
+import plataformaCarga from '../assets/images/plataforma-carga-colussi.jpg';
+import flotaUnidadesPatio from '../assets/images/flota-colussi-unidades-patio.jpg';
+import camionSemirremolque from '../assets/images/camion-colussi-semirremolque-ruta.jpg';
+import flotaPlayaManiobras from '../assets/images/flota-colussi-playa-maniobras.jpg';
 
 export const IMAGES = {
-  hero: [
-    { src: heroBranded, alt: 'Camión de Transporte Colussi con logo oficial en ruta' },
-    { src: heroRuta, alt: 'Camión de Transporte Colussi en ruta nacional argentina' },
-    { src: heroPuente, alt: 'Camión de carga cruzando puente sobre río' },
-  ],
+  hero: {
+    src: heroCamiones,
+    alt: 'Dos camiones de Transporte Colussi transportando contenedores sobre la ruta al atardecer',
+  },
   about: {
-    src: aboutInstalaciones,
-    alt: 'Instalaciones logísticas de Transporte Colussi',
+    src: plataformaCarga,
+    alt: 'Unidades de Transporte Colussi en la plataforma de carga y descarga',
   },
   fleet: [
-    { src: flotaIveco01, alt: 'Flota de camiones Colussi estacionados', label: 'Flota propia' },
-    { src: flotaRuta01, alt: 'Camión Colussi en ruta al atardecer', label: 'Cobertura nacional' },
-    { src: flotaCarga01, alt: 'Operación de carga en depósito logístico', label: 'Logística integrada' },
+    {
+      src: flotaUnidadesPatio,
+      alt: 'Unidades Iveco de la flota propia de Transporte Colussi en el patio de la empresa',
+      label: 'Flota propia',
+    },
+    {
+      src: camionSemirremolque,
+      alt: 'Camión de Transporte Colussi con semirremolque curtain sider en ruta',
+      label: 'En ruta',
+    },
+    {
+      src: flotaPlayaManiobras,
+      alt: 'Flota de Transporte Colussi en la playa de maniobras',
+      label: 'Playa de maniobras',
+    },
   ],
   // Logos pendientes del cliente — usar placeholders
   socialProof: {
