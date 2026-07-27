@@ -1,8 +1,5 @@
 ---
 import { Image } from 'astro:assets';
-import cliente1 from '../assets/images/cliente-1.svg';
-import cliente2 from '../assets/images/cliente-2.png';
-import cliente3 from '../assets/images/cliente-3.svg';
 import { CLIENTS, SECTORS } from '../config/clients';
 
 const joinWithY = (items: string[]) =>
@@ -10,19 +7,27 @@ const joinWithY = (items: string[]) =>
     ? `${items.slice(0, -1).join(', ')} y ${items[items.length - 1]}`
     : items[0];
 
+// Zona 1 (arriba, estática y a mayor tamaño) / Zona 2 (abajo, cinta animada):
+// la separación sale del booleano `featured` de cada cliente en config/clients.ts.
+// Para mover un cliente de zona: cambiar ese booleano ahí. No hace falta tocar
+// este componente.
+const FEATURED_CLIENTS = CLIENTS.filter((c) => c.featured);
+const MARQUEE_CLIENTS = CLIENTS.filter((c) => !c.featured);
+
 const clientsText = joinWithY(CLIENTS.map((c) => c.name));
+const marqueeClientsText = joinWithY(MARQUEE_CLIENTS.map((c) => c.name));
+const featuredClientsText = joinWithY(FEATURED_CLIENTS.map((c) => c.name));
 const sectorsText = joinWithY(SECTORS.map((s) => s.toLowerCase()));
 
-// Logos de la cinta (marquee). Para sumar un logo nuevo cuando Juan Manuel los
-// mande: 1) importar el archivo arriba, junto a cliente1/cliente2/cliente3;
-// 2) agregar una entrada acá con su alt real (nombre del cliente). No hace falta
-// tocar nada más: la cantidad de repeticiones y el desplazamiento de la
-// animación (más abajo) se recalculan solos a partir de LOGOS.length.
-const LOGOS = [
-  { img: cliente1, alt: 'Nestlé, cliente de Transporte Colussi' },
-  { img: cliente2, alt: 'Molinos Río de la Plata, cliente de Transporte Colussi' },
-  { img: cliente3, alt: 'Arcor, cliente de Transporte Colussi' },
-];
+// Logos de la cinta (marquee), derivados de los clientes NO destacados. Para sumar
+// un cliente nuevo a la cinta: agregarlo en config/clients.ts con featured: false
+// (o sumar el logo ahí directamente). El alt sale solo del `name`, y la cantidad
+// de repeticiones y el desplazamiento de la animación (más abajo) se recalculan
+// solos a partir de LOGOS.length.
+const LOGOS = MARQUEE_CLIENTS.map((c) => ({
+  img: c.image,
+  alt: `${c.name}, cliente de Transporte Colussi`,
+}));
 
 // La cinta repite el set de logos varias veces seguidas para no dejar huecos en
 // pantallas anchas y para que el loop sea continuo (sin salto visible). El
@@ -30,8 +35,9 @@ const LOGOS = [
 // trasladándola exactamente el ancho de UNA copia (100 / REPEAT %) — al llegar
 // ahí, la copia siguiente cae justo donde arrancó la primera. Por eso el
 // desplazamiento se calcula a partir de REPEAT en vez de dejarlo fijo: si
-// mañana se suman más logos, REPEAT baja solo y el loop sigue siendo perfecto
-// (el piso de 2 copias es el mínimo matemático para que el truco funcione).
+// mañana se suman o sacan logos de la cinta, REPEAT se ajusta solo y el loop
+// sigue siendo perfecto (el piso de 2 copias es el mínimo matemático para que
+// el truco funcione).
 const MIN_LOGO_SLOTS = 12;
 const REPEAT = Math.max(2, Math.ceil(MIN_LOGO_SLOTS / LOGOS.length));
 const marqueeLogos = Array.from({ length: REPEAT * LOGOS.length }, (_, i) => LOGOS[i % LOGOS.length]);
@@ -50,11 +56,33 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
       </p>
     </div>
 
-    <!-- Cinta de logos (marquee infinito). Ver LOGOS arriba para sumar clientes nuevos. -->
+    <!-- Zona 1: clientes destacados (featured: true), estáticos y a mayor tamaño -->
+    <div
+      class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-10 md:gap-x-12 md:gap-y-14 mb-14"
+      role="group"
+      aria-label={`Clientes destacados de Transporte Colussi: ${featuredClientsText}`}
+    >
+      {FEATURED_CLIENTS.map((client) => (
+        <div class="flex items-center justify-center h-20 md:h-24">
+          <Image
+            src={client.image}
+            alt={`${client.name}, cliente de Transporte Colussi`}
+            class="max-h-16 md:max-h-20 w-auto object-contain"
+          />
+        </div>
+      ))}
+    </div>
+
+    <!-- Texto puente hacia la cinta -->
+    <p class="text-center text-sm font-medium text-neutral-500 uppercase tracking-wide mb-8">
+      Y muchos más entre las compañías que confían en nosotros
+    </p>
+
+    <!-- Zona 2: cinta de logos (marquee infinito) con el resto de los clientes -->
     <div
       class="marquee-viewport relative overflow-hidden mb-10"
       role="group"
-      aria-label={`Empresas cliente de Transporte Colussi: ${clientsText}`}
+      aria-label={`Otras empresas cliente de Transporte Colussi: ${marqueeClientsText}`}
     >
       <div
         class="marquee-track flex items-center gap-10 md:gap-16 w-max"
@@ -75,6 +103,9 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
     <p class="text-center text-neutral-700 max-w-3xl mx-auto mb-3">
       Trabajamos para compañías líderes de consumo masivo, alimentos e industria:
       <span class="font-semibold text-neutral-900">{clientsText}</span>.
+    </p>
+    <p class="text-center text-neutral-600 max-w-3xl mx-auto mb-3">
+      Combinamos clientes de alcance nacional con la industria del norte santafesino: Buyatti, la Unión Agrícola de Avellaneda y Vicentin operan a minutos de nuestra casa central.
     </p>
     <p class="text-center text-neutral-600 max-w-3xl mx-auto mb-14">
       Trabajamos para las principales industrias del país: {sectorsText}.
@@ -123,7 +154,8 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
      existe hover: si el filtro no estuviera detrás de este media query, los
      logos quedarían grises para siempre en celular. Con el media query, en
      touch directamente no se aplica ninguna de las dos reglas y se ven a color
-     desde el arranque. */
+     desde el arranque. Solo aplica a la cinta (zona 2): los destacados de la
+     zona 1 van siempre a color, son los que tienen que leerse de un vistazo. */
   @media (hover: hover) {
     .logo-item {
       filter: grayscale(1);
