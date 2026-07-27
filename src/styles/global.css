@@ -17,7 +17,9 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  /* Header flotante: top-4 (1rem) + alto de la barra (~3.5rem) + aire para que
+     el título de la sección no quede pegado al borde inferior de la píldora. */
+  scroll-padding-top: 6.5rem;
 }
 
 body {

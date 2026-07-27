@@ -1,0 +1,35 @@
+---
+import { STATS } from '../config/stats';
+---
+
+<!-- Sección propia de estadísticas. Va sobre fondo oscuro para separarse
+     visualmente de "Quiénes Somos" (bg-neutral-50, justo antes) y de RRHH
+     (bg-white, justo después). Los números viven en config/stats.ts, no acá. -->
+<section id="numeros" class="py-20 lg:py-28 bg-neutral-900">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-14">
+      <p class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-3">
+        Trayectoria
+      </p>
+      <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-white">
+        Números que respaldan el servicio
+      </h2>
+    </div>
+
+    <!-- Grilla: 2 columnas en mobile, 4 en desktop. Los valores van en texto
+         plano (no imagen, no oculto) para que los motores de búsqueda e IA
+         los lean igual que un visitante. -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-6">
+      {STATS.map((stat) => (
+        <div class="text-center px-2">
+          <p class="text-4xl sm:text-5xl font-extrabold text-brand-red mb-3">
+            {stat.value}
+          </p>
+          <p class="text-sm text-neutral-300 leading-snug max-w-[220px] mx-auto">
+            {stat.label}
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

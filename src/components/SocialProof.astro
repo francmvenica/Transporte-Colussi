@@ -118,9 +118,16 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
         <p class="text-xs font-medium text-neutral-600 uppercase tracking-wide transition-colors duration-300 group-hover:text-neutral-900">Monitoreo Satelital</p>
       </div>
       <div class="w-px h-10 bg-neutral-300 hidden md:block"></div>
+      <!-- Antes decía "100% / Flota Propia": con la nueva sección de estadísticas
+           (Stats.astro, después de "Quiénes Somos") apareció otro "100%" —
+           "100% de los objetivos planteados por nuestros clientes en los últimos
+           10 años", un dato distinto. Dos cifras iguales compitiendo en la misma
+           página resta credibilidad a las dos. El claim de flota propia (pedido
+           explícito de Romualdo) NO se borra: se reformula, moviendo "100%" del
+           titular al texto de apoyo, para que deje de competir por el mismo número. -->
       <div class="text-center group cursor-default">
-        <p class="text-3xl font-bold text-brand-red transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110">100%</p>
-        <p class="text-xs font-medium text-neutral-600 uppercase tracking-wide transition-colors duration-300 group-hover:text-neutral-900">Flota Propia</p>
+        <p class="text-3xl font-bold text-brand-red transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110">Flota</p>
+        <p class="text-xs font-medium text-neutral-600 uppercase tracking-wide transition-colors duration-300 group-hover:text-neutral-900">100% Propia</p>
       </div>
       <div class="w-px h-10 bg-neutral-300 hidden md:block"></div>
       <div class="text-center group cursor-default">

@@ -8,35 +8,61 @@ const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 ---
 
-<header id="site-header" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white shadow-md">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-20">
-      <!-- Logo -->
-      <a href={base} class="flex items-center group h-12" aria-label="Transporte Colussi - Inicio">
-        <Logo class="h-full w-auto" />
+<!-- Header flotante tipo "pill": el <header> no tiene fondo ni recibe clicks
+     (pointer-events-none) — solo reserva el hueco arriba. La barra y el menú
+     móvil, adentro, sí son interactivos (pointer-events-auto). Así el resto
+     de la franja superior deja pasar los clicks a lo que esté debajo. -->
+<header id="site-header" class="fixed top-4 inset-x-0 z-50 px-4 sm:px-6 pointer-events-none">
+  <div class="max-w-5xl mx-auto pointer-events-auto">
+   <div class="flex justify-center">
+    <!-- inline-flex a propósito: la píldora se ajusta a su contenido (no se
+         estira a max-w-5xl). El logo real (1600x138, ratio ~11.6:1) ya ocupa
+         bastante ancho por sí solo; si la barra se estirara de punta a punta,
+         el resto del contenido se ve forzado a achicarse y el texto de dos
+         palabras ("Nuestra Historia", "Solicitar Cotización") se parte en
+         dos líneas. Con shrink-to-fit, la barra mide lo que necesita. -->
+    <div class="inline-flex items-center gap-3 lg:gap-4 bg-neutral-950/80 backdrop-blur-md border border-neutral-700/60 rounded-full pl-3 pr-3 py-2 sm:pl-4 sm:pr-4 sm:py-2.5 shadow-xl shadow-black/30 max-w-full">
+      <!-- Logo: el archivo real es un wordmark ancho (1600x138) con negro +
+           rojo de marca. Sobre fondo oscuro el "Colussi" negro se pierde, y
+           un filtro brightness/invert lo arruina (el invert convierte el
+           rojo de marca en cian). Se resuelve igual que ya lo hace
+           Footer.astro con este mismo logo sobre este mismo problema: un
+           chip blanco detrás. Contenido del logo intacto, cero sustituto.
+           Altura chica (h-5) a propósito: por el ratio tan ancho del archivo,
+           cualquier altura "normal" de logo (28-32px) arrastra ~350-400px de
+           ancho y no entra junto al nav completo. Con un logo más compacto
+           enviado por el cliente esto se puede agrandar. -->
+      <a href={base} class="flex items-center shrink-0" aria-label="Transporte Colussi - Inicio">
+        <div class="h-5 sm:h-6 bg-white rounded-full pl-2 pr-2.5 flex items-center shadow-sm">
+          <Logo class="h-full w-auto" />
+        </div>
       </a>
 
-      <!-- Desktop Nav -->
-      <nav class="hidden lg:flex items-center gap-8" aria-label="Navegación principal">
+      <!-- Desktop Nav: se arma desde SITE.nav (6 ítems) + el link a /historia,
+           igual que el header viejo. Nunca hardcodear la lista acá. "Historia"
+           en vez de "Nuestra Historia": mismo destino, etiqueta más corta para
+           que entre en la barra compacta (en el footer, que tiene mucho más
+           espacio, se mantiene "Nuestra Historia" sin tocar). -->
+      <nav class="hidden lg:flex items-center gap-3 xl:gap-4 whitespace-nowrap" aria-label="Navegación principal">
         {SITE.nav.map((item) => (
           <a
             href={`${base}${item.href}`}
-            class="text-sm font-medium text-neutral-900 hover:text-brand-red transition-colors duration-200"
+            class="text-xs font-semibold text-neutral-300 hover:text-white transition-colors duration-200"
           >
             {item.label}
           </a>
         ))}
         <a
           href={`${base}historia`}
-          class="text-sm font-medium text-neutral-900 hover:text-brand-red transition-colors duration-200"
+          class="text-xs font-semibold text-neutral-300 hover:text-white transition-colors duration-200"
         >
-          Nuestra Historia
+          Historia
         </a>
         <a
           href={SITE.whatsapp.link}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-flex items-center px-5 py-2.5 bg-brand-red text-white text-sm font-semibold rounded-lg hover:bg-brand-red-dark transition-colors duration-200"
+          class="header-cta inline-flex items-center px-3.5 py-2 bg-brand-red text-white text-xs font-semibold rounded-full hover:bg-brand-red-dark hover:scale-105 transition-all duration-200"
         >
           Solicitar Cotización
         </a>
@@ -45,46 +71,59 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
       <!-- Mobile hamburger -->
       <button
         id="mobile-menu-btn"
-        class="lg:hidden p-2 rounded-lg hover:bg-neutral-100 transition-colors"
+        class="lg:hidden p-2 rounded-full hover:bg-white/10 transition-colors shrink-0"
         aria-label="Abrir menú"
         aria-expanded="false"
       >
-        <svg class="w-6 h-6 text-neutral-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path id="hamburger-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
           <path id="close-icon" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
     </div>
-  </div>
+   </div>
 
-  <!-- Mobile menu drawer -->
-  <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-neutral-200 shadow-lg">
-    <nav class="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1" aria-label="Navegación móvil">
-      {SITE.nav.map((item) => (
+    <!-- Mobile menu: panel flotante debajo de la barra, mismo lenguaje visual -->
+    <div id="mobile-menu" class="hidden lg:hidden mt-3 bg-neutral-950/95 backdrop-blur-xl border border-neutral-700/60 rounded-3xl shadow-xl shadow-black/30 overflow-hidden">
+      <nav class="px-3 py-4 flex flex-col gap-1" aria-label="Navegación móvil">
+        {SITE.nav.map((item) => (
+          <a
+            href={`${base}${item.href}`}
+            class="mobile-nav-link block px-4 py-3 text-neutral-200 font-medium rounded-2xl hover:bg-white/10 transition-colors"
+          >
+            {item.label}
+          </a>
+        ))}
         <a
-          href={`${base}${item.href}`}
-          class="mobile-nav-link block px-4 py-3 text-neutral-800 font-medium rounded-lg hover:bg-neutral-100 transition-colors"
+          href={`${base}historia`}
+          class="mobile-nav-link block px-4 py-3 text-neutral-200 font-medium rounded-2xl hover:bg-white/10 transition-colors"
         >
-          {item.label}
+          Nuestra Historia
         </a>
-      ))}
-      <a
-        href={`${base}historia`}
-        class="mobile-nav-link block px-4 py-3 text-neutral-800 font-medium rounded-lg hover:bg-neutral-100 transition-colors"
-      >
-        Nuestra Historia
-      </a>
-      <a
-        href={SITE.whatsapp.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="mobile-nav-link mt-2 block text-center px-4 py-3 bg-brand-red text-white font-semibold rounded-lg hover:bg-brand-red-dark transition-colors"
-      >
-        Solicitar Cotización
-      </a>
-    </nav>
+        <a
+          href={SITE.whatsapp.link}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="header-cta mobile-nav-link mt-2 block text-center px-4 py-3 bg-brand-red text-white font-semibold rounded-full hover:bg-brand-red-dark transition-colors"
+        >
+          Solicitar Cotización
+        </a>
+      </nav>
+    </div>
   </div>
 </header>
+
+<style>
+  @media (prefers-reduced-motion: reduce) {
+    #site-header a,
+    #site-header button {
+      transition-duration: 0.01ms !important;
+    }
+    #site-header .header-cta:hover {
+      transform: none !important;
+    }
+  }
+</style>
 
 <script>
   const btn = document.getElementById('mobile-menu-btn')!;
