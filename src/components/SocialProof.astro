@@ -17,7 +17,10 @@ const MARQUEE_CLIENTS = CLIENTS.filter((c) => !c.featured);
 const clientsText = joinWithY(CLIENTS.map((c) => c.name));
 const marqueeClientsText = joinWithY(MARQUEE_CLIENTS.map((c) => c.name));
 const featuredClientsText = joinWithY(FEATURED_CLIENTS.map((c) => c.name));
-const sectorsText = joinWithY(SECTORS.map((s) => s.toLowerCase()));
+// Los sectores van separados por COMAS, no con joinWithY: uno de ellos es
+// "papel y tissue", que ya trae su propia "y" adentro. Con el join queda
+// "...papel y tissue y madera", que se lee como un error. Con comas, no.
+const sectorsText = SECTORS.map((s) => s.toLowerCase()).join(', ');
 
 // Logos de la cinta (marquee), derivados de los clientes NO destacados. Para sumar
 // un cliente nuevo a la cinta: agregarlo en config/clients.ts con featured: false
@@ -46,17 +49,32 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
 
 // Notas internas (no publicar en el HTML):
 //
-// Párrafo "Clientes en texto plano" (además de los logos): además de los
-// logos, para que los motores de búsqueda e IA los lean.
+// LOS NOMBRES DE CLIENTES EN TEXTO PLANO NO SE BORRAN. Están plegados en el
+// <details> de abajo, no eliminados, y la diferencia importa: es el entregable
+// central de lo que se vendió. Medido en el baseline del 25/07 — el sitio
+// aparece SOLO en las consultas cuyas palabras están escritas literales en él.
+// Los motores no leen los logos y no infieren lo que falta. Los `alt` tampoco
+// alcanzan: la cinta muestra 19 y los destacados 8, pero la lista completa es
+// la que tiene que estar legible. Si alguien vuelve a proponer "los logos
+// hablan solos", la respuesta es que hablan para las personas, no para las
+// máquinas — y este trabajo se vendió para las dos.
 //
-// Stats strip, cifra "Flota / 100% Propia": antes decía "100% / Flota Propia":
-// con la nueva sección de estadísticas (Stats.astro, después de "Quiénes
-// Somos") apareció otro "100%" — "100% de los objetivos planteados por
-// nuestros clientes en los últimos 10 años", un dato distinto. Dos cifras
-// iguales compitiendo en la misma página resta credibilidad a las dos. El
-// claim de flota propia (pedido explícito de Romualdo) NO se borra: se
-// reformula, moviendo "100%" del titular al texto de apoyo, para que deje de
-// competir por el mismo número.
+// Se pliega con CSS (<details> nativo), NUNCA con JavaScript: así el texto
+// viaja siempre en el HTML y los crawlers lo leen aunque nadie lo despliegue.
+// Mismo patrón que el detalle de Services.astro.
+//
+// SUBTÍTULO: la primera línea ("Los clientes ocupan la posición más
+// importante...") es TEXTUAL del brief del cliente — su filosofía operativa.
+// Es texto institucional de ellos: se copia, no se mejora. Un rediseño
+// propuso reemplazarla; se conservó por decisión de Franco y se sumó la
+// segunda línea debajo, que además absorbe los sectores.
+//
+// BARRA "24/7 / Flota 100% Propia / NEA" — ELIMINADA el 28/07 por redundante.
+// Antes de sacarla se verificó que los tres claims viven en otro lado:
+// flota propia en About, Hero y faq.ts; monitoreo satelital en About, Hero,
+// fleet.ts, services.ts, faq.ts y CoverageMap; centro de tráfico en About,
+// fleet.ts y CoverageMap. No se perdió nada de lo comprometido. De paso muere
+// el conflicto de los dos "100%" compitiendo con el de Stats.astro.
 ---
 
 <section id="clientes" class="bg-neutral-100 border-y border-neutral-200 py-20 lg:py-28">
@@ -67,6 +85,9 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
       </h2>
       <p class="text-lg text-neutral-600 max-w-3xl mx-auto">
         Los clientes ocupan la posición más importante en la empresa, hacemos lo que es mejor para ellos siempre.
+      </p>
+      <p class="text-base text-neutral-500 max-w-3xl mx-auto mt-3">
+        Acompañamos la logística de marcas líderes de {sectorsText}.
       </p>
     </div>
 
@@ -87,7 +108,7 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
     </div>
 
     <p class="text-center text-sm font-medium text-neutral-500 uppercase tracking-wide mb-8">
-      Y muchos más entre las compañías que confían en nosotros
+      Otras firmas y marcas regionales que operan con nosotros
     </p>
 
     <div
@@ -110,37 +131,44 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
       </div>
     </div>
 
-    <p class="text-center text-neutral-700 max-w-3xl mx-auto mb-3">
-      Trabajamos para compañías líderes de consumo masivo, alimentos e industria:
-      <span class="font-semibold text-neutral-900">{clientsText}</span>.
-    </p>
-    <p class="text-center text-neutral-600 max-w-3xl mx-auto mb-3">
-      Combinamos clientes de alcance nacional con la industria del norte santafesino: Buyatti, la Unión Agrícola de Avellaneda y Vicentin operan a minutos de nuestra casa central.
-    </p>
-    <p class="text-center text-neutral-600 max-w-3xl mx-auto mb-14">
-      Trabajamos para las principales industrias del país: {sectorsText}.
-    </p>
-
-    <div class="flex flex-wrap items-center justify-center gap-8 md:gap-16 pt-8 border-t border-neutral-200">
-      <div class="text-center group cursor-default">
-        <p class="text-3xl font-bold text-brand-red transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110">24/7</p>
-        <p class="text-xs font-medium text-neutral-600 uppercase tracking-wide transition-colors duration-300 group-hover:text-neutral-900">Monitoreo Satelital</p>
+    <details class="clients-detail max-w-3xl mx-auto text-center">
+      <summary class="text-sm font-medium text-neutral-500 hover:text-brand-red transition-colors cursor-pointer select-none">
+        Ver la lista completa de clientes
+      </summary>
+      <div class="pt-5 space-y-3">
+        <p class="text-neutral-700">
+          Trabajamos para compañías líderes del país y de la región:
+          <span class="font-semibold text-neutral-900">{clientsText}</span>.
+        </p>
+        <p class="text-neutral-600">
+          Combinamos clientes de alcance nacional con la industria del norte santafesino: Buyatti, la Unión Agrícola de Avellaneda y Vicentin operan a minutos de nuestra casa central.
+        </p>
       </div>
-      <div class="w-px h-10 bg-neutral-300 hidden md:block"></div>
-      <div class="text-center group cursor-default">
-        <p class="text-3xl font-bold text-brand-red transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110">Flota</p>
-        <p class="text-xs font-medium text-neutral-600 uppercase tracking-wide transition-colors duration-300 group-hover:text-neutral-900">100% Propia</p>
-      </div>
-      <div class="w-px h-10 bg-neutral-300 hidden md:block"></div>
-      <div class="text-center group cursor-default">
-        <p class="text-3xl font-bold text-brand-red transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110">NEA</p>
-        <p class="text-xs font-medium text-neutral-600 uppercase tracking-wide transition-colors duration-300 group-hover:text-neutral-900">Base Operativa</p>
-      </div>
-    </div>
+    </details>
   </div>
 </section>
 
 <style>
+  /* El pliegue es SOLO presentación: el texto está siempre en el HTML, así que
+     los crawlers lo leen aunque nadie abra el <details>. Si alguien lo
+     "mejora" renderizando el contenido con JS al hacer clic, el texto deja de
+     existir para los motores y se rompe justo lo que la sección tiene que
+     lograr. Mismo criterio que el detalle plegable de Services.astro. */
+  .clients-detail > summary {
+    list-style: none;
+  }
+  .clients-detail > summary::-webkit-details-marker {
+    display: none;
+  }
+  .clients-detail > summary::after {
+    content: '+';
+    margin-left: 0.4rem;
+    display: inline-block;
+  }
+  .clients-detail[open] > summary::after {
+    content: '–';
+  }
+
   .marquee-viewport {
     -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
     mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
