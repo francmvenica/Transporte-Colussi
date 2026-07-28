@@ -2,115 +2,150 @@
 import { Image } from 'astro:assets';
 import { IMAGES } from '../config/assets';
 
-// Nota interna (no publicar en el HTML) — párrafo "Desde 2000, nacimos, crecimos...":
-// "Desde 2000": trayectoria confirmada por el cliente 27/07. No redondear
-// este dato al editar (2000 a 2026 son 26 años; "más de 25 años" es la
-// alternativa segura si se reformula la frase).
+// Notas internas (no publicar en el HTML):
+//
+// "Desde 2000": trayectoria confirmada por el cliente el 27/07. No redondear al
+// editar — de 2000 a 2026 son 26 años, y "más de 25 años" es la forma segura si
+// se reformula la frase. OJO: la ficha del planificador
+// (NEGOCIO/clientes/transporte-colussi/datos.md) todavía lo lista como "a
+// confirmar"; el dato quedó desincronizado y hay que corregirlo ahí.
+//
+// Misión, visión y valores son TEXTUALES del brief de la empresa. No se
+// reescriben ni se "mejoran": son texto institucional del cliente. Una
+// propuesta de rediseño los traía reformulados ("líder y más confiable",
+// "responsabilidad ambiental y social") y se revirtieron al original.
+//
+// El eyebrow dice "Organización" y no "Nuestra Historia" a propósito: es la
+// etiqueta del menú (SITE.nav → #empresa) y además ya existe la subpágina
+// /historia, con la que se confundiría.
+//
+// El bloque de confianza operativa (flota propia, monitoreo satelital, centro
+// de tráfico, Polivias, cross-docking en Fontana) se conserva: es donde vive
+// buena parte del vocabulario por el que los motores encuentran a la empresa.
+// Una propuesta de rediseño lo eliminaba.
+//
+// Fontana es el CENTRO DE DISTRIBUCIÓN. La casa central es Calle 7 351,
+// Guadalupe Norte. No llamar a Fontana "base operativa" a secas: se confunde
+// con la sede.
+
+const BADGES = [
+  'Desde el año 2000',
+  'Flota 100% propia',
+  'Centro de distribución propio en Fontana (Chaco)',
+];
+
+const VALORES = [
+  'Escuchar al cliente',
+  'Atentos a las oportunidades de mejoras',
+  'Respeto por la palabra, las personas y el medio ambiente',
+  'Honestidad',
+  'Responsabilidad',
+];
 ---
 
 <section id="empresa" class="py-20 lg:py-28 bg-neutral-100">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-      <div>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+      <div class="lg:col-span-7">
         <p class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-3">Organización</p>
-        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 mb-6 font-display">
-          Quiénes Somos
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900 mb-6 font-display leading-tight text-balance">
+          Más de 25 años conectando la producción del noreste argentino
         </h2>
-        <p class="text-lg text-neutral-600 mb-6 leading-relaxed">
-          Brindar el mejor servicio no solo es una filosofía, es el trabajo de todos los días, que se valora gracias al talento y dedicación de nuestros colaboradores que se integran trabajando en equipo profesionalmente.
+        <p class="text-lg text-neutral-600 mb-5 leading-relaxed">
+          Desde 2000, nacimos, crecimos y nos desarrollamos en el NEA. Brindar el mejor servicio no solo es una filosofía, es el trabajo de todos los días, que se valora gracias al talento y dedicación de nuestros colaboradores que se integran trabajando en equipo profesionalmente.
         </p>
         <p class="text-lg text-neutral-600 mb-8 leading-relaxed">
-          Desde 2000, nacimos, crecimos y nos desarrollamos en el NEA. Know How, unidades de última generación y una base de cross-docking ubicada en el corazón mismo del noreste argentino.
+          Know How, unidades de última generación y una base de cross-docking ubicada en el corazón mismo del noreste argentino.
         </p>
 
-        <div class="space-y-6">
-          <div class="flex gap-4">
-            <div class="flex-shrink-0 w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.64 0 8.577 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.64 0-8.577-3.007-9.963-7.178z" />
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-bold text-neutral-900 mb-1">Visión</h3>
-              <p class="text-neutral-600">Lograr el reconocimiento del Cliente como la mejor empresa de transporte de la región.</p>
-            </div>
-          </div>
-
-          <div class="flex gap-4">
-            <div class="flex-shrink-0 w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-bold text-neutral-900 mb-1">Misión</h3>
-              <p class="text-neutral-600">Brindar al cliente soluciones que contribuyan a su cadena de valor.</p>
-            </div>
-          </div>
-
-          <div class="flex gap-4">
-            <div class="flex-shrink-0 w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-bold text-neutral-900 mb-2">Valores</h3>
-              <ul class="text-neutral-600 space-y-1">
-                <li class="flex items-center gap-2">
-                  <span class="w-1.5 h-1.5 rounded-full bg-brand-red flex-shrink-0"></span>
-                  Escuchar al cliente
-                </li>
-                <li class="flex items-center gap-2">
-                  <span class="w-1.5 h-1.5 rounded-full bg-brand-red flex-shrink-0"></span>
-                  Atentos a las oportunidades de mejoras
-                </li>
-                <li class="flex items-start gap-2">
-                  <span class="w-1.5 h-1.5 rounded-full bg-brand-red flex-shrink-0 mt-2"></span>
-                  <span>Respeto por la palabra, las personas y el medio ambiente</span>
-                </li>
-                <li class="flex items-center gap-2">
-                  <span class="w-1.5 h-1.5 rounded-full bg-brand-red flex-shrink-0"></span>
-                  Honestidad
-                </li>
-                <li class="flex items-center gap-2">
-                  <span class="w-1.5 h-1.5 rounded-full bg-brand-red flex-shrink-0"></span>
-                  Responsabilidad
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="flex gap-4">
-            <div class="flex-shrink-0 w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center">
-              <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.556-3.03 8.401-7.183 9.632-.435.13-.897.13-1.334 0C8.33 20.401 5.3 16.556 5.3 12V6.741c0-.577.416-1.06.983-1.187a48.325 48.325 0 0111.434 0c.567.127.983.61.983 1.187V12z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-bold text-neutral-900 mb-2">Confianza operativa</h3>
-              <p class="text-neutral-600">
-                Flota 100% propia, con monitoreo satelital 24/7 desde nuestro centro de tráfico. Alianza operativa con Polivias para la ruta a Brasil, y base de cross-docking en Fontana (Chaco) para la logística y distribución en el NEA.
-              </p>
-            </div>
-          </div>
-        </div>
+        <ul class="flex flex-wrap gap-3">
+          {BADGES.map((badge) => (
+            <li class="inline-flex items-center gap-2 bg-white border border-neutral-200 rounded-xl px-4 py-2 text-sm font-semibold text-neutral-800">
+              <span class="w-2 h-2 rounded-full bg-brand-red shrink-0"></span>
+              {badge}
+            </li>
+          ))}
+        </ul>
       </div>
 
-      <div class="relative">
+      <div class="lg:col-span-5 relative">
         <Image
           src={IMAGES.about.src}
           alt={IMAGES.about.alt}
-          class="w-full h-auto rounded-2xl shadow-2xl"
+          class="w-full h-72 lg:h-96 object-cover rounded-2xl shadow-2xl"
           widths={[400, 800]}
-          sizes="(max-width: 1024px) 100vw, 50vw"
+          sizes="(max-width: 1024px) 100vw, 42vw"
           loading="lazy"
-          quality={80}
+          quality={78}
         />
         <div class="absolute -bottom-6 -left-6 bg-brand-red text-white p-6 rounded-2xl shadow-lg hidden lg:block">
-          <p class="text-4xl font-extrabold">NEA</p>
-          <p class="text-sm font-medium text-white/80">Base operativa</p>
+          <p class="text-4xl font-extrabold font-display leading-none">NEA</p>
+          <p class="text-sm font-medium text-white/80 mt-1">Base operativa</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-20 lg:mt-24 pt-12 border-t border-neutral-200">
+      <div class="text-center mb-10">
+        <p class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-2">Pilares</p>
+        <h3 class="text-2xl sm:text-3xl font-bold text-neutral-900 font-display">Misión, visión y valores</h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <article class="bg-white rounded-2xl p-7 border border-neutral-200 hover:border-brand-red/40 transition-colors">
+          <div class="w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+            </svg>
+          </div>
+          <h4 class="text-lg font-bold text-neutral-900 mb-2">Misión</h4>
+          <p class="text-neutral-600 leading-relaxed">
+            Brindar al cliente soluciones que contribuyan a su cadena de valor.
+          </p>
+        </article>
+
+        <article class="bg-white rounded-2xl p-7 border border-neutral-200 hover:border-brand-red/40 transition-colors">
+          <div class="w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.64 0 8.577 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.64 0-8.577-3.007-9.963-7.178z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h4 class="text-lg font-bold text-neutral-900 mb-2">Visión</h4>
+          <p class="text-neutral-600 leading-relaxed">
+            Lograr el reconocimiento del Cliente como la mejor empresa de transporte de la región.
+          </p>
+        </article>
+
+        <article class="bg-white rounded-2xl p-7 border border-neutral-200 hover:border-brand-red/40 transition-colors">
+          <div class="w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center mb-5">
+            <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+            </svg>
+          </div>
+          <h4 class="text-lg font-bold text-neutral-900 mb-3">Valores</h4>
+          <ul class="text-neutral-600 space-y-2">
+            {VALORES.map((valor) => (
+              <li class="flex items-start gap-2.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-brand-red shrink-0 mt-2"></span>
+                <span>{valor}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+      </div>
+
+      <div class="mt-6 bg-white rounded-2xl p-7 lg:p-8 border border-neutral-200 flex flex-col sm:flex-row gap-5 sm:gap-7">
+        <div class="w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center shrink-0">
+          <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.556-3.03 8.401-7.183 9.632-.435.13-.897.13-1.334 0C8.33 20.401 5.3 16.556 5.3 12V6.741c0-.577.416-1.06.983-1.187a48.325 48.325 0 0111.434 0c.567.127.983.61.983 1.187V12z" />
+          </svg>
+        </div>
+        <div>
+          <h4 class="text-lg font-bold text-neutral-900 mb-2">Confianza operativa</h4>
+          <p class="text-neutral-600 leading-relaxed">
+            Flota 100% propia, con monitoreo satelital 24/7 desde nuestro centro de tráfico. Alianza operativa con Polivias para la ruta a Brasil, y base de cross-docking en Fontana (Chaco) para la logística y distribución en el NEA.
+          </p>
         </div>
       </div>
     </div>

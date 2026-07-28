@@ -42,7 +42,12 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
   id="hero"
   class="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-950"
 >
-  <div id="hero-slides" class="absolute inset-0" data-slide-ms={HERO_SLIDE_MS}>
+  <div
+    id="hero-slides"
+    class="absolute inset-0"
+    data-slide-ms={HERO_SLIDE_MS}
+    style={`--hero-slide-ms: ${HERO_SLIDE_MS}ms`}
+  >
     {HERO_SLIDES.map((slide, i) => (
       <div
         class:list={['hero-slide absolute inset-0', i === 0 && 'is-active']}
@@ -149,18 +154,26 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
     opacity: 1;
   }
 
+  /* El reposo del <img> es el MISMO punto donde termina el zoom. Cuando el
+     slide sale pierde .is-active y la animacion se remueve entera: si el reposo
+     fuera scale(1), la foto pegaria un salto hacia atras a mitad del fundido.
+     Por eso el zoom dura exactamente lo que dura el slide (--hero-slide-ms): al
+     salir ya llego a 1.06 y no se mueve. */
   .hero-slide-img {
-    transform: scale(1);
+    transform: scale(1.06);
   }
   .hero-slide.is-active .hero-slide-img {
-    animation: hero-kenburns 9s ease-out forwards;
+    animation: hero-kenburns var(--hero-slide-ms, 6000ms) linear forwards;
+  }
+  #hero-slides.is-paused .hero-slide.is-active .hero-slide-img {
+    animation-play-state: paused;
   }
   @keyframes hero-kenburns {
     from {
       transform: scale(1);
     }
     to {
-      transform: scale(1.08);
+      transform: scale(1.06);
     }
   }
 
@@ -262,6 +275,7 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
 
     const setPaused = (value: boolean) => {
       paused = value;
+      root.classList.toggle('is-paused', value);
       playPause.setAttribute('aria-pressed', String(value));
       iconPause?.classList.toggle('hidden', value);
       iconPlay?.classList.toggle('hidden', !value);
