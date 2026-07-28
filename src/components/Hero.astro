@@ -7,7 +7,6 @@ const heroImage = IMAGES.hero;
 ---
 
 <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
-  <!-- Background image -->
   <div class="absolute inset-0">
     <Image
       src={heroImage.src}
@@ -21,7 +20,6 @@ const heroImage = IMAGES.hero;
     <div class="absolute inset-0 bg-gradient-to-r from-neutral-900/80 via-neutral-900/60 to-neutral-900/40"></div>
   </div>
 
-  <!-- Content -->
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
     <div class="max-w-3xl">
       <p class="text-brand-red font-semibold text-sm sm:text-base uppercase tracking-widest mb-4 animate-fade-up">
@@ -56,7 +54,6 @@ const heroImage = IMAGES.hero;
     </div>
   </div>
 
-  <!-- Scroll indicator -->
   <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
     <svg class="w-6 h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />

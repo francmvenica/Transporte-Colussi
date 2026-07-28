@@ -7,9 +7,12 @@ interface Props {
 }
 
 const { class: className = '' } = Astro.props;
+
+// Nota interna (no publicar en el HTML) — el <div class="logo-container"> existe
+// solo para colgarle el filtro de color cuando el header esta transparente sobre
+// el hero oscuro. Sin ese wrapper no hay donde aplicar el drop-shadow.
 ---
 
-<!-- Wrapper div to handle the color transition filter for the dark hero -->
 <div class={`logo-container ${className}`}>
   <Image 
     src={logoImg} 

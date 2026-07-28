@@ -136,7 +136,6 @@ const organizationSchema = {
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonicalURL} />
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={pageTitle} />
@@ -145,13 +144,11 @@ const organizationSchema = {
     <meta property="og:image" content={ogImageURL} />
     <meta property="og:locale" content="es_AR" />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL} />
 
-    <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href={`${basePath}${basePath.endsWith('/') ? '' : '/'}favicon.svg`} />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
