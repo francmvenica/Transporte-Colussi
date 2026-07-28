@@ -1,9 +1,17 @@
 ---
 import { STATS } from '../config/stats';
+
+// Nota interna (no publicar en el HTML) — grilla de tarjetas de estadísticas:
+// grilla: 2 columnas en mobile, 4 en desktop. Los valores van en texto plano
+// (no imagen, no oculto) para que los motores de búsqueda e IA los lean
+// igual que un visitante. Ícono arriba de cada tarjeta: con una sola tarjeta
+// ilustrada (el pedido explícito era un globo para la de la vuelta a la
+// tierra) las otras 3 quedaban desbalanceadas, así que las 4 llevan ícono
+// para que la sección se lea coherente.
 ---
 
 <!-- Sección propia de estadísticas. Va sobre fondo oscuro para separarse
-     visualmente de "Quiénes Somos" (bg-neutral-50, justo antes) y de RRHH
+     visualmente de "Quiénes Somos" (bg-neutral-100, justo antes) y de RRHH
      (bg-white, justo después). Los números viven en config/stats.ts, no acá. -->
 <section id="numeros" class="py-20 lg:py-28 bg-neutral-900">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,12 +24,6 @@ import { STATS } from '../config/stats';
       </h2>
     </div>
 
-    <!-- Grilla: 2 columnas en mobile, 4 en desktop. Los valores van en texto
-         plano (no imagen, no oculto) para que los motores de búsqueda e IA
-         los lean igual que un visitante. Ícono arriba de cada tarjeta: con
-         una sola tarjeta ilustrada (el pedido explícito era un globo para la
-         de la vuelta a la tierra) las otras 3 quedaban desbalanceadas, así
-         que las 4 llevan ícono para que la sección se lea coherente. -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-6">
       {STATS.map((stat) => (
         <div class="text-center px-2">

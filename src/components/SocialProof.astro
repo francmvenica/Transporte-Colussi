@@ -43,9 +43,23 @@ const REPEAT = Math.max(2, Math.ceil(MIN_LOGO_SLOTS / LOGOS.length));
 const marqueeLogos = Array.from({ length: REPEAT * LOGOS.length }, (_, i) => LOGOS[i % LOGOS.length]);
 const marqueeOffsetPct = (100 / REPEAT).toFixed(4);
 const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida no cambia al sumar logos
+
+// Notas internas (no publicar en el HTML):
+//
+// Párrafo "Clientes en texto plano" (además de los logos): además de los
+// logos, para que los motores de búsqueda e IA los lean.
+//
+// Stats strip, cifra "Flota / 100% Propia": antes decía "100% / Flota Propia":
+// con la nueva sección de estadísticas (Stats.astro, después de "Quiénes
+// Somos") apareció otro "100%" — "100% de los objetivos planteados por
+// nuestros clientes en los últimos 10 años", un dato distinto. Dos cifras
+// iguales compitiendo en la misma página resta credibilidad a las dos. El
+// claim de flota propia (pedido explícito de Romualdo) NO se borra: se
+// reformula, moviendo "100%" del titular al texto de apoyo, para que deje de
+// competir por el mismo número.
 ---
 
-<section id="clientes" class="bg-neutral-50 border-y border-neutral-200 py-20 lg:py-28">
+<section id="clientes" class="bg-neutral-100 border-y border-neutral-200 py-20 lg:py-28">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
       <h2 class="text-3xl sm:text-4xl font-bold text-neutral-900 mb-4 font-display">
@@ -99,7 +113,6 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
       </div>
     </div>
 
-    <!-- Clientes en texto plano (además de los logos, para que los motores de búsqueda e IA los lean) -->
     <p class="text-center text-neutral-700 max-w-3xl mx-auto mb-3">
       Trabajamos para compañías líderes de consumo masivo, alimentos e industria:
       <span class="font-semibold text-neutral-900">{clientsText}</span>.
@@ -118,13 +131,6 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
         <p class="text-xs font-medium text-neutral-600 uppercase tracking-wide transition-colors duration-300 group-hover:text-neutral-900">Monitoreo Satelital</p>
       </div>
       <div class="w-px h-10 bg-neutral-300 hidden md:block"></div>
-      <!-- Antes decía "100% / Flota Propia": con la nueva sección de estadísticas
-           (Stats.astro, después de "Quiénes Somos") apareció otro "100%" —
-           "100% de los objetivos planteados por nuestros clientes en los últimos
-           10 años", un dato distinto. Dos cifras iguales compitiendo en la misma
-           página resta credibilidad a las dos. El claim de flota propia (pedido
-           explícito de Romualdo) NO se borra: se reformula, moviendo "100%" del
-           titular al texto de apoyo, para que deje de competir por el mismo número. -->
       <div class="text-center group cursor-default">
         <p class="text-3xl font-bold text-brand-red transition-transform duration-300 group-hover:-translate-y-1 group-hover:scale-110">Flota</p>
         <p class="text-xs font-medium text-neutral-600 uppercase tracking-wide transition-colors duration-300 group-hover:text-neutral-900">100% Propia</p>

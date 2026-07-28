@@ -51,9 +51,11 @@
 
 html {
   scroll-behavior: smooth;
-  /* Header flotante: top-4 (1rem) + alto de la barra (~3.5rem) + aire para que
-     el título de la sección no quede pegado al borde inferior de la píldora. */
-  scroll-padding-top: 6.5rem;
+  /* Header fijo ancho completo (Header.astro, h-16 = 4rem), pegado al borde
+     superior desde el 27/07 (ya no es la píldora flotante con top-4). Un poco
+     de aire extra para que el título de la sección no quede pegado al borde
+     inferior de la barra. */
+  scroll-padding-top: 4.5rem;
 }
 
 body {

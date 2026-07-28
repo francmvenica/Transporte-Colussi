@@ -4,7 +4,7 @@ import { IMAGES } from '../config/assets';
 import { FLEET_SPECS } from '../config/fleet';
 ---
 
-<section id="unidades" class="py-20 lg:py-28 bg-white">
+<section id="unidades" class="py-20 lg:py-28 bg-neutral-100">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-16">
       <p class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-3">Nuestra flota</p>
@@ -40,7 +40,7 @@ import { FLEET_SPECS } from '../config/fleet';
     <!-- Fleet specs -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {FLEET_SPECS.map((spec) => (
-        <div class="bg-neutral-50 rounded-xl p-4 text-center border border-neutral-200">
+        <div class="bg-white rounded-xl p-4 text-center border border-neutral-200">
           <p class="text-xs font-bold text-brand-red uppercase tracking-wide mb-1">{spec.label}</p>
           <p class="text-xs text-neutral-600 leading-tight">{spec.value}</p>
         </div>

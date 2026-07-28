@@ -1,60 +1,61 @@
 ---
 import { SITE } from '../config/site';
-import Logo from './Logo.astro';
 
 // BASE_URL puede venir sin slash final (p. ej. "/Transporte-Colussi") — se normaliza
 // para que `${base}${href}` nunca pegue el path con lo que sigue.
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+// Notas internas (no publicar en el HTML):
+//
+// <header id="site-header">: header fijo, ancho completo, pegado al borde
+// superior (pedido de Franco, 27/07: la versión "píldora" flotante distraía
+// a la vista). Se mantiene el fondo oscuro translúcido + backdrop-blur; se
+// saca el margen superior (top-4), el ancho acotado centrado (max-w-5xl) y
+// el rounded-full. Como ahora ocupa todo el ancho, ya no hace falta el
+// truco de pointer-events-none/auto que tenía la píldora (existía solo para
+// dejar pasar clicks por los costados, donde no había barra). scroll-padding-top
+// en global.css está calculado contra la altura real de esta barra
+// (h-16 = 4rem): si esa altura cambia acá, hay que ajustarlo ahí también (y
+// el pt-* del primer section de historia.astro, que compensa lo mismo para
+// una carga de página completa en vez de un scroll por ancla).
+//
+// Link/badge "TC" (isotipo, dentro de <header>): PROVISORIO, isotipo TC hasta
+// que el cliente mande el logo PNG oficial. NO es la marca real, no
+// propagarlo a otros lados. El footer sigue con el logo real sin tocar
+// (Footer.astro / Logo.astro no cambiaron). El wordmark real necesitaba un
+// chip blanco detrás para leerse sobre este fondo oscuro (el "Colussi" en
+// negro se perdía); el badge TC en rojo de marca ya tiene contraste propio
+// contra el header y no necesita ese chip.
+//
+// <div id="mobile-menu">: panel a todo lo ancho, pegado debajo de la barra
+// (ya no flota separado con margen propio, porque el header dejó de ser una
+// píldora).
 ---
 
-<!-- Header flotante tipo "pill": el <header> no tiene fondo ni recibe clicks
-     (pointer-events-none) — solo reserva el hueco arriba. La barra y el menú
-     móvil, adentro, sí son interactivos (pointer-events-auto). Así el resto
-     de la franja superior deja pasar los clicks a lo que esté debajo. -->
-<header id="site-header" class="fixed top-4 inset-x-0 z-50 px-4 sm:px-6 pointer-events-none">
-  <div class="max-w-5xl mx-auto pointer-events-auto">
-   <div class="flex justify-center">
-    <!-- inline-flex a propósito: la píldora se ajusta a su contenido (no se
-         estira a max-w-5xl). El logo real (1600x138, ratio ~11.6:1) ya ocupa
-         bastante ancho por sí solo; si la barra se estirara de punta a punta,
-         el resto del contenido se ve forzado a achicarse y el texto de dos
-         palabras ("Nuestra Historia", "Solicitar Cotización") se parte en
-         dos líneas. Con shrink-to-fit, la barra mide lo que necesita. -->
-    <div class="inline-flex items-center gap-3 lg:gap-4 bg-neutral-950/80 backdrop-blur-md border border-neutral-700/60 rounded-full pl-3 pr-3 py-2 sm:pl-4 sm:pr-4 sm:py-2.5 shadow-xl shadow-black/30 max-w-full">
-      <!-- Logo: el archivo real es un wordmark ancho (1600x138) con negro +
-           rojo de marca. Sobre fondo oscuro el "Colussi" negro se pierde, y
-           un filtro brightness/invert lo arruina (el invert convierte el
-           rojo de marca en cian). Se resuelve igual que ya lo hace
-           Footer.astro con este mismo logo sobre este mismo problema: un
-           chip blanco detrás. Contenido del logo intacto, cero sustituto.
-           Altura chica (h-5) a propósito: por el ratio tan ancho del archivo,
-           cualquier altura "normal" de logo (28-32px) arrastra ~350-400px de
-           ancho y no entra junto al nav completo. Con un logo más compacto
-           enviado por el cliente esto se puede agrandar. -->
+<header id="site-header" class="fixed top-0 inset-x-0 z-50 bg-neutral-950/80 backdrop-blur-md border-b border-neutral-700/60 shadow-lg shadow-black/20">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
       <a href={base} class="flex items-center shrink-0" aria-label="Transporte Colussi - Inicio">
-        <div class="h-5 sm:h-6 bg-white rounded-full pl-2 pr-2.5 flex items-center shadow-sm">
-          <Logo class="h-full w-auto" />
-        </div>
+        <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-red text-white font-display text-base tracking-tight select-none">
+          TC
+        </span>
       </a>
 
       <!-- Desktop Nav: se arma desde SITE.nav (6 ítems) + el link a /historia,
-           igual que el header viejo. Nunca hardcodear la lista acá. "Historia"
-           en vez de "Nuestra Historia": mismo destino, etiqueta más corta para
-           que entre en la barra compacta (en el footer, que tiene mucho más
-           espacio, se mantiene "Nuestra Historia" sin tocar). -->
-      <nav class="hidden lg:flex items-center gap-3 xl:gap-4 whitespace-nowrap" aria-label="Navegación principal">
+           igual que antes. Nunca hardcodear la lista acá. -->
+      <nav class="hidden lg:flex items-center gap-5 xl:gap-6" aria-label="Navegación principal">
         {SITE.nav.map((item) => (
           <a
             href={`${base}${item.href}`}
-            class="text-xs font-semibold text-neutral-300 hover:text-white transition-colors duration-200"
+            class="text-sm font-semibold text-neutral-300 hover:text-white transition-colors duration-200"
           >
             {item.label}
           </a>
         ))}
         <a
           href={`${base}historia`}
-          class="text-xs font-semibold text-neutral-300 hover:text-white transition-colors duration-200"
+          class="text-sm font-semibold text-neutral-300 hover:text-white transition-colors duration-200"
         >
           Historia
         </a>
@@ -62,7 +63,7 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
           href={SITE.whatsapp.link}
           target="_blank"
           rel="noopener noreferrer"
-          class="header-cta inline-flex items-center px-3.5 py-2 bg-brand-red text-white text-xs font-semibold rounded-full hover:bg-brand-red-dark hover:scale-105 transition-all duration-200"
+          class="header-cta inline-flex items-center px-4 py-2 bg-brand-red text-white text-sm font-semibold rounded-full hover:bg-brand-red-dark hover:scale-105 transition-all duration-200"
         >
           Solicitar Cotización
         </a>
@@ -81,35 +82,33 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
         </svg>
       </button>
     </div>
-   </div>
+  </div>
 
-    <!-- Mobile menu: panel flotante debajo de la barra, mismo lenguaje visual -->
-    <div id="mobile-menu" class="hidden lg:hidden mt-3 bg-neutral-950/95 backdrop-blur-xl border border-neutral-700/60 rounded-3xl shadow-xl shadow-black/30 overflow-hidden">
-      <nav class="px-3 py-4 flex flex-col gap-1" aria-label="Navegación móvil">
-        {SITE.nav.map((item) => (
-          <a
-            href={`${base}${item.href}`}
-            class="mobile-nav-link block px-4 py-3 text-neutral-200 font-medium rounded-2xl hover:bg-white/10 transition-colors"
-          >
-            {item.label}
-          </a>
-        ))}
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-neutral-700/60 bg-neutral-950/95 backdrop-blur-xl shadow-xl shadow-black/30">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col gap-1" aria-label="Navegación móvil">
+      {SITE.nav.map((item) => (
         <a
-          href={`${base}historia`}
+          href={`${base}${item.href}`}
           class="mobile-nav-link block px-4 py-3 text-neutral-200 font-medium rounded-2xl hover:bg-white/10 transition-colors"
         >
-          Nuestra Historia
+          {item.label}
         </a>
-        <a
-          href={SITE.whatsapp.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="header-cta mobile-nav-link mt-2 block text-center px-4 py-3 bg-brand-red text-white font-semibold rounded-full hover:bg-brand-red-dark transition-colors"
-        >
-          Solicitar Cotización
-        </a>
-      </nav>
-    </div>
+      ))}
+      <a
+        href={`${base}historia`}
+        class="mobile-nav-link block px-4 py-3 text-neutral-200 font-medium rounded-2xl hover:bg-white/10 transition-colors"
+      >
+        Nuestra Historia
+      </a>
+      <a
+        href={SITE.whatsapp.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="header-cta mobile-nav-link mt-2 block text-center px-4 py-3 bg-brand-red text-white font-semibold rounded-full hover:bg-brand-red-dark transition-colors"
+      >
+        Solicitar Cotización
+      </a>
+    </nav>
   </div>
 </header>
 
