@@ -1,26 +1,70 @@
 ---
 import { Image } from 'astro:assets';
-import { IMAGES } from '../config/assets';
 import { SITE } from '../config/site';
+import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
 
-const heroImage = IMAGES.hero;
+// Notas internas (no publicar en el HTML):
+//
+// Carrusel del hero. Las fotos y el orden viven en config/hero.ts.
+//
+// Carga: solo el primer slide va con loading="eager" + fetchpriority="high",
+// porque es el unico que entra en el LCP. Los otros 6 van lazy y con prioridad
+// baja: el navegador los baja igual (estan en el viewport aunque con opacity 0)
+// pero recien despues de lo que bloquea el render.
+//
+// El plegado/apagado de cada slide es SOLO CSS (clase .is-active + opacity). No
+// se renderiza condicionalmente por JS: si los <img> no estan en el HTML, los
+// alt tampoco, y los alt son parte del trabajo de posicionamiento.
+//
+// Auto-rotado: se apaga entero si el visitante tiene prefers-reduced-motion, y
+// hay boton de pausa siempre visible (WCAG 2.2.2 — todo lo que se mueve solo
+// mas de 5 segundos necesita como pararse). Tambien se pausa cuando la pestana
+// pasa a segundo plano.
+//
+// El copy (tagline, h1, parrafo, CTAs) es el que ya estaba. No se cambio: no lo
+// pidio el cliente.
+//
+// Dos gradientes, no uno: el horizontal solo no alcanzaba. Con las fotos claras
+// (roca, lona blanca) el parrafo quedaba ilegible. El vertical agrega piso y
+// techo para que el texto y los controles se lean sobre cualquiera de las 7.
+//
+// Los controles tienen right-28 en desktop a proposito: el boton flotante de
+// WhatsApp vive en esa esquina y le tapaba los puntos del carrusel.
+//
+// quality=62 y tope de 1600px: medido, no elegido de memoria. Con quality 78 y
+// tope 1920 la primera foto daba 1,4 MB en WebP — es 4000x3000 y llena de grava,
+// que es justo lo que WebP comprime mal. Encima de todo esto va un gradiente al
+// 85%, asi que el detalle fino no se ve. Si se cambia una foto del carrusel,
+// volver a medir el peso: `stat -c%s dist/_astro/<archivo>.webp`.
 ---
 
-<section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden">
-  <div class="absolute inset-0">
-    <Image
-      src={heroImage.src}
-      alt={heroImage.alt}
-      class="w-full h-full object-cover"
-      widths={[640, 1024, 1920]}
-      sizes="100vw"
-      loading="eager"
-      quality={80}
-    />
-    <div class="absolute inset-0 bg-gradient-to-r from-neutral-900/80 via-neutral-900/60 to-neutral-900/40"></div>
+<section
+  id="hero"
+  class="relative min-h-screen flex items-center justify-center overflow-hidden bg-neutral-950"
+>
+  <div id="hero-slides" class="absolute inset-0" data-slide-ms={HERO_SLIDE_MS}>
+    {HERO_SLIDES.map((slide, i) => (
+      <div
+        class:list={['hero-slide absolute inset-0', i === 0 && 'is-active']}
+        aria-hidden={i === 0 ? 'false' : 'true'}
+      >
+        <Image
+          src={slide.src}
+          alt={slide.alt}
+          class="hero-slide-img w-full h-full object-cover"
+          widths={[640, 1024, 1600]}
+          sizes="100vw"
+          loading={i === 0 ? 'eager' : 'lazy'}
+          fetchpriority={i === 0 ? 'high' : 'low'}
+          quality={slide.quality ?? 62}
+        />
+      </div>
+    ))}
+    <div class="absolute inset-0 bg-gradient-to-r from-neutral-950/92 via-neutral-950/72 to-neutral-950/40"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-neutral-950/70 via-transparent to-neutral-950/40"></div>
   </div>
 
-  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32">
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 w-full">
     <div class="max-w-3xl">
       <p class="text-brand-red font-semibold text-sm sm:text-base uppercase tracking-widest mb-4 animate-fade-up">
         {SITE.tagline}
@@ -40,7 +84,7 @@ const heroImage = IMAGES.hero;
           class="inline-flex items-center justify-center px-8 py-4 bg-brand-red text-white font-semibold text-lg rounded-xl hover:bg-brand-red-dark transition-all duration-200 hover:shadow-lg hover:shadow-brand-red/25"
         >
           Solicitar Cotización
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
           </svg>
         </a>
@@ -54,9 +98,192 @@ const heroImage = IMAGES.hero;
     </div>
   </div>
 
-  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-    <svg class="w-6 h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <div
+    class="absolute bottom-8 left-4 right-20 sm:left-8 sm:right-28 z-20 flex flex-wrap items-center justify-between gap-3 pointer-events-none"
+    role="group"
+    aria-label="Controles del carrusel de fotos"
+  >
+    <button
+      id="hero-playpause"
+      type="button"
+      class="pointer-events-auto inline-flex items-center gap-2 bg-neutral-950/60 backdrop-blur-md px-3.5 py-2 rounded-full border border-white/15 text-xs font-semibold text-neutral-200 hover:text-white hover:border-white/40 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      aria-pressed="false"
+    >
+      <svg class="hero-icon-pause w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 4h4v16H6zM14 4h4v16h-4z" />
+      </svg>
+      <svg class="hero-icon-play w-3.5 h-3.5 hidden" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 4l13 8-13 8z" />
+      </svg>
+      <span class="hero-playpause-label">Pausar</span>
+    </button>
+
+    <div class="pointer-events-auto flex items-center gap-1.5 sm:gap-2 bg-neutral-950/60 backdrop-blur-md px-3 sm:px-4 py-2.5 rounded-full border border-white/15">
+      {HERO_SLIDES.map((slide, i) => (
+        <button
+          type="button"
+          class:list={['hero-dot relative w-5 sm:w-7 h-1.5 rounded-full overflow-hidden bg-white/25 transition-colors hover:bg-white/45 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white', i === 0 && 'is-active']}
+          data-index={i}
+          aria-label={`Ver foto ${i + 1} de ${HERO_SLIDES.length}: ${slide.alt}`}
+          aria-current={i === 0 ? 'true' : 'false'}
+        >
+          <span class="hero-dot-fill absolute inset-y-0 left-0 w-0 bg-brand-red"></span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div class="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 animate-bounce pointer-events-none hidden sm:block">
+    <svg class="w-6 h-6 text-white/50" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
     </svg>
   </div>
 </section>
+
+<style>
+  .hero-slide {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  }
+  .hero-slide.is-active {
+    opacity: 1;
+  }
+
+  .hero-slide-img {
+    transform: scale(1);
+  }
+  .hero-slide.is-active .hero-slide-img {
+    animation: hero-kenburns 9s ease-out forwards;
+  }
+  @keyframes hero-kenburns {
+    from {
+      transform: scale(1);
+    }
+    to {
+      transform: scale(1.08);
+    }
+  }
+
+  .hero-dot-fill {
+    width: 0;
+  }
+  .hero-dot-fill.is-running {
+    width: 100%;
+  }
+  .hero-dot-fill.is-filled {
+    width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-slide {
+      transition: none;
+    }
+    .hero-slide.is-active .hero-slide-img {
+      animation: none;
+    }
+    .hero-dot-fill {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  const initHero = () => {
+    const root = document.getElementById('hero-slides');
+    if (!root || root.dataset.ready === 'true') return;
+    root.dataset.ready = 'true';
+
+    const slides = Array.from(root.querySelectorAll<HTMLElement>('.hero-slide'));
+    const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.hero-dot'));
+    const fills = Array.from(document.querySelectorAll<HTMLElement>('.hero-dot-fill'));
+    const playPause = document.getElementById('hero-playpause');
+    if (slides.length < 2 || !playPause) return;
+
+    const iconPause = playPause.querySelector<HTMLElement>('.hero-icon-pause');
+    const iconPlay = playPause.querySelector<HTMLElement>('.hero-icon-play');
+    const label = playPause.querySelector<HTMLElement>('.hero-playpause-label');
+
+    const slideMs = Number(root.dataset.slideMs) || 6000;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let current = 0;
+    let paused = reduceMotion;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const stopTimer = () => {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+    };
+
+    const paintBars = () => {
+      fills.forEach((fill, i) => {
+        fill.classList.remove('is-running', 'is-filled');
+        fill.style.transition = 'none';
+        if (i < current) fill.classList.add('is-filled');
+      });
+
+      const active = fills[current];
+      if (!active) return;
+      if (paused) {
+        active.classList.add('is-filled');
+        return;
+      }
+      // Reflow forzado: sin esto el navegador agrupa el reset y el arranque en
+      // un solo frame y la barra salta al final en vez de llenarse.
+      void active.offsetWidth;
+      active.style.transition = `width ${slideMs}ms linear`;
+      active.classList.add('is-running');
+    };
+
+    const scheduleNext = () => {
+      stopTimer();
+      if (paused) return;
+      timer = setTimeout(() => goTo((current + 1) % slides.length), slideMs);
+    };
+
+    const goTo = (index: number) => {
+      slides[current]?.classList.remove('is-active');
+      slides[current]?.setAttribute('aria-hidden', 'true');
+      dots[current]?.classList.remove('is-active');
+      dots[current]?.setAttribute('aria-current', 'false');
+
+      current = index;
+
+      slides[current]?.classList.add('is-active');
+      slides[current]?.setAttribute('aria-hidden', 'false');
+      dots[current]?.classList.add('is-active');
+      dots[current]?.setAttribute('aria-current', 'true');
+
+      paintBars();
+      scheduleNext();
+    };
+
+    const setPaused = (value: boolean) => {
+      paused = value;
+      playPause.setAttribute('aria-pressed', String(value));
+      iconPause?.classList.toggle('hidden', value);
+      iconPlay?.classList.toggle('hidden', !value);
+      if (label) label.textContent = value ? 'Reanudar' : 'Pausar';
+      paintBars();
+      scheduleNext();
+    };
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => goTo(i));
+    });
+
+    playPause.addEventListener('click', () => setPaused(!paused));
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stopTimer();
+      else if (!paused) scheduleNext();
+    });
+
+    setPaused(paused);
+  };
+
+  document.addEventListener('DOMContentLoaded', initHero);
+  document.addEventListener('astro:page-load', initHero);
+</script>
