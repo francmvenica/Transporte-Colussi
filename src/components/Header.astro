@@ -8,6 +8,9 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
 // Notas internas (no publicar en el HTML):
 //
+// Nav de desktop: se arma desde SITE.nav (6 ítems) + el link a /historia.
+// Nunca hardcodear la lista en el markup.
+//
 // <header id="site-header">: header fijo, ancho completo, pegado al borde
 // superior (pedido de Franco, 27/07: la versión "píldora" flotante distraía
 // a la vista). Se mantiene el fondo oscuro translúcido + backdrop-blur; se
@@ -42,8 +45,6 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
         </span>
       </a>
 
-      <!-- Desktop Nav: se arma desde SITE.nav (6 ítems) + el link a /historia,
-           igual que antes. Nunca hardcodear la lista acá. -->
       <nav class="hidden lg:flex items-center gap-5 xl:gap-6" aria-label="Navegación principal">
         {SITE.nav.map((item) => (
           <a

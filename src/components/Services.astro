@@ -15,9 +15,9 @@ import { SERVICES } from '../config/services';
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      {SERVICES.map((service, index) => (
+      {SERVICES.map((service) => (
         <article
-          class="service-card group relative bg-white border border-neutral-200 rounded-2xl overflow-hidden p-8 hover:shadow-xl hover:border-brand-red/20 transition-all duration-300 hover:-translate-y-1"
+          class="service-card group relative flex flex-col bg-white border border-neutral-200 rounded-2xl overflow-hidden p-8 hover:shadow-xl hover:border-brand-red/20 transition-all duration-300 hover:-translate-y-1"
         >
           <div class="absolute top-0 left-0 right-0 h-0 bg-brand-red group-hover:h-1.5 transition-all duration-300"></div>
           <div class="w-14 h-14 bg-brand-red-light rounded-xl flex items-center justify-center mb-6 group-hover:bg-brand-red transition-colors duration-300">
@@ -42,8 +42,20 @@ import { SERVICES } from '../config/services';
               </svg>
             )}
           </div>
-          <h3 class="text-xl font-bold text-neutral-900 mb-3">{service.title}</h3>
-          <p class="text-neutral-600 leading-relaxed">{service.description}</p>
+          <h3 class="text-xl font-bold text-neutral-900 mb-3 text-balance">{service.title}</h3>
+          <p class="text-neutral-600 leading-relaxed">{service.summary}</p>
+          <details class="service-details mt-auto pt-5">
+            <summary
+              class="inline-flex items-center gap-1.5 cursor-pointer text-sm font-semibold text-brand-red hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-red rounded-sm"
+            >
+              <span class="summary-label summary-label-closed">Ver detalle</span>
+              <span class="summary-label summary-label-open">Ocultar detalle</span>
+              <svg class="summary-chevron w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+              </svg>
+            </summary>
+            <p class="mt-3 text-neutral-600 leading-relaxed">{service.description}</p>
+          </details>
         </article>
       ))}
     </div>
@@ -51,9 +63,34 @@ import { SERVICES } from '../config/services';
 </section>
 
 <style>
+  /* El detalle se pliega solo con CSS: el texto viaja siempre en el HTML para
+     que los crawlers lo lean. No reemplazar por render condicional en JS. */
+  .service-details > summary {
+    list-style: none;
+  }
+  .service-details > summary::-webkit-details-marker {
+    display: none;
+  }
+  .summary-chevron {
+    transition: transform 0.2s ease;
+  }
+  .service-details[open] .summary-chevron {
+    transform: rotate(180deg);
+  }
+  .summary-label-open {
+    display: none;
+  }
+  .service-details[open] .summary-label-closed {
+    display: none;
+  }
+  .service-details[open] .summary-label-open {
+    display: inline;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .service-card,
-    .service-card * {
+    .service-card *,
+    .summary-chevron {
       transition: none;
     }
     .service-card:hover {

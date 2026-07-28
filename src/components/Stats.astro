@@ -8,11 +8,12 @@ import { STATS } from '../config/stats';
 // ilustrada (el pedido explícito era un globo para la de la vuelta a la
 // tierra) las otras 3 quedaban desbalanceadas, así que las 4 llevan ícono
 // para que la sección se lea coherente.
+//
+// <section id="numeros">: va sobre fondo oscuro para separarse visualmente de
+// "Quiénes Somos" (bg-neutral-100, justo antes) y de RRHH (bg-white, justo
+// después). Los números viven en config/stats.ts, no acá.
 ---
 
-<!-- Sección propia de estadísticas. Va sobre fondo oscuro para separarse
-     visualmente de "Quiénes Somos" (bg-neutral-100, justo antes) y de RRHH
-     (bg-white, justo después). Los números viven en config/stats.ts, no acá. -->
 <section id="numeros" class="py-20 lg:py-28 bg-neutral-900">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-14">
