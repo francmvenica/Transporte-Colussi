@@ -1,5 +1,27 @@
 ---
 import { SERVICES } from '../config/services';
+
+// Notas internas (no publicar en el HTML):
+//
+// FORMATO DE LAS TARJETAS (unificado el 28/07). Antes eran tarjetas grandes con
+// un ícono de 56px arriba; ahora usan el MISMO lenguaje que las tarjetas del
+// mapa de cobertura y de "Unidades": fondo blanco, borde suave, punto rojo a la
+// izquierda y jerarquía título/descripción. El sitio tenía cuatro tratamientos
+// distintos para la misma idea y se leía desordenado. Si se toca una de las
+// tres, tocar las otras dos — el valor está en que sean iguales.
+//
+// Los íconos SVG se eliminaron de acá, pero el campo `icon` SIGUE en
+// config/services.ts a propósito: no molesta y evita perder el mapeo si algún
+// día se vuelven a usar.
+//
+// DOS COSAS QUE NO SE TOCAN AL COMPACTAR:
+// 1. El <details> con el detalle técnico. Ahí viven "pallets", "curtain
+//    sider" y "cross-docking" — el vocabulario por el que los motores
+//    encuentran a la empresa. Se pliega con CSS, nunca con JS, así el texto
+//    viaja siempre en el HTML.
+// 2. Los títulos COMPLETOS ("Transporte de Cargas Generales", no "Cargas
+//    Generales"). Fue un pedido explícito del cliente el 27/07, y además son
+//    las frases que la gente escribe al buscar.
 ---
 
 <section id="soluciones" class="py-20 lg:py-28 bg-white">
@@ -17,34 +39,16 @@ import { SERVICES } from '../config/services';
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {SERVICES.map((service) => (
         <article
-          class="service-card group relative flex flex-col bg-white border border-neutral-200 rounded-2xl overflow-hidden p-8 hover:shadow-xl hover:border-brand-red/20 transition-all duration-300 hover:-translate-y-1"
+          class="service-card group flex flex-col bg-white border border-neutral-200/80 rounded-2xl shadow-sm p-5 hover:shadow-lg hover:border-brand-red/20 transition-all duration-300"
         >
-          <div class="absolute top-0 left-0 right-0 h-0 bg-brand-red group-hover:h-1.5 transition-all duration-300"></div>
-          <div class="w-14 h-14 bg-brand-red-light rounded-xl flex items-center justify-center mb-6 group-hover:bg-brand-red transition-colors duration-300">
-            {service.icon === 'Truck' && (
-              <svg class="w-7 h-7 text-brand-red group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 0 0-10.026 0 1.106 1.106 0 0 0-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-              </svg>
-            )}
-            {service.icon === 'Container' && (
-              <svg class="w-7 h-7 text-brand-red group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-              </svg>
-            )}
-            {service.icon === 'Package' && (
-              <svg class="w-7 h-7 text-brand-red group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-              </svg>
-            )}
-            {service.icon === 'Globe' && (
-              <svg class="w-7 h-7 text-brand-red group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-              </svg>
-            )}
+          <div class="flex items-start gap-3">
+            <span class="w-3 h-3 rounded-full bg-brand-red mt-1.5 shrink-0"></span>
+            <div class="min-w-0">
+              <h3 class="text-base font-bold text-neutral-900 text-balance">{service.title}</h3>
+              <p class="text-neutral-600 text-sm mt-1 leading-relaxed">{service.summary}</p>
+            </div>
           </div>
-          <h3 class="text-xl font-bold text-neutral-900 mb-3 text-balance">{service.title}</h3>
-          <p class="text-neutral-600 leading-relaxed">{service.summary}</p>
-          <details class="service-details mt-auto pt-5">
+          <details class="service-details mt-auto pt-4">
             <summary
               class="inline-flex items-center gap-1.5 cursor-pointer text-sm font-semibold text-brand-red hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-red rounded-sm"
             >
@@ -54,7 +58,7 @@ import { SERVICES } from '../config/services';
                 <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
               </svg>
             </summary>
-            <p class="mt-3 text-neutral-600 leading-relaxed">{service.description}</p>
+            <p class="mt-3 text-sm text-neutral-600 leading-relaxed">{service.description}</p>
           </details>
         </article>
       ))}

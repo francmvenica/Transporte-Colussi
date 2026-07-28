@@ -5,6 +5,15 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
 
 // Notas internas (no publicar en el HTML):
 //
+// EL HERO NO LLEVA BOTONES DE ACCION (decision de Franco, 28/07). Tenia dos —
+// "Solicitar Cotizacion" a WhatsApp y "Conocer Servicios" al ancla— y se
+// sacaron para que la portada respire. Antes de sacarlos se verifico que el
+// sitio NO se queda sin CTA: "Solicitar Cotizacion" sigue en el header, que es
+// fijo y acompana todo el scroll (y esta tambien en el menu mobile), mas el
+// boton flotante de WhatsApp. Lo unico que se perdio es el ancla a servicios,
+// que el menu ya cubre. Si alguien propone volver a poner un CTA aca, que sea
+// por una razon medida, no por la costumbre de que "un hero lleva boton".
+//
 // Carrusel del hero. Las fotos y el orden viven en config/hero.ts.
 //
 // Carga: solo el primer slide va con loading="eager" + fetchpriority="high",
@@ -78,28 +87,9 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
         Conectamos el NEA<br />
         <span class="text-brand-red font-brand-italic">con todo el país</span>
       </h1>
-      <p class="text-lg sm:text-xl text-neutral-300 mb-10 max-w-xl animate-fade-up" style="animation-delay: 0.2s">
+      <p class="text-lg sm:text-xl text-neutral-300 max-w-xl animate-fade-up" style="animation-delay: 0.2s">
         Flota propia con monitoreo satelital 24/7. Carga general, contenedores, logística y distribución.
       </p>
-      <div class="flex flex-col sm:flex-row gap-4 animate-fade-up" style="animation-delay: 0.3s">
-        <a
-          href={SITE.whatsapp.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="inline-flex items-center justify-center px-8 py-4 bg-brand-red text-white font-semibold text-lg rounded-xl hover:bg-brand-red-dark transition-all duration-200 hover:shadow-lg hover:shadow-brand-red/25"
-        >
-          Solicitar Cotización
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-          </svg>
-        </a>
-        <a
-          href="#soluciones"
-          class="inline-flex items-center justify-center px-8 py-4 bg-white/10 backdrop-blur-sm text-white font-semibold text-lg rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-200"
-        >
-          Conocer Servicios
-        </a>
-      </div>
     </div>
   </div>
 
