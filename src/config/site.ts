@@ -67,12 +67,14 @@ export const SITE = {
     embedUrl:
       'https://maps.google.com/maps?q=-28.938237,-59.561470&hl=es&z=15&output=embed',
   },
+  // El orden de este menú tiene que seguir al orden de las secciones en
+  // pages/index.astro. Si se reordena una sección, se reordena acá también.
   nav: [
     { label: 'Clientes', href: '#clientes' },
     { label: 'Servicios', href: '#soluciones' },
+    { label: 'Unidades', href: '#unidades' },
     { label: 'Organización', href: '#empresa' },
     { label: 'RRHH', href: '#rrhh' },
-    { label: 'Unidades', href: '#unidades' },
     { label: 'Contactos', href: '#contactos' },
   ],
 };

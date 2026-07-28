@@ -15,6 +15,23 @@ import FAQ from '../components/FAQ.astro';
 import Contact from '../components/Contact.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
+
+// Notas internas (no publicar en el HTML):
+//
+// El orden de <main> sigue el embudo B2B: captar (Hero) -> validar (SocialProof
+// + Stats) -> informar (Services + cobertura) -> demostrar (Fleet +
+// Sustainability) -> convertir (FAQ + Contact).
+//
+// Dos pares que NO conviene separar al reordenar:
+// - Fleet y Sustainability: son el mismo tema (con que equipos trabajan y que
+//   impacto tienen). Sustainability es donde vive el argumento que pidio
+//   Romualdo, "a igualdad de tarifa, desempata"; suelto a mitad del sitio se
+//   descuelga.
+// - SocialProof y Stats: los numeros son prueba, no historia. Antes estaban
+//   entre About y RRHH, que es donde el lector ya decidio si sigue leyendo.
+//
+// Si se cambia este orden, revisar SITE.nav en config/site.ts: el menu del
+// header se arma de ahi y su orden tiene que seguir al de la pagina.
 ---
 
 <Layout>
@@ -22,14 +39,14 @@ import WhatsAppButton from '../components/WhatsAppButton.astro';
   <main>
     <Hero />
     <SocialProof />
+    <Stats />
     <Services />
     <CoverageMap />
     <Corridors />
-    <About />
-    <Stats />
-    <RRHH />
     <Fleet />
     <Sustainability />
+    <About />
+    <RRHH />
     <FAQ />
     <Contact />
   </main>
