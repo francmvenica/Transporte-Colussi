@@ -1,5 +1,24 @@
-// Fotos del carrusel del hero. Material del cliente (Temp/Colussi-material/Fotos/
-// Hero seccion), ya triado a mano por Franco.
+// Fotos y Videos del carrusel del hero.
+//
+// ⚠️ LOS 4 VIDEOS SON GENERADOS POR IA, no son tomas reales de la flota.
+// Decisión de Franco (29/07) sabiendo lo que sigue, así que no re-discutirlo —
+// pero dejarlo escrito, porque el que retome no lo puede adivinar mirando el
+// código y hay cosas que conviene tener presentes:
+//   · En el video "coastal" la lona muestra "Tul: 03482 - 499197". El teléfono
+//     real es 498191 y el rótulo dice "Tul", no "Tel". Franco lo evaluó: a la
+//     velocidad del plano no se alcanza a leer.
+//   · En "container" la patente ("01 0F07U") no tiene formato argentino.
+//   · El logo de marca aparece deformado en grado variable en los cuatro.
+//   · Romualdo pidió el 14/07 reemplazar las imágenes de IA del sitio viejo
+//     por fotos reales. Esto va en dirección contraria a aquel pedido, y él
+//     todavía no lo vio.
+// Si el cliente manda sus videos institucionales —están comprometidos en el
+// mail del 21/07— reemplazan a estos y el problema se termina.
+//
+// Las FOTOS de HERO_SLIDES sí son material real del cliente
+// (Temp/Colussi-material/Fotos/Hero seccion), triado a mano por Franco. Hoy no
+// se usan en el hero (quedó con video) pero se conservan: son el respaldo si
+// se vuelve atrás, y siguen siendo los posters de cada video.
 //
 // Reglas de este archivo:
 //
@@ -33,6 +52,54 @@ export interface HeroSlide {
   /** Calidad WebP propia. Solo para fotos que compriman mal (ver nota de abajo). */
   quality?: number;
 }
+
+export interface HeroVideo {
+  id: string;
+  src: string;
+  title: string;
+  badge: string;
+  alt: string;
+  poster: ImageMetadata;
+}
+
+export const HERO_VIDEOS: HeroVideo[] = [
+  {
+    id: 'drone-pullback',
+    src: '/videos/hero-drone-pullback.mp4',
+    title: 'Tomas Aéreas de Flota',
+    badge: 'Video 1 de 4',
+    alt: 'Vista aérea de un camión de Transporte Colussi en camino de montaña',
+    poster: flotaAtardecer,
+  },
+  {
+    id: 'iveco-coastal',
+    src: '/videos/hero-iveco-coastal.mp4',
+    title: 'Semirremolque en Ruta',
+    badge: 'Video 2 de 4',
+    alt: 'Camión tractor Iveco de Transporte Colussi con semirremolque de lona en ruta',
+    poster: curtainSiderRuta,
+  },
+  {
+    id: 'iveco-container',
+    src: '/videos/hero-iveco-container.mp4',
+    title: 'Transporte de Contenedores',
+    badge: 'Video 3 de 4',
+    alt: 'Camión Iveco rojo transportando contenedor en corredor logístico',
+    poster: camionesContenedores,
+  },
+  // ⚠️ El `title` SALE PUBLICADO: es la etiqueta del punto de navegación y en
+  // desktop se lee entera. Este slide decía "Próxima Unidad (Pendiente)" y se
+  // veía en el sitio. Un nombre de slide describe lo que se ve, nunca su
+  // estado interno de producción.
+  {
+    id: 'iveco-lona-ruta',
+    src: '/videos/hero-iveco-lona-ruta.mp4',
+    title: 'Semirremolque de Lona',
+    badge: '',
+    alt: 'Camión de Transporte Colussi con semirremolque de lona en ruta',
+    poster: tractorasHiRoad,
+  },
+];
 
 export const HERO_SLIDES: HeroSlide[] = [
   {
@@ -72,3 +139,4 @@ export const HERO_SLIDES: HeroSlide[] = [
 
 /** Milisegundos que dura cada slide. La barra de progreso se sincroniza con esto. */
 export const HERO_SLIDE_MS = 6000;
+export const HERO_VIDEO_SLIDE_MS = 8000;

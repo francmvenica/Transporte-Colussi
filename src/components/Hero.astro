@@ -1,50 +1,51 @@
 ---
 import { Image } from 'astro:assets';
 import { SITE } from '../config/site';
-import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
+import { HERO_VIDEOS, HERO_VIDEO_SLIDE_MS } from '../config/hero';
 
 // Notas internas (no publicar en el HTML):
 //
-// EL HERO NO LLEVA BOTONES DE ACCION (decision de Franco, 28/07). Tenia dos —
-// "Solicitar Cotizacion" a WhatsApp y "Conocer Servicios" al ancla— y se
-// sacaron para que la portada respire. Antes de sacarlos se verifico que el
-// sitio NO se queda sin CTA: "Solicitar Cotizacion" sigue en el header, que es
-// fijo y acompana todo el scroll (y esta tambien en el menu mobile), mas el
-// boton flotante de WhatsApp. Lo unico que se perdio es el ancla a servicios,
-// que el menu ya cubre. Si alguien propone volver a poner un CTA aca, que sea
-// por una razon medida, no por la costumbre de que "un hero lleva boton".
+// HERO CON VIDEO. Reemplazó al carrusel de 7 fotos el 29/07. La estructura
+// (slides, controles, gradientes dobles, puntos de navegación) vino de un
+// handoff de Antigravity; acá quedó ya saneada para producción.
 //
-// Carrusel del hero. Las fotos y el orden viven en config/hero.ts.
+// LO QUE SE SACÓ DEL HANDOFF, y por qué — no volver a meterlo:
+//   · El badge "Maqueta Hero Video · 3 de 4 Videos cargados": texto interno.
+//   · El bloque "Video actual: [título]": era un selector de debug.
+//   · El cartel "4to Video (Pendiente) — El espacio se activará automáticamente
+//     apenas agregues el 4to video": instrucción para Franco, visible al
+//     cliente. Ahora ese slide muestra su poster y nada más.
+//   · El botón de sonido: los videos se recomprimieron SIN pista de audio, así
+//     que no tenía nada que activar. Además Romualdo pidió el institucional
+//     "probablemente sin música".
+//   · Siete comentarios de markup: viajan al navegador. Van acá con `//`.
 //
-// Carga: solo el primer slide va con loading="eager" + fetchpriority="high",
-// porque es el unico que entra en el LCP. Los otros 6 van lazy y con prioridad
-// baja: el navegador los baja igual (estan en el viewport aunque con opacity 0)
-// pero recien despues de lo que bloquea el render.
+// PESO — los videos van en public/ porque Astro NO optimiza video (su pipeline
+// es solo de imágenes), así que la compresión se hace a mano ANTES de
+// copiarlos. Los originales pesaban 33,58 MB en total y quedaron en 4,64 MB
+// (-86%) con este comando, que es el que hay que repetir por cada video nuevo:
 //
-// El plegado/apagado de cada slide es SOLO CSS (clase .is-active + opacity). No
-// se renderiza condicionalmente por JS: si los <img> no estan en el HTML, los
-// alt tampoco, y los alt son parte del trabajo de posicionamiento.
+//   ffmpeg -i entrada.mp4 -vf "scale=1280:-2" -c:v libx264 -crf 28 \
+//          -preset slow -an -movflags +faststart salida.mp4
 //
-// Auto-rotado: se apaga entero si el visitante tiene prefers-reduced-motion, y
-// hay boton de pausa siempre visible (WCAG 2.2.2 — todo lo que se mueve solo
-// mas de 5 segundos necesita como pararse). Tambien se pausa cuando la pestana
-// pasa a segundo plano.
+// 720p y CRF 28 se eligieron comparando frames contra el original: a este
+// tamaño, y con dos gradientes encima, no se distingue. `-an` saca el audio
+// (nadie lo escucha en un hero) y `+faststart` deja el índice al principio
+// para que arranque sin descargar todo. Los ORIGINALES sin comprimir viven en
+// Temp/Colussi-material/videos-hero-originales/ — recomprimir sobre un
+// comprimido degrada, siempre partir de ahí.
 //
-// El copy (tagline, h1, parrafo, CTAs) es el que ya estaba. No se cambio: no lo
-// pidio el cliente.
-//
-// Dos gradientes, no uno: el horizontal solo no alcanzaba. Con las fotos claras
-// (roca, lona blanca) el parrafo quedaba ilegible. El vertical agrega piso y
-// techo para que el texto y los controles se lean sobre cualquiera de las 7.
-//
-// Los controles tienen right-28 en desktop a proposito: el boton flotante de
-// WhatsApp vive en esa esquina y le tapaba los puntos del carrusel.
-//
-// quality=62 y tope de 1600px: medido, no elegido de memoria. Con quality 78 y
-// tope 1920 la primera foto daba 1,4 MB en WebP — es 4000x3000 y llena de grava,
-// que es justo lo que WebP comprime mal. Encima de todo esto va un gradiente al
-// 85%, asi que el detalle fino no se ve. Si se cambia una foto del carrusel,
-// volver a medir el peso: `stat -c%s dist/_astro/<archivo>.webp`.
+// CARGA: solo el primer video precarga. Los demás van preload="none" y no
+// bajan un byte hasta que el carrusel llega a ellos.
+
+const rawBase = import.meta.env.BASE_URL;
+const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
+
+const getVideoUrl = (src: string) => {
+  if (!src) return '';
+  const cleanSrc = src.startsWith('/') ? src.slice(1) : src;
+  return `${base}${cleanSrc}`;
+};
 ---
 
 <section
@@ -54,30 +55,39 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
   <div
     id="hero-slides"
     class="absolute inset-0"
-    data-slide-ms={HERO_SLIDE_MS}
-    style={`--hero-slide-ms: ${HERO_SLIDE_MS}ms`}
+    data-slide-ms={HERO_VIDEO_SLIDE_MS}
+    style={`--hero-slide-ms: ${HERO_VIDEO_SLIDE_MS}ms`}
   >
-    {HERO_SLIDES.map((slide, i) => (
+    {HERO_VIDEOS.map((video, i) => (
       <div
-        class:list={['hero-slide absolute inset-0', i === 0 && 'is-active']}
+        class:list={['hero-slide absolute inset-0 transition-opacity duration-1000 ease-in-out', i === 0 ? 'is-active opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none']}
+        data-index={i}
         aria-hidden={i === 0 ? 'false' : 'true'}
       >
-        <Image
-          src={slide.src}
-          alt={slide.alt}
-          class="hero-slide-img w-full h-full object-cover"
-          widths={[640, 1024, 1600]}
-          sizes="100vw"
-          loading={i === 0 ? 'eager' : 'lazy'}
-          fetchpriority={i === 0 ? 'high' : 'low'}
-          quality={slide.quality ?? 62}
-        />
+        {video.src ? (
+          <video
+            class="hero-video-element w-full h-full object-cover scale-105 transition-transform duration-10000 ease-linear"
+            src={getVideoUrl(video.src)}
+            poster={video.poster.src}
+            autoplay={i === 0}
+            loop
+            muted
+            playsinline
+            preload={i === 0 ? 'auto' : 'none'}
+          />
+        ) : (
+          <Image
+            src={video.poster}
+            alt={video.alt}
+            class="w-full h-full object-cover"
+            quality={52}
+          />
+        )}
       </div>
     ))}
-    <div class="absolute inset-0 bg-gradient-to-r from-neutral-950/92 via-neutral-950/72 to-neutral-950/40"></div>
-    <div class="absolute inset-0 bg-gradient-to-t from-neutral-950/70 via-transparent to-neutral-950/40"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-neutral-950/92 via-neutral-950/75 to-neutral-950/40 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-neutral-950/50 pointer-events-none"></div>
   </div>
-
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 w-full">
     <div class="max-w-3xl">
       <p class="text-brand-red font-semibold text-sm sm:text-base uppercase tracking-widest mb-4 animate-fade-up">
@@ -92,37 +102,42 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
       </p>
     </div>
   </div>
-
   <div
-    class="absolute bottom-8 left-4 right-20 sm:left-8 sm:right-28 z-20 flex flex-wrap items-center justify-between gap-3 pointer-events-none"
+    class="absolute bottom-8 left-4 right-4 sm:left-8 sm:right-28 z-20 flex flex-wrap items-center justify-between gap-3 pointer-events-none"
     role="group"
-    aria-label="Controles del carrusel de fotos"
+    aria-label="Controles del carrusel de videos"
   >
-    <button
-      id="hero-playpause"
-      type="button"
-      class="pointer-events-auto inline-flex items-center gap-2 bg-neutral-950/60 backdrop-blur-md px-3.5 py-2 rounded-full border border-white/15 text-xs font-semibold text-neutral-200 hover:text-white hover:border-white/40 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-      aria-pressed="false"
-    >
-      <svg class="hero-icon-pause w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M6 4h4v16H6zM14 4h4v16h-4z" />
-      </svg>
-      <svg class="hero-icon-play w-3.5 h-3.5 hidden" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M7 4l13 8-13 8z" />
-      </svg>
-      <span class="hero-playpause-label">Pausar</span>
-    </button>
+    <div class="flex items-center gap-2 pointer-events-auto">
+      <button
+        id="hero-playpause"
+        type="button"
+        class="inline-flex items-center gap-2 bg-neutral-950/70 backdrop-blur-md px-3.5 py-2 rounded-full border border-white/15 text-xs font-semibold text-neutral-200 hover:text-white hover:border-white/40 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        aria-pressed="false"
+      >
+        <svg class="hero-icon-pause w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 4h4v16H6zM14 4h4v16h-4z" />
+        </svg>
+        <svg class="hero-icon-play w-3.5 h-3.5 hidden" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 4l13 8-13 8z" />
+        </svg>
+        <span class="hero-playpause-label">Pausar Video</span>
+      </button>
 
-    <div class="pointer-events-auto flex items-center gap-1.5 sm:gap-2 bg-neutral-950/60 backdrop-blur-md px-3 sm:px-4 py-2.5 rounded-full border border-white/15">
-      {HERO_SLIDES.map((slide, i) => (
+    </div>
+    <div class="pointer-events-auto flex items-center gap-2 bg-neutral-950/70 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/15">
+      {HERO_VIDEOS.map((video, i) => (
         <button
           type="button"
-          class:list={['hero-dot relative w-5 sm:w-7 h-1.5 rounded-full overflow-hidden bg-white/25 transition-colors hover:bg-white/45 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white', i === 0 && 'is-active']}
+          class:list={['hero-dot relative group flex items-center gap-2 px-2.5 py-1 rounded-full text-xs transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white', i === 0 ? 'is-active bg-white/20 text-white font-semibold' : 'bg-transparent text-white/60 hover:text-white hover:bg-white/10']}
           data-index={i}
-          aria-label={`Ver foto ${i + 1} de ${HERO_SLIDES.length}: ${slide.alt}`}
+          data-title={video.title}
+          aria-label={`Ver ${video.title}`}
           aria-current={i === 0 ? 'true' : 'false'}
         >
-          <span class="hero-dot-fill absolute inset-y-0 left-0 w-0 bg-brand-red"></span>
+          <span class="w-2 h-2 rounded-full bg-white/40 group-hover:bg-white transition-colors hero-dot-indicator"></span>
+          <span class="hidden md:inline">{video.title}</span>
+          <span class="md:hidden">{i + 1}</span>
+          <span class="hero-dot-fill absolute bottom-0 left-2 right-2 h-0.5 bg-brand-red rounded-full overflow-hidden"></span>
         </button>
       ))}
     </div>
@@ -136,35 +151,14 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
 </section>
 
 <style>
-  .hero-slide {
-    opacity: 0;
-    transition: opacity 1s ease-in-out;
-  }
   .hero-slide.is-active {
-    opacity: 1;
+    opacity: 1 !important;
+    pointer-events: auto !important;
   }
 
-  /* El reposo del <img> es el MISMO punto donde termina el zoom. Cuando el
-     slide sale pierde .is-active y la animacion se remueve entera: si el reposo
-     fuera scale(1), la foto pegaria un salto hacia atras a mitad del fundido.
-     Por eso el zoom dura exactamente lo que dura el slide (--hero-slide-ms): al
-     salir ya llego a 1.06 y no se mueve. */
-  .hero-slide-img {
-    transform: scale(1.06);
-  }
-  .hero-slide.is-active .hero-slide-img {
-    animation: hero-kenburns var(--hero-slide-ms, 6000ms) linear forwards;
-  }
-  #hero-slides.is-paused .hero-slide.is-active .hero-slide-img {
-    animation-play-state: paused;
-  }
-  @keyframes hero-kenburns {
-    from {
-      transform: scale(1);
-    }
-    to {
-      transform: scale(1.06);
-    }
+  .hero-dot.is-active .hero-dot-indicator {
+    background-color: #E22026 !important;
+    box-shadow: 0 0 8px rgba(226, 32, 38, 0.8);
   }
 
   .hero-dot-fill {
@@ -173,40 +167,35 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
   .hero-dot-fill.is-running {
     width: 100%;
   }
-  .hero-dot-fill.is-filled {
-    width: 100%;
-  }
 
   @media (prefers-reduced-motion: reduce) {
     .hero-slide {
-      transition: none;
-    }
-    .hero-slide.is-active .hero-slide-img {
-      animation: none;
-    }
-    .hero-dot-fill {
       transition: none !important;
+    }
+    .hero-video-element {
+      transition: none !important;
+      transform: none !important;
     }
   }
 </style>
 
 <script>
-  const initHero = () => {
+  const initHeroVideo = () => {
     const root = document.getElementById('hero-slides');
     if (!root || root.dataset.ready === 'true') return;
     root.dataset.ready = 'true';
 
     const slides = Array.from(root.querySelectorAll<HTMLElement>('.hero-slide'));
     const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.hero-dot'));
-    const fills = Array.from(document.querySelectorAll<HTMLElement>('.hero-dot-fill'));
     const playPause = document.getElementById('hero-playpause');
+
     if (slides.length < 2 || !playPause) return;
 
     const iconPause = playPause.querySelector<HTMLElement>('.hero-icon-pause');
     const iconPlay = playPause.querySelector<HTMLElement>('.hero-icon-play');
-    const label = playPause.querySelector<HTMLElement>('.hero-playpause-label');
+    const labelPlayPause = playPause.querySelector<HTMLElement>('.hero-playpause-label');
 
-    const slideMs = Number(root.dataset.slideMs) || 6000;
+    const slideMs = Number(root.dataset.slideMs) || 8000;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let current = 0;
@@ -220,24 +209,23 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
       }
     };
 
-    const paintBars = () => {
-      fills.forEach((fill, i) => {
-        fill.classList.remove('is-running', 'is-filled');
-        fill.style.transition = 'none';
-        if (i < current) fill.classList.add('is-filled');
-      });
+    const playActiveVideo = (index: number) => {
+      slides.forEach((slide, i) => {
+        const video = slide.querySelector<HTMLVideoElement>('video');
+        if (!video) return;
 
-      const active = fills[current];
-      if (!active) return;
-      if (paused) {
-        active.classList.add('is-filled');
-        return;
-      }
-      // Reflow forzado: sin esto el navegador agrupa el reset y el arranque en
-      // un solo frame y la barra salta al final en vez de llenarse.
-      void active.offsetWidth;
-      active.style.transition = `width ${slideMs}ms linear`;
-      active.classList.add('is-running');
+        if (i === index) {
+          // Los videos no tienen pista de audio (se saca al comprimir), pero el
+          // atributo `muted` va igual: sin el, los navegadores bloquean el
+          // autoplay y el hero arranca congelado en el poster.
+          video.muted = true;
+          video.play().catch(() => {
+            // Si el navegador igual bloquea el autoplay, queda el poster.
+          });
+        } else {
+          video.pause();
+        }
+      });
     };
 
     const scheduleNext = () => {
@@ -247,31 +235,40 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
     };
 
     const goTo = (index: number) => {
+      // Deactivate current
       slides[current]?.classList.remove('is-active');
       slides[current]?.setAttribute('aria-hidden', 'true');
-      dots[current]?.classList.remove('is-active');
+      dots[current]?.classList.remove('is-active', 'bg-white/20', 'text-white', 'font-semibold');
+      dots[current]?.classList.add('bg-transparent', 'text-white/60');
       dots[current]?.setAttribute('aria-current', 'false');
 
       current = index;
 
+      // Activate new slide
       slides[current]?.classList.add('is-active');
       slides[current]?.setAttribute('aria-hidden', 'false');
-      dots[current]?.classList.add('is-active');
+      dots[current]?.classList.add('is-active', 'bg-white/20', 'text-white', 'font-semibold');
+      dots[current]?.classList.remove('bg-transparent', 'text-white/60');
       dots[current]?.setAttribute('aria-current', 'true');
 
-      paintBars();
+      playActiveVideo(current);
       scheduleNext();
     };
 
     const setPaused = (value: boolean) => {
       paused = value;
-      root.classList.toggle('is-paused', value);
       playPause.setAttribute('aria-pressed', String(value));
       iconPause?.classList.toggle('hidden', value);
       iconPlay?.classList.toggle('hidden', !value);
-      if (label) label.textContent = value ? 'Reanudar' : 'Pausar';
-      paintBars();
-      scheduleNext();
+      if (labelPlayPause) labelPlayPause.textContent = value ? 'Reanudar Video' : 'Pausar Video';
+
+      if (paused) {
+        slides[current]?.querySelector<HTMLVideoElement>('video')?.pause();
+        stopTimer();
+      } else {
+        playActiveVideo(current);
+        scheduleNext();
+      }
     };
 
     dots.forEach((dot, i) => {
@@ -281,13 +278,20 @@ import { HERO_SLIDES, HERO_SLIDE_MS } from '../config/hero';
     playPause.addEventListener('click', () => setPaused(!paused));
 
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden) stopTimer();
-      else if (!paused) scheduleNext();
+      if (document.hidden) {
+        slides.forEach(slide => slide.querySelector<HTMLVideoElement>('video')?.pause());
+        stopTimer();
+      } else if (!paused) {
+        playActiveVideo(current);
+        scheduleNext();
+      }
     });
 
-    setPaused(paused);
+    // Start initial video
+    playActiveVideo(0);
+    if (!paused) scheduleNext();
   };
 
-  document.addEventListener('DOMContentLoaded', initHero);
-  document.addEventListener('astro:page-load', initHero);
+  document.addEventListener('DOMContentLoaded', initHeroVideo);
+  document.addEventListener('astro:page-load', initHeroVideo);
 </script>
