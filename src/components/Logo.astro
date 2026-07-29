@@ -1,31 +1,52 @@
 ---
 import { Image } from 'astro:assets';
-import logoImg from '../assets/images/logo-real.png';
+import logoDark from '../assets/images/logo-colussi-horizontal.png';
+import logoReverse from '../assets/images/logo-colussi-horizontal-reverse.png';
 
 interface Props {
   class?: string;
+  variant?: 'dark' | 'reverse';
+  eager?: boolean;
 }
 
-const { class: className = '' } = Astro.props;
+const { class: className = '', variant = 'dark', eager = false } = Astro.props;
 
-// Nota interna (no publicar en el HTML) — el <div class="logo-container"> existe
-// solo para colgarle el filtro de color cuando el header esta transparente sobre
-// el hero oscuro. Sin ese wrapper no hay donde aplicar el drop-shadow.
+const src = variant === 'reverse' ? logoReverse : logoDark;
+
+// Notas internas (no publicar en el HTML):
+//
+// LOGO OFICIAL del cliente, llegado el 2026-07-29. Reemplaza al isotipo "TC"
+// provisorio del header y al `logo-real.png` viejo del footer.
+//
+// DOS VARIANTES, y la eleccion NO es estetica — es de contraste:
+//   variant="dark"    -> "Colussi" en negro. Va sobre FONDO CLARO.
+//   variant="reverse" -> "Colussi" en blanco. Va sobre FONDO OSCURO.
+// El isotipo rojo y el "TRANSPORTE" son iguales en las dos.
+// Hoy el header (bg-neutral-950) y el footer (bg-neutral-900) son los dos
+// oscuros, asi que los dos usan "reverse". Si alguna vez se pone el logo sobre
+// un fondo claro, va "dark" — nunca el reverse con un chip blanco detras, que
+// era el parche del footer viejo y se veia como un remiendo.
+//
+// EL RATIO ES 13,75:1 (4000x291). Es un wordmark MUY horizontal, y eso manda
+// como se usa: la altura la define el ancho disponible, no al reves.
+//   Header desktop: h-8 (32px) -> ~440px de ancho. Entra con el nav completo.
+//   Header mobile:  h-5 (20px) -> ~275px. Es lo que deja un viewport de 375px
+//                   despues del padding y del boton de menu.
+// A 20px de alto el "Colussi" se lee bien y el "TRANSPORTE" queda como una
+// linea roja fina. Es el limite: NO bajar mas.
+//
+// NO HAY VERSION ISOTIPO (cuadrada). Se evaluo recortar el simbolo rojo del
+// PNG para usarlo en mobile y se descarto: el isotipo y la "C" de Colussi se
+// tocan, no hay separacion limpia, y recortar por un punto elegido a ojo es
+// fabricar un activo de marca que el cliente no entrego. Si en algun momento
+// hace falta un logo cuadrado (favicon, avatar, app icon), se le PIDE a Juan
+// Manuel — no se recorta este.
 ---
 
-<div class={`logo-container ${className}`}>
-  <Image 
-    src={logoImg} 
-    alt="Transporte Colussi Logo" 
-    class="w-full h-full object-contain"
-    loading="eager"
-  />
-</div>
-
-<style>
-  /* When the header is transparent (header-text-color text-white is active on links), 
-     we apply a white drop shadow so the black text remains visible on the dark hero image. */
-  :global(.bg-transparent) .logo-container {
-    filter: drop-shadow(0 0 10px rgba(255,255,255,0.8)) drop-shadow(0 0 20px rgba(255,255,255,0.5));
-  }
-</style>
+<Image
+  src={src}
+  alt="Transporte Colussi"
+  class={className}
+  loading={eager ? 'eager' : 'lazy'}
+  densities={[1, 2]}
+/>

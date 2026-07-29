@@ -24,7 +24,7 @@ import 'leaflet/dist/leaflet.css';
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
 
       <div class="lg:col-span-7">
-        <div class="bg-white p-3 rounded-3xl shadow-xl border border-neutral-200/90 relative overflow-hidden">
+        <div class="bg-white p-3 rounded-3xl shadow-xl border border-neutral-200/90 relative z-0 overflow-hidden">
 
           <div class="absolute top-6 right-6 z-[1000] bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-neutral-200 shadow-md flex items-center gap-3 text-xs font-semibold">
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-brand-red"></span> Rutas Troncales</span>
@@ -78,6 +78,20 @@ import 'leaflet/dist/leaflet.css';
 </section>
 
 <style is:global>
+  /* BUG ARREGLADO (28/07): al hacer scroll, el mapa se dibujaba ENCIMA del
+     header fijo. No era culpa del header — Leaflet le pone z-index altos a lo
+     suyo por diseño: 400 a los panes, 650 a los tooltips, 700 a los popups y
+     1000 a los controles. El header es z-50, así que perdía siempre.
+
+     La tarjeta contenedora tenía `relative` pero SIN z-index, y `position`
+     sin `z-index` no crea stacking context: los 1000 de Leaflet se comparaban
+     directo contra el 50 del header. Con `relative z-0` (en el markup) el
+     contenedor sí crea contexto propio, y todo lo de adentro —mapa, tooltips
+     y la leyenda, que también estaba en z-[1000]— queda encerrado por debajo.
+
+     Regla para cualquier mapa o widget de terceros: encerralo en un contenedor
+     con stacking context propio. Subirle el z-index al header solo mueve la
+     pelea de lugar; la próxima librería vuelve a ganarla. */
   .colussi-pin {
     width: 14px;
     height: 14px;

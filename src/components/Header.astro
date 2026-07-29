@@ -1,5 +1,6 @@
 ---
 import { SITE } from '../config/site';
+import Logo from './Logo.astro';
 
 // BASE_URL puede venir sin slash final (p. ej. "/Transporte-Colussi") — se normaliza
 // para que `${base}${href}` nunca pegue el path con lo que sigue.
@@ -23,13 +24,26 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 // el pt-* del primer section de historia.astro, que compensa lo mismo para
 // una carga de página completa en vez de un scroll por ancla).
 //
-// Link/badge "TC" (isotipo, dentro de <header>): PROVISORIO, isotipo TC hasta
-// que el cliente mande el logo PNG oficial. NO es la marca real, no
-// propagarlo a otros lados. El footer sigue con el logo real sin tocar
-// (Footer.astro / Logo.astro no cambiaron). El wordmark real necesitaba un
-// chip blanco detrás para leerse sobre este fondo oscuro (el "Colussi" en
-// negro se perdía); el badge TC en rojo de marca ya tiene contraste propio
-// contra el header y no necesita ese chip.
+// LOGO: ya es el OFICIAL (llegó el 2026-07-29). El badge "TC" provisorio que
+// vivía acá se eliminó. Va la variante `reverse` —"Colussi" en blanco— porque
+// este header es oscuro; el chip blanco que hacía falta antes ya no existe.
+//
+// LA ALTURA DEL LOGO ES `h-5 xl:h-8`, Y CADA NÚMERO SE MIDIÓ. El wordmark
+// tiene ratio 13,75:1, así que la altura define el ancho: 20px → 275px,
+// 32px → 440px. El nav completo ocupa ~660px y el padding lateral son 64px.
+//
+// EL PUNTO DONDE ESTE HEADER SE ROMPE ES 1024px, no 1280: es donde `lg` hace
+// visible el nav completo con el MENOS ancho disponible. La cuenta ahí:
+//   64 (padding) + 275 (logo h-5) + 12 (mr-3) + 660 (nav) = 1011 < 1024 ✅
+// Con h-8 daban 1176 y el header desbordaba —el nav se iba de pantalla—.
+// Con h-6 daban 1034 y TAMBIÉN desbordaba, por 10px. Por eso el salto a h-8
+// va recién en `xl` (1280): 64 + 440 + 12 + 660 = 1176 < 1280 ✅
+//
+// ⚠️ Un test de "¿se superponen?" da FALSO NEGATIVO acá: cuando no entran, el
+// nav no se monta sobre el logo — se corre hacia afuera del viewport. Para
+// verificar hay que mirar `scrollWidth > innerWidth`, no las posiciones
+// relativas. Si se toca la altura del logo o se suman ítems al nav, medir en
+// 375, 1024 y 1280 con ese chequeo.
 //
 // <div id="mobile-menu">: panel a todo lo ancho, pegado debajo de la barra
 // (ya no flota separado con margen propio, porque el header dejó de ser una
@@ -39,10 +53,8 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 <header id="site-header" class="fixed top-0 inset-x-0 z-50 bg-neutral-950/80 backdrop-blur-md border-b border-neutral-700/60 shadow-lg shadow-black/20">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16">
-      <a href={base} class="flex items-center shrink-0" aria-label="Transporte Colussi - Inicio">
-        <span class="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-red text-white font-display text-base tracking-tight select-none">
-          TC
-        </span>
+      <a href={base} class="flex items-center shrink-0 mr-3" aria-label="Transporte Colussi - Inicio">
+        <Logo variant="reverse" class="h-5 xl:h-8 w-auto" eager />
       </a>
 
       <nav class="hidden lg:flex items-center gap-5 xl:gap-6" aria-label="Navegación principal">
