@@ -37,6 +37,17 @@ import { HERO_VIDEOS, HERO_VIDEO_SLIDE_MS } from '../config/hero';
 //
 // CARGA: solo el primer video precarga. Los demás van preload="none" y no
 // bajan un byte hasta que el carrusel llega a ellos.
+//
+// GRADIENTE IZQUIERDO subido a 96/88/45 (venía 92/75/40). Motivo concreto: en
+// el video "coastal" la lona del semi lleva pintado un teléfono que NO es el
+// de la empresa, y en el render con el texto encima se alcanzaba a leer justo
+// detrás del H1. Se resolvió oscureciendo la mitad izquierda, que es donde
+// vive el texto — y de paso mejora su contraste.
+//
+// Se evaluó `object-position` para desplazar el encuadre y se descartó: con
+// `object-cover`, cuánto se recorta a los lados depende del aspect ratio de
+// CADA pantalla, así que un desplazamiento calibrado en un tamaño deja de
+// servir en otro. El gradiente no depende del viewport.
 
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
@@ -85,7 +96,7 @@ const getVideoUrl = (src: string) => {
         )}
       </div>
     ))}
-    <div class="absolute inset-0 bg-gradient-to-r from-neutral-950/92 via-neutral-950/75 to-neutral-950/40 pointer-events-none"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-neutral-950/96 via-neutral-950/88 to-neutral-950/45 pointer-events-none"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-transparent to-neutral-950/50 pointer-events-none"></div>
   </div>
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 w-full">
