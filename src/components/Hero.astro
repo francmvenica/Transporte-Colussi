@@ -38,6 +38,22 @@ import { HERO_VIDEOS, HERO_VIDEO_SLIDE_MS } from '../config/hero';
 // CARGA: solo el primer video precarga. Los demás van preload="none" y no
 // bajan un byte hasta que el carrusel llega a ellos.
 //
+// 🔴 EL CARRUSEL AVANZA CUANDO EL VIDEO TERMINA, NO POR RELOJ — y los videos
+// NO llevan `loop`. Antes sí lo hacían, con un temporizador fijo de 8 s: como
+// duran distinto (3,8 · 8 · 8 · 8 · 6 s), el primero se reproducía DOS VECES
+// enteras antes de que le tocara avanzar. Cada video se ve una vez por vuelta.
+//
+// El motor es el evento `ended` del video activo. El `setTimeout` sigue
+// existiendo pero pasó a ser **red de seguridad**, no motor: cubre el slide
+// que es foto y no video, el archivo que no carga y el navegador que bloquea
+// el autoplay. Por eso se programa con 1,2 s de margen sobre la duración real
+// — si saltara antes que `ended`, cortaría el video.
+//
+// Y la barra de progreso se sincroniza con la duración REAL de cada video, no
+// con un valor fijo. Ojo con el orden: con `preload="none"` esa duración no se
+// conoce hasta que el video empieza a cargar, así que al activarse el slide la
+// barra arranca con el fallback y se re-sincroniza en `loadedmetadata`.
+//
 // EL BOTÓN DE PAUSA NO SE ELIMINA, aunque moleste visualmente. Es lo único
 // que cumple WCAG 2.2.2 (control para contenido en movimiento automático de
 // más de 5 segundos), que es criterio AA igual que el resto del sitio, y el
@@ -95,7 +111,6 @@ const getVideoUrl = (src: string) => {
             src={getVideoUrl(video.src)}
             poster={video.poster.src}
             autoplay={i === 0}
-            loop
             muted
             playsinline
             preload={i === 0 ? 'auto' : 'none'}
@@ -231,6 +246,8 @@ const getVideoUrl = (src: string) => {
       }
     };
 
+    const videoDe = (i: number) => slides[i]?.querySelector<HTMLVideoElement>('video') ?? null;
+
     const playActiveVideo = (index: number) => {
       slides.forEach((slide, i) => {
         const video = slide.querySelector<HTMLVideoElement>('video');
@@ -241,6 +258,9 @@ const getVideoUrl = (src: string) => {
           // atributo `muted` va igual: sin el, los navegadores bloquean el
           // autoplay y el hero arranca congelado en el poster.
           video.muted = true;
+          // Siempre desde el principio: si se vuelve a un slide ya visto, tiene
+          // que arrancar de cero y no desde donde habia quedado.
+          try { video.currentTime = 0; } catch { /* el navegador aun no lo permite */ }
           video.play().catch(() => {
             // Si el navegador igual bloquea el autoplay, queda el poster.
           });
@@ -248,6 +268,17 @@ const getVideoUrl = (src: string) => {
           video.pause();
         }
       });
+    };
+
+    /**
+     * Cuanto dura el slide actual. Si es un video con metadata ya cargada, su
+     * duracion REAL; si no (todavia sin cargar, o es una foto), el fallback del
+     * config. Es lo que evita que un video corto se repita esperando al reloj.
+     */
+    const duracionDelSlide = (i: number) => {
+      const v = videoDe(i);
+      const d = v?.duration;
+      return d && Number.isFinite(d) && d > 0 ? d * 1000 : slideMs;
     };
 
     const paintBars = () => {
@@ -266,14 +297,21 @@ const getVideoUrl = (src: string) => {
       // Reflow forzado: sin esto el navegador agrupa el reset y el arranque en
       // un solo frame, y la barra salta al final en vez de llenarse.
       void active.offsetWidth;
-      active.style.transition = `width ${slideMs}ms linear`;
+      active.style.transition = `width ${duracionDelSlide(current)}ms linear`;
       active.classList.add('is-running');
     };
 
+    /**
+     * Red de seguridad, NO el motor del carrusel. El avance real lo dispara el
+     * evento `ended` del video; este timer solo cubre los casos en que ese
+     * evento no llega: un slide que es foto y no video, un archivo que no
+     * carga, o un navegador que bloquea el autoplay. Por eso se programa con
+     * un margen sobre la duracion real — si saltara antes, cortaria videos.
+     */
     const scheduleNext = () => {
       stopTimer();
       if (paused) return;
-      timer = setTimeout(() => goTo((current + 1) % slides.length), slideMs);
+      timer = setTimeout(() => goTo((current + 1) % slides.length), duracionDelSlide(current) + 1200);
     };
 
     const goTo = (index: number) => {
@@ -314,6 +352,27 @@ const getVideoUrl = (src: string) => {
       }
       paintBars();
     };
+
+    // EL MOTOR DEL CARRUSEL: cada video avanza al terminar, no por reloj.
+    slides.forEach((slide, i) => {
+      const v = slide.querySelector<HTMLVideoElement>('video');
+      if (!v) return;
+
+      v.addEventListener('ended', () => {
+        if (i !== current || paused) return;
+        goTo((current + 1) % slides.length);
+      });
+
+      // Con preload="none" la duracion no se conoce hasta que el video empieza
+      // a cargar, asi que al activarse el slide la barra y el timer arrancan
+      // con el fallback. Cuando llega la metadata ya sabemos cuanto dura de
+      // verdad, y hay que re-sincronizar los dos.
+      v.addEventListener('loadedmetadata', () => {
+        if (i !== current || paused) return;
+        paintBars();
+        scheduleNext();
+      });
+    });
 
     dots.forEach((dot, i) => {
       dot.addEventListener('click', () => goTo(i));
