@@ -149,20 +149,16 @@ const getVideoUrl = (src: string) => {
       </button>
 
     </div>
-    <div class="pointer-events-auto flex items-center gap-2 bg-neutral-950/70 backdrop-blur-md px-4 py-2.5 rounded-full border border-white/15">
+    <div class="pointer-events-auto flex items-center gap-2">
       {HERO_VIDEOS.map((video, i) => (
         <button
           type="button"
-          class:list={['hero-dot relative group flex items-center gap-2 px-2.5 py-1 rounded-full text-xs transition-all duration-300 focus-visible:outline-2 focus-visible:outline-white', i === 0 ? 'is-active bg-white/20 text-white font-semibold' : 'bg-transparent text-white/60 hover:text-white hover:bg-white/10']}
+          class:list={['hero-dot relative w-5 sm:w-7 h-1.5 rounded-full overflow-hidden bg-white/25 transition-colors hover:bg-white/45 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white', i === 0 && 'is-active']}
           data-index={i}
-          data-title={video.title}
-          aria-label={`Ver ${video.title}`}
+          aria-label={`Ver video ${i + 1} de ${HERO_VIDEOS.length}: ${video.title}`}
           aria-current={i === 0 ? 'true' : 'false'}
         >
-          <span class="w-2 h-2 rounded-full bg-white/40 group-hover:bg-white transition-colors hero-dot-indicator"></span>
-          <span class="hidden md:inline">{video.title}</span>
-          <span class="md:hidden">{i + 1}</span>
-          <span class="hero-dot-fill absolute bottom-0 left-2 right-2 h-0.5 bg-brand-red rounded-full overflow-hidden"></span>
+          <span class="hero-dot-fill absolute inset-y-0 left-0 w-0 bg-brand-red"></span>
         </button>
       ))}
     </div>
@@ -181,15 +177,13 @@ const getVideoUrl = (src: string) => {
     pointer-events: auto !important;
   }
 
-  .hero-dot.is-active .hero-dot-indicator {
-    background-color: #E22026 !important;
-    box-shadow: 0 0 8px rgba(226, 32, 38, 0.8);
-  }
-
   .hero-dot-fill {
     width: 0;
   }
   .hero-dot-fill.is-running {
+    width: 100%;
+  }
+  .hero-dot-fill.is-filled {
     width: 100%;
   }
 
@@ -200,6 +194,9 @@ const getVideoUrl = (src: string) => {
     .hero-video-element {
       transition: none !important;
       transform: none !important;
+    }
+    .hero-dot-fill {
+      transition: none !important;
     }
   }
 </style>
@@ -212,6 +209,7 @@ const getVideoUrl = (src: string) => {
 
     const slides = Array.from(root.querySelectorAll<HTMLElement>('.hero-slide'));
     const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('.hero-dot'));
+    const fills = Array.from(document.querySelectorAll<HTMLElement>('.hero-dot-fill'));
     const playPause = document.getElementById('hero-playpause');
 
     if (slides.length < 2 || !playPause) return;
@@ -252,6 +250,26 @@ const getVideoUrl = (src: string) => {
       });
     };
 
+    const paintBars = () => {
+      fills.forEach((fill, i) => {
+        fill.classList.remove('is-running', 'is-filled');
+        fill.style.transition = 'none';
+        if (i < current) fill.classList.add('is-filled');
+      });
+
+      const active = fills[current];
+      if (!active) return;
+      if (paused) {
+        active.classList.add('is-filled');
+        return;
+      }
+      // Reflow forzado: sin esto el navegador agrupa el reset y el arranque en
+      // un solo frame, y la barra salta al final en vez de llenarse.
+      void active.offsetWidth;
+      active.style.transition = `width ${slideMs}ms linear`;
+      active.classList.add('is-running');
+    };
+
     const scheduleNext = () => {
       stopTimer();
       if (paused) return;
@@ -262,19 +280,17 @@ const getVideoUrl = (src: string) => {
       // Deactivate current
       slides[current]?.classList.remove('is-active');
       slides[current]?.setAttribute('aria-hidden', 'true');
-      dots[current]?.classList.remove('is-active', 'bg-white/20', 'text-white', 'font-semibold');
-      dots[current]?.classList.add('bg-transparent', 'text-white/60');
+      dots[current]?.classList.remove('is-active');
       dots[current]?.setAttribute('aria-current', 'false');
 
       current = index;
 
-      // Activate new slide
       slides[current]?.classList.add('is-active');
       slides[current]?.setAttribute('aria-hidden', 'false');
-      dots[current]?.classList.add('is-active', 'bg-white/20', 'text-white', 'font-semibold');
-      dots[current]?.classList.remove('bg-transparent', 'text-white/60');
+      dots[current]?.classList.add('is-active');
       dots[current]?.setAttribute('aria-current', 'true');
 
+      paintBars();
       playActiveVideo(current);
       scheduleNext();
     };
@@ -296,6 +312,7 @@ const getVideoUrl = (src: string) => {
         playActiveVideo(current);
         scheduleNext();
       }
+      paintBars();
     };
 
     dots.forEach((dot, i) => {
@@ -315,6 +332,7 @@ const getVideoUrl = (src: string) => {
     });
 
     // Start initial video
+    paintBars();
     playActiveVideo(0);
     if (!paused) scheduleNext();
   };

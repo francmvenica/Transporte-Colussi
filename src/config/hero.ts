@@ -99,6 +99,14 @@ export const HERO_VIDEOS: HeroVideo[] = [
     alt: 'Camión de Transporte Colussi con semirremolque de lona en ruta',
     poster: tractorasHiRoad,
   },
+  {
+    id: 'dos-unidades-ruta',
+    src: '/videos/hero-dos-unidades-ruta.mp4',
+    title: 'Unidades en Ruta',
+    badge: '',
+    alt: 'Dos unidades de Transporte Colussi circulando en ruta',
+    poster: flotaContrapicado,
+  },
 ];
 
 export const HERO_SLIDES: HeroSlide[] = [
