@@ -4,11 +4,21 @@ import { IMAGES } from '../config/assets';
 
 // Notas internas (no publicar en el HTML):
 //
-// "Desde 2000": trayectoria confirmada por el cliente el 27/07. No redondear al
-// editar — de 2000 a 2026 son 26 años, y "más de 25 años" es la forma segura si
-// se reformula la frase. OJO: la ficha del planificador
-// (NEGOCIO/clientes/transporte-colussi/datos.md) todavía lo lista como "a
-// confirmar"; el dato quedó desincronizado y hay que corregirlo ahí.
+// 🔴 EL AÑO DE FUNDACIÓN SALIÓ DE TODO EL SITIO (29/07). Estuvo publicado como
+// "Desde 2000" y se sacó porque **Franco no está seguro de que sea esa fecha**.
+// Antes figuraba como confirmado por el cliente el 27/07; esa confirmación
+// quedó en duda, así que se aplica hueco honesto > dato inventado.
+//
+// Lo que sí se puede afirmar es "más de 25 años", que se sostiene con
+// cualquier arranque anterior a 2001 y es lo que quedó en el H2 y en la
+// sección de estadísticas. **No devolver una fecha exacta al sitio —ni al
+// texto ni al JSON-LD— hasta que Romualdo la confirme.**
+//
+// También se eliminaron los tres badges que había debajo de este bloque
+// ("Desde el año 2000", "Flota 100% propia", "Centro de distribución propio en
+// Fontana"). Antes de sacarlos se verificó que los dos claims que valían
+// siguen vivos: los dos están en el párrafo de confianza operativa de más
+// abajo, y "flota propia" además en el Hero y en la FAQ.
 //
 // Misión, visión y valores son TEXTUALES del brief de la empresa. No se
 // reescriben ni se "mejoran": son texto institucional del cliente. Una
@@ -28,12 +38,6 @@ import { IMAGES } from '../config/assets';
 // Guadalupe Norte. No llamar a Fontana "base operativa" a secas: se confunde
 // con la sede.
 
-const BADGES = [
-  'Desde el año 2000',
-  'Flota 100% propia',
-  'Centro de distribución propio en Fontana (Chaco)',
-];
-
 const VALORES = [
   'Escuchar al cliente',
   'Atentos a las oportunidades de mejoras',
@@ -52,20 +56,11 @@ const VALORES = [
           Más de 25 años conectando la producción del noreste argentino
         </h2>
         <p class="text-lg text-neutral-600 mb-5 leading-relaxed">
-          Desde 2000, nacimos, crecimos y nos desarrollamos en el NEA. Brindar el mejor servicio no solo es una filosofía, es el trabajo de todos los días, que se valora gracias al talento y dedicación de nuestros colaboradores que se integran trabajando en equipo profesionalmente.
+          Nacimos, crecimos y nos desarrollamos en el NEA. Brindar el mejor servicio no solo es una filosofía, es el trabajo de todos los días, que se valora gracias al talento y dedicación de nuestros colaboradores que se integran trabajando en equipo profesionalmente.
         </p>
-        <p class="text-lg text-neutral-600 mb-8 leading-relaxed">
+        <p class="text-lg text-neutral-600 leading-relaxed">
           Know How, unidades de última generación y una base de cross-docking ubicada en el corazón mismo del noreste argentino.
         </p>
-
-        <ul class="flex flex-wrap gap-3">
-          {BADGES.map((badge) => (
-            <li class="inline-flex items-center gap-2 bg-white border border-neutral-200 rounded-xl px-4 py-2 text-sm font-semibold text-neutral-800">
-              <span class="w-2 h-2 rounded-full bg-brand-red shrink-0"></span>
-              {badge}
-            </li>
-          ))}
-        </ul>
       </div>
 
       <div class="lg:col-span-5 relative">

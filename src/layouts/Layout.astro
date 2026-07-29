@@ -58,8 +58,14 @@ const organizationSchema = {
       email: SITE.contact.email,
       telephone: SITE.contact.phoneRaw,
       taxID: '30-71137821-5', // confirmado por el cliente 27/07
-      // 2000 → 2026 son 26 años. No redondear al reutilizar este dato en texto visible.
-      foundingDate: '2000', // confirmado por el cliente 27/07
+      // 🔴 `foundingDate` ELIMINADO el 29/07. Estaba en '2000' como confirmado
+      // por el cliente, pero Franco puso esa fecha en duda y la sacamos del
+      // texto visible del sitio. **Si no se afirma en la página, tampoco puede
+      // afirmarse acá — y menos acá.** El JSON-LD es la capa que define la
+      // identidad de la empresa ante los buscadores, y esta empresa tiene tres
+      // homónimos contaminando sus resultados: un dato dudoso en el schema
+      // hace exactamente lo contrario de lo que vinimos a resolver. Se
+      // devuelve cuando Romualdo confirme el año.
       areaServed: [
         { '@type': 'State', name: 'Chaco' },
         { '@type': 'State', name: 'Formosa' },

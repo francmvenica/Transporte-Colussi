@@ -26,10 +26,13 @@ export const STATS: Stat[] = [
   // terrestre es 40.075 km, o sea el 97,6% de una vuelta. Se conserva el km
   // al mes, que es el dato verificable. Marcado a Franco.
   {
-    value: 'Una vuelta a la tierra',
-    label: 'Por semana · más de 170.000 km al mes',
+    value: 'Una vuelta a la tierra por semana',
+    label: 'Más de 170.000 km al mes',
     icon: 'Globe',
     valueSize: 'phrase',
   },
-  { value: '+25 años', label: 'En la ruta desde el año 2000', icon: 'Calendar' },
+  // El año de fundación salió de todo el sitio el 29/07: Franco no está seguro
+  // de que sea 2000, así que no se afirma. "+25 años" es la forma segura — se
+  // sostiene con cualquier fecha de arranque anterior a 2001.
+  { value: '+25 años', label: 'De trayectoria', icon: 'Calendar' },
 ];
