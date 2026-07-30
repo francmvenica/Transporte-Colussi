@@ -64,7 +64,7 @@ import 'leaflet/dist/leaflet.css';
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-brand-black"></span> Nuestras bases</span>
           </div>
 
-          <div id="colussi-interactive-map" class="h-[520px] w-full rounded-2xl"></div>
+          <div id="colussi-interactive-map" class="h-[460px] sm:h-[600px] lg:h-[700px] w-full rounded-2xl"></div>
         </div>
       </div>
 
@@ -160,7 +160,7 @@ import 'leaflet/dist/leaflet.css';
     const map = L.map('colussi-interactive-map', {
       zoomControl: true,
       scrollWheelZoom: false // a propósito: que el visitante pueda scrollear la página sin que la rueda del mouse quede "atrapada" haciendo zoom en el mapa
-    }).setView([-28.8, -58.8], 6);
+    }).setView([-28.8, -58.8], 6); // encuadre de arranque; lo ajusta el fitBounds del final
 
     // Tiles de un servicio externo (CARTO, sobre datos OpenStreetMap): el mapa
     // depende de la disponibilidad de ese tercero para pintar el fondo (calles,
@@ -211,14 +211,28 @@ import 'leaflet/dist/leaflet.css';
     // con Calle 7 351. Resistencia queda como ciudad del corredor Chaco nada
     // más, sin la marca de hub que antes le atribuía el CD ajeno.
     //
-    // Entre Ríos (Paraná, Gualeguaychú, Concordia) sacadas a propósito: el mapa
-    // de rutas troncales del propio cliente no marca ninguna ciudad entrerriana
-    // como destino — la RN 14 cruza la provincia camino a Paso de los Libres,
-    // pero es tránsito, no cobertura (mismo criterio que ya aplican
-    // corridors.ts y la versión anterior de este mismo componente, ninguno de
-    // los dos las incluye). Se prefirió sacarlas antes que inventar, sin
-    // precedente visual en el resto del sitio, un tratamiento de "ciudad de
-    // paso" distinto del de "ciudad de cobertura".
+    // 🔴 ENTRE RÍOS VOLVIÓ AL MAPA EL 30/07, y esto REVIERTE una decisión que
+    // estaba anotada como "no re-litigar". Conviene entender por qué cambió, no
+    // solo que cambió:
+    //
+    // La decisión vieja sacaba Paraná, Gualeguaychú y Concordia porque el mapa
+    // de troncales del propio cliente no marca ninguna ciudad entrerriana como
+    // DESTINO: la RN 14 cruza la provincia camino a Paso de los Libres, así que
+    // era tránsito, no cobertura. El argumento sigue siendo correcto — lo que
+    // cambió es que Franco pidió explícitamente marcarlas "así como están las
+    // otras ciudades", junto con Rosario, Santa Fe, Salto y Zárate.
+    //
+    // Se resolvió por el ROL y no sacándolas: cada una lleva "Corredor RN 12" /
+    // "Corredor RN 14", que dice ciudad SOBRE el corredor, no destino de
+    // cobertura. Así el mapa muestra por dónde pasan sin afirmar que reparten
+    // ahí, que era exactamente el riesgo que la decisión vieja evitaba.
+    // ⚠️ `corridors.ts` sigue sin listarlas como destino, y está bien: son dos
+    // cosas distintas. Si alguien las agrega allá, eso sí sería afirmar cobertura.
+    //
+    // La RAMA OESTE (Buenos Aires → Salto → Firmat → Rosario) también entró el
+    // 30/07: Romualdo había dejado la duda de si faltaba una rama y Franco la
+    // confirmó. Geometría por OSRM, igual que el resto (491,7 km, 3.325 → 350
+    // puntos). "Salto" y "Firmat" dejaron de ser nombres dudosos.
     interface CityNode {
       name: string;
       role: string;
@@ -228,6 +242,14 @@ import 'leaflet/dist/leaflet.css';
 
     const cities: CityNode[] = [
       { name: "BUENOS AIRES", role: "Origen de los corredores", coords: [-34.6037, -58.3816] },
+      { name: "Zárate", role: "Corredor RN 12", coords: [-34.0955, -59.0245] },
+      { name: "Salto", role: "Rama oeste", coords: [-34.2918, -60.2545] },
+      { name: "Firmat", role: "Rama oeste", coords: [-33.4581, -61.4860] },
+      { name: "Rosario", role: "Corredor Santa Fe", coords: [-32.9594, -60.6617] },
+      { name: "Santa Fe", role: "Corredor RN 11", coords: [-31.6187, -60.7020] },
+      { name: "Paraná", role: "Corredor RN 12", coords: [-31.7330, -60.5299] },
+      { name: "Gualeguaychú", role: "Corredor RN 14", coords: [-33.0079, -58.5110] },
+      { name: "Concordia", role: "Corredor RN 14", coords: [-31.3973, -58.0173] },
       { name: "San Cristóbal", role: "Corredor Oeste", coords: [-30.3120, -61.2323] },
       { name: "Tostado", role: "Corredor Oeste", coords: [-29.2319, -61.7694] },
       { name: "Villa Ángela", role: "Sudoeste Chaqueño", coords: [-27.5779, -60.7153] },
@@ -280,6 +302,20 @@ import 'leaflet/dist/leaflet.css';
         className: 'text-xs bg-neutral-900 text-white border-0 rounded-lg px-2 py-1 shadow-md'
       });
     });
+
+    // 🔴 EL MAPA SE ENCUADRA SOLO CON SU CONTENIDO, no con un centro/zoom fijo.
+    // Antes arrancaba en setView([-28.8,-58.8], 6), calibrado a mano para la red
+    // de ese momento: al sumar la rama oeste y las ciudades del sur el 30/07,
+    // **Salto, Zárate y Firmat quedaron fuera del encuadre** — o sea, se
+    // agregaron y no se veían. Un centro fijo envejece cada vez que la red
+    // cambia, y el síntoma es silencioso: nada se rompe, simplemente no está.
+    // Con fitBounds sobre las rutas, cualquier tramo que se sume queda dentro.
+    // El padding evita que las puntas (Asunción arriba, Buenos Aires abajo)
+    // queden pegadas al borde.
+    const bounds = L.latLngBounds([]);
+    Object.keys(TRUNK_ROUTES).forEach(r => TRUNK_ROUTES[r].forEach(p => bounds.extend(p)));
+    cities.forEach(c => bounds.extend(c.coords));
+    map.fitBounds(bounds, { padding: [24, 24] });
   };
 
   document.addEventListener('DOMContentLoaded', initMap);

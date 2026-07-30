@@ -1,6 +1,5 @@
 ---
 import { Image } from 'astro:assets';
-import { SITE } from '../config/site';
 import { HERO_VIDEOS, HERO_VIDEO_SLIDE_MS } from '../config/hero';
 
 // Notas internas (no publicar en el HTML):
@@ -130,9 +129,6 @@ const getVideoUrl = (src: string) => {
   </div>
   <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 w-full">
     <div class="max-w-3xl">
-      <p class="text-brand-red font-semibold text-sm sm:text-base uppercase tracking-widest mb-4 animate-fade-up">
-        {SITE.tagline}
-      </p>
       <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl text-white leading-tight mb-6 animate-fade-up font-display" style="animation-delay: 0.1s">
         Conectamos el NEA<br />
         <span class="text-brand-red font-brand-italic">con todo el país</span>

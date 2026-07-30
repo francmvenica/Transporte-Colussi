@@ -11,7 +11,12 @@ export interface Sede {
 
 export const SITE = {
   name: 'Transporte Colussi',
-  tagline: 'Transporte de cargas a nivel nacional',
+  // ⚠️ `tagline` SE ELIMINÓ el 30/07. Era el eyebrow rojo del hero
+  // ("Transporte de cargas a nivel nacional") y Romualdo preguntó en la revisión
+  // del 29/07 si se sacaba —en el audio quedó deformado como "cámara de cargas"—;
+  // Franco lo confirmó el 30/07. Se sacó también el campo y no solo el render:
+  // config muerto se lee después como si hiciera algo. Si vuelve a hacer falta un
+  // eyebrow en el hero, va junto con el título nuevo, que Franco está escribiendo.
   description:
     'Transporte de cargas generales y contenedores desde Buenos Aires hacia el NEA (Chaco, Formosa, Corrientes, Misiones y norte de Santa Fe) y al Mercosur. Flota propia con monitoreo satelital 24/7.',
   url: 'https://www.transportecolussi.com.ar',
@@ -25,10 +30,16 @@ export const SITE = {
       return `https://wa.me/${this.number}?text=${encodeURIComponent(this.message)}`;
     },
   },
+  // 🔴 EL TELÉFONO QUE SE MUESTRA ES EL 498191 (decisión de Franco, 30/07). Es el
+  // que está pintado en las lonas de los camiones, o sea el que la gente ya
+  // asocia a la empresa. Cierra el pendiente "cuál teléfono es el principal",
+  // que venía abierto desde el 27/07 con los dos conviviendo sin jerarquía.
+  // El 545990 no se borra: sigue visible como secundario en la ficha de Casa
+  // Central. Y el de WhatsApp es OTRO (el de Leticia, tráfico) y no se toca.
   contact: {
     email: 'trafico@transportecolussi.com.ar',
-    phone: '03482-545990',
-    phoneRaw: '+543482545990',
+    phone: '03482-498191',
+    phoneRaw: '+543482498191',
   },
   sedes: [
     {
@@ -39,12 +50,14 @@ export const SITE = {
       // es el de la localidad, no depende de la calle.
       address: 'Calle 7 351, Guadalupe Norte, Santa Fe',
       email: 'trafico@transportecolussi.com.ar',
-      phone: '03482-545990',
-      phoneRaw: '+543482545990',
-      // Dos teléfonos: 54-5990 es el confirmado con la dirección nueva; 498191 está
-      // pintado en las unidades. Pendiente confirmar cuál es el principal.
-      phoneSecondary: '03482-498191',
-      phoneSecondaryRaw: '+543482498191',
+      // 🔴 INVERTIDOS EL 30/07: el principal es el 498191, el pintado en las
+      // lonas. Cierra el pendiente que estaba anotado justo acá abajo desde el
+      // 27/07 ("confirmar cuál es el principal"). Los dos siguen a la vista, en
+      // este orden — decisión de Franco.
+      phone: '03482-498191',
+      phoneRaw: '+543482498191',
+      phoneSecondary: '03482-545990',
+      phoneSecondaryRaw: '+543482545990',
     },
     {
       name: 'CD Noreste',

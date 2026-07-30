@@ -82,10 +82,16 @@ export interface Client {
 export const CLIENTS: Client[] = [
   // ── Principales (12): cuadro congelado inicial + repetidos en la cinta.
   // El ORDEN de este bloque es el que se ve en el primer pantallazo, así que
-  // importa. Walmart va 1º y Dorinka 2º por pedido de Romualdo — Dorinka no
-  // está porque falta su logo (ver nota de arriba), así que el 2º puesto queda
-  // ocupado por el que sigue hasta que el asset llegue.
-  { name: 'Walmart', image: walmart, featured: true },
+  // importa. Este orden lo definió Franco el 30/07.
+  //
+  // ⚠️ WALMART VA ÚLTIMO POR DECISIÓN DE FRANCO, y conviene saber que eso
+  // CONTRADICE lo que dictó Romualdo en la reunión del 29/07: "Walmart y Dorinka
+  // van juntos, 1º Walmart y 2º Dorinka". Se le marcó la contradicción y
+  // respondió "Walmart dejalo último". No se re-litiga — pero queda anotado
+  // acá para poder contrastarlo cuando llegue la foto con el orden que Romualdo
+  // se comprometió a pasar, que es la que manda sobre este bloque.
+  //
+  // Dorinka sigue sin aparecer: falta su logo (ver nota de arriba).
   { name: 'Molinos Río de la Plata', image: molinosRioDeLaPlata, featured: true },
   { name: 'Nestlé', image: nestle, featured: true },
   { name: 'Arcor', image: arcor, featured: true },
@@ -97,6 +103,7 @@ export const CLIENTS: Client[] = [
   { name: 'Colven', image: colven, featured: true },
   { name: 'CHEP', image: chep, featured: true },
   { name: 'Malsa', image: malsa, featured: true }, // el corte: "hasta Malsa"
+  { name: 'Walmart', image: walmart, featured: true }, // ⚠️ último por decisión de Franco, ver nota
   // ── Resto: aparecen una vez en la cinta, en la misma línea que los de arriba.
   { name: 'Quilmes', image: quilmes, featured: false }, // ⚠️ a confirmar con la foto
   { name: 'Molino Cañuelas', image: molinoCanuelas, featured: false }, // ⚠️ "también puede ir arriba"
