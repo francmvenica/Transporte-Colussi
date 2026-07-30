@@ -1,7 +1,20 @@
-// Specs de flota. Fuente: brief de la empresa (2026-07-26).
+// Specs de flota. Fuente: brief de la empresa (2026-07-26), actualizado con lo
+// que dictó Romualdo en la revisión del 29/07.
+//
 // Antigüedad: historial completo para que nadie la "corrija" de nuevo — el brief
 // original decía 5 años, Romualdo corrigió a 7 el 14/07 ("5 es muy mentiroso"),
 // y el cliente confirmó 6 el 27/07. Vale el último dato: 6 años.
+//
+// 🔴 TRACTORAS (29/07): ENTRA LA 360, SALE LA 420. Quedan 320/330/360/380/410.
+// Es un dato de flota real, no una lista de catálogo: si vuelve a aparecer la
+// 420, está mal.
+//
+// 🔴 SEMIRREMOLQUES (29/07): se sumaron los ESCALABLES ("cuando teníamos esto no
+// teníamos escalables, ahora sí") y los tonelajes que dio — escalable de 55,5 t
+// brutas con tractor de dos ejes, otro escalable de 52,5 t, convencional 45 t.
+// Y se sacó "con trabas para contenedor" de la frase de la baranda volcable:
+// "eso no se necesita, la baranda, para el contenedor". La capacidad para
+// contenedores vive en su propia ficha de servicio, no acá.
 export interface FleetSpec {
   label: string;
   value: string;
@@ -11,11 +24,11 @@ export const FLEET_SPECS: FleetSpec[] = [
   {
     label: 'Semirremolques',
     value:
-      'Capacidad de 28 y 30 pallets (14,50 m / 15,30 m). Curtain sider, baranda volcable de arco y lona y unidades escalables.',
+      'Capacidad de 28 y 30 pallets (14,50 m / 15,30 m). Curtain sider, baranda volcable de arco y lona y unidades escalables de 52,5 y 55,5 toneladas brutas (convencional, 45 t).',
   },
   {
     label: 'Unidades Tractoras',
-    value: '320 / 330 / 380 / 410 / 420 CV. Distintas potencias para cada servicio.',
+    value: '320 / 330 / 360 / 380 / 410 CV. Distintas potencias para cada servicio.',
   },
   {
     label: 'Gestión de la Flota',
