@@ -43,10 +43,25 @@
   --color-neutral-100: #F5F5F4;
   --color-neutral-50: #FAFAFA;
 
-  /* Archivo (Omnibus-Type) reemplaza a Inter — manual de marca 27/07. Carga
-     completa (roman variable wght 400-800 / wdth 75-108% + itálica fija en
-     wght 800 / wdth 100%) en Layout.astro. */
+  /* Archivo (Omnibus-Type) es la tipográfica de TEXTO y DATOS — los dos roles
+     que siguen siendo suyos desde el 30/07 (los titulares se fueron a Chivo,
+     ver abajo). Se carga como roman variable wght 400-800 / wdth 75-100% en
+     Layout.astro; la itálica de Archivo ya NO se carga, porque el único lugar
+     que la usaba era la itálica de marca y ese rol también pasó a Chivo. */
   --font-sans: 'Archivo', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Chivo (Omnibus-Type, la hermana de Archivo) es la tipográfica de DISPLAY
+   desde el 30/07 — actualización de los roles pedida por el cliente.
+   ⚠️ POR QUÉ NO ESTÁ EN @theme: Tailwind v4 genera una utilidad por cada
+   token `--font-*`, así que un `--font-display` ahí crearía un
+   `.font-display { font-family }` que choca de nombre con la utilidad de rol
+   `font-display` de más abajo (dos reglas homónimas, gana la última del
+   build). Como custom property suelta no genera utilidad y no hay colisión.
+   Fallback a Archivo y no al sans del sistema: si Chivo no carga, el titular
+   cae en la otra tipográfica de la marca, que ya está descargada. */
+:root {
+  --font-display: 'Chivo', 'Archivo', ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
@@ -70,32 +85,64 @@ body {
 }
 
 /* ---------------------------------------------------------------------
-   Roles tipográficos de marca (manual del cliente, 27/07). Archivo se
-   cargó como variable: wght 400↔800 y wdth 75%↔108% en un rango continuo,
-   más la itálica fija en wght 800 / wdth 100% (ver Layout.astro). Los 4
-   roles quedan como utilidades de Tailwind v4 (@utility → se combinan con
-   las clases de tamaño/color que ya existen en cada componente, no hace
-   falta reescribirlas).
+   Roles tipográficos de marca — ACTUALIZADOS POR EL CLIENTE EL 30/07.
+   Dos tipográficas, cuatro roles: Chivo para los dos roles de titular,
+   Archivo para los dos de contenido.
+
+   | Rol             | Familia | Peso | Ancho      | Color                    |
+   |-----------------|---------|------|------------|--------------------------|
+   | Display         | Chivo   | 900  | (sin eje)  | #FFF sobre oscuro / 800  |
+   | Itálica marca   | Chivo   | 900  | (sin eje)  | brand-red                |
+   | Texto           | Archivo | 400  | 100%       | neutral-800              |
+   | Datos           | Archivo | ctx  | 75% + tab  | del contexto             |
+
+   Lo que cambió respecto del manual del 27/07: Display e Itálica pasaron de
+   Archivo 800/108% a **Chivo 900 sin font-stretch**, y el tracking del
+   Display de -0.025em a -0.03em. Texto y Datos NO se tocaron.
+
+   ⚠️ CHIVO NO TIENE EJE DE ANCHO. El `font-stretch: 108%` que tenía el
+   Display no se "quitó por gusto": en Chivo no existe a qué aplicarlo, y
+   dejarlo escrito haría que el navegador sintetice o ignore. Por eso la
+   spec dice "sin font-stretch" — es la única opción posible, no una
+   preferencia estética.
+
+   ESCALERA DE COLOR DE TEXTO (para que no vuelva a driftear). El rol Texto
+   define UN color base, neutral-800, y es el que llevan todas las oraciones
+   de contenido sobre fondo claro. Los otros dos niveles son derivados, no
+   roles, y se usan solo para lo que es genuinamente subordinado:
+     · neutral-800 → párrafos y titulares sobre fondo claro (el rol)
+     · neutral-500/600 → microcopy: labels en mayúscula, breadcrumbs,
+       summaries de controles, segundas líneas de leyenda
+     · neutral-200/300/400 y #FFF → todo lo que va sobre fondo oscuro
+       (Hero, Stats, Header, Footer). Ahí neutral-800 sería invisible: no es
+       una excepción al rol, es física.
+   `text-neutral-900` quedó ELIMINADO como color de texto en todo el sitio
+   (sobrevive solo como `bg-neutral-900`): tener titulares a 900 y párrafos
+   a 800 dejaba dos negros compitiendo. Se verifica con un grep, no a ojo.
    --------------------------------------------------------------------- */
 
-/* Display (títulos): h1/h2 del sitio. */
+/* Display (titulares): h1/h2 y los titulares de bloque de tamaño ≥ text-2xl.
+   NO los títulos de tarjeta (text-base/text-lg) ni los del footer: esos son
+   etiquetas y viven en el rol Texto, en negrita. */
 @utility font-display {
-  font-weight: 800;
-  font-stretch: 108%;
-  letter-spacing: -0.025em;
+  font-family: var(--font-display);
+  font-weight: 900;
+  letter-spacing: -0.03em;
 }
 
 /* Itálica de marca (destacados): "rima con el 11,65° del logo". Es un
    acento puntual, no un estilo de párrafo — reservado a un highlight
    dentro de un titular (ver el span rojo del Hero), no para usar suelto. */
 @utility font-brand-italic {
+  font-family: var(--font-display);
   font-style: italic;
-  font-weight: 800;
+  font-weight: 900;
 }
 
-/* Texto (párrafos): mismo valor que ya aplica el <body>. Existe como clase
-   explícita para el caso de un componente que necesite reafirmarlo dentro
-   de un contexto que ya cambió tamaño o peso. */
+/* Texto (párrafos): Archivo 400 / wdth 100%, mismo valor que ya aplica el
+   <body>. Existe como clase explícita para el caso de un componente que
+   necesite reafirmarlo dentro de un contexto que ya cambió tamaño o peso.
+   No lleva font-family: hereda Archivo del <body>. */
 @utility font-body {
   font-weight: 400;
   font-stretch: 100%;
@@ -103,9 +150,13 @@ body {
   line-height: 1.6;
 }
 
-/* Datos (specs, patentes, cifras, tablas): condensado + números tabulares
-   para que columnas de dígitos alineen. El peso lo pone el contexto (400 u
-   800, los dos cargados en este ancho) — no lo fija esta utilidad. */
+/* Datos (specs, patentes, cifras, tablas): Archivo condensado al 75% +
+   números tabulares para que columnas de dígitos alineen. El peso lo pone el
+   contexto (400 u 800, los dos cargados en este ancho) y el color también —
+   no los fija esta utilidad. Dónde se usa hoy: cifras de estadísticas,
+   specs de flota (pallets, metros, CV, antigüedad) y teléfonos.
+   ⚠️ Nunca combinar con `font-display`: Chivo no tiene eje de ancho y el
+   condensado no se aplicaría. Los datos son Archivo, siempre. */
 @utility font-data {
   font-stretch: 75%;
   font-variant-numeric: tabular-nums;

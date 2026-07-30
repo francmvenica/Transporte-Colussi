@@ -121,16 +121,28 @@ const organizationSchema = {
   ],
 };
 
-// Nota interna (no publicar en el HTML) — bloque de <link> de Fonts (Archivo):
-// Fonts: Archivo (Omnibus-Type), manual de marca 27/07. Reemplaza a Inter.
-// Roman: rango variable wght 400-800 / wdth 75-108% (los 4 roles de marca
-// viven en ese rectángulo, ver global.css). Itálica: PIN a un solo punto
-// exacto (wght 800 / wdth 100%, lo único que pide "Itálica de marca") en
-// vez de rango — medido: pinear el punto baja ese archivo de ~99 KB a
-// ~15,6 KB (-84%). El rango de roman, en cambio, no se pudo achicar más
-// ahí: Google sirve el mismo binario tanto si se pide 400-800/75-108 como
-// si se pide el rango completo 100-900/62-125 (probado con curl antes de
-// cerrar esta URL) — la ganancia real de peso está toda en la itálica.
+// Nota interna (no publicar en el HTML) — bloque de <link> de Fonts:
+//
+// DOS familias, un solo request (Google Fonts acepta varios `family=` en la
+// misma URL; dos <link> serían dos round-trips para nada).
+//
+// ARCHIVO (Omnibus-Type) — roles Texto y Datos. Roman variable wght 400-800 /
+// wdth 75-100%. Dos cambios el 30/07, cuando los titulares pasaron a Chivo:
+//   · Se DEJÓ DE PEDIR LA ITÁLICA. Era exclusiva del rol "Itálica de marca",
+//     que ahora es Chivo. Deja de bajar un archivo de 16.016 bytes (medido).
+//   · El tope de wdth bajó de 108% a 100%: el 108 lo usaba solo el Display.
+//     No cambia un byte —Google sirve el mismo binario para cualquier rango,
+//     verificado con curl— pero deja declarado lo que el sitio realmente usa.
+//
+// CHIVO (Omnibus-Type, hermana de Archivo) — roles Display e Itálica de marca,
+// los dos en 900. Se pide PINEADO a `0,900;1,900` en vez de un rango: Chivo no
+// tiene eje de ancho y no se usa ningún otro peso, así que Google devuelve dos
+// woff2 estáticos chicos en lugar del variable completo. Medido sobre el
+// subset latin: 13.972 bytes el roman + 14.912 la itálica.
+//
+// BALANCE NETO DEL CAMBIO: +13.972 +14.912 -16.016 = **+12.868 bytes** en
+// latin. Dos familias cuestan menos de 13 KB extra porque los dos archivos
+// que entran están pineados y el que sale era un variable.
 ---
 
 <!doctype html>
@@ -160,7 +172,7 @@ const organizationSchema = {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,75..108,400..800;1,100,800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&family=Chivo:ital,wght@0,900;1,900&display=swap"
       rel="stylesheet"
     />
 
