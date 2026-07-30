@@ -1,87 +1,143 @@
 ---
 import { Image } from 'astro:assets';
-import { CLIENTS, SECTORS } from '../config/clients';
+import { CLIENTS, SECTORS, type Client } from '../config/clients';
 
 const joinWithY = (items: string[]) =>
   items.length > 1
     ? `${items.slice(0, -1).join(', ')} y ${items[items.length - 1]}`
     : items[0];
 
-// Zona 1 (arriba, estática y a mayor tamaño) / Zona 2 (abajo, cinta animada):
-// la separación sale del booleano `featured` de cada cliente en config/clients.ts.
-// Para mover un cliente de zona: cambiar ese booleano ahí. No hace falta tocar
-// este componente.
-const FEATURED_CLIENTS = CLIENTS.filter((c) => c.featured);
-const MARQUEE_CLIENTS = CLIENTS.filter((c) => !c.featured);
-
 const clientsText = joinWithY(CLIENTS.map((c) => c.name));
-const marqueeClientsText = joinWithY(MARQUEE_CLIENTS.map((c) => c.name));
-const featuredClientsText = joinWithY(FEATURED_CLIENTS.map((c) => c.name));
 // Los sectores van separados por COMAS, no con joinWithY: uno de ellos es
 // "papel y tissue", que ya trae su propia "y" adentro. Con el join queda
 // "...papel y tissue y madera", que se lee como un error. Con comas, no.
 const sectorsText = SECTORS.map((s) => s.toLowerCase()).join(', ');
 
-// Logos de la cinta (marquee), derivados de los clientes NO destacados. Para sumar
-// un cliente nuevo a la cinta: agregarlo en config/clients.ts con featured: false
-// (o sumar el logo ahí directamente). El alt sale solo del `name`, y la cantidad
-// de repeticiones y el desplazamiento de la animación (más abajo) se recalculan
-// solos a partir de LOGOS.length.
-const LOGOS = MARQUEE_CLIENTS.map((c) => ({
-  img: c.image,
-  alt: `${c.name}, cliente de Transporte Colussi`,
-}));
+const PRINCIPALES = CLIENTS.filter((c) => c.featured);
+const RESTO = CLIENTS.filter((c) => !c.featured);
 
-// La cinta repite el set de logos varias veces seguidas para no dejar huecos en
-// pantallas anchas y para que el loop sea continuo (sin salto visible). El
-// truco: armar UNA franja larga con REPEAT copias idénticas y animarla
-// trasladándola exactamente el ancho de UNA copia (100 / REPEAT %) — al llegar
-// ahí, la copia siguiente cae justo donde arrancó la primera. Por eso el
-// desplazamiento se calcula a partir de REPEAT en vez de dejarlo fijo: si
-// mañana se suman o sacan logos de la cinta, REPEAT se ajusta solo y el loop
-// sigue siendo perfecto (el piso de 2 copias es el mínimo matemático para que
-// el truco funcione).
-const MIN_LOGO_SLOTS = 12;
-const REPEAT = Math.max(2, Math.ceil(MIN_LOGO_SLOTS / LOGOS.length));
-const marqueeLogos = Array.from({ length: REPEAT * LOGOS.length }, (_, i) => LOGOS[i % LOGOS.length]);
-const marqueeOffsetPct = (100 / REPEAT).toFixed(4);
-const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida no cambia al sumar logos
+const COLUMNAS = 3;
+
+// Reparto por módulo para conservar el orden de config/clients.ts: la columna
+// `col` se queda con los índices col, col+3, col+6… Con 12 principales caen 4
+// por columna, y esas 4 filas son exactamente el cuadro congelado inicial.
+const repartir = (items: Client[], col: number) => items.filter((_, i) => i % COLUMNAS === col);
+
+// Intercala las repeticiones de los principales entre el resto, a distancia
+// pareja. Es el "repetir los importantes, pero que se separe la repetición" de
+// Romualdo: concatenadas al final quedarían todas juntas, que es lo contrario.
+// Las posiciones se calculan sobre el total para que queden equiespaciadas.
+const intercalar = (resto: Client[], repeticiones: Client[]): Client[] => {
+  if (!repeticiones.length) return resto;
+  const total = resto.length + repeticiones.length;
+  const posiciones = new Set(
+    repeticiones.map((_, k) => Math.floor(((k + 0.5) * total) / repeticiones.length)),
+  );
+  const salida: Client[] = [];
+  let ri = 0;
+  let pi = 0;
+  for (let i = 0; i < total; i++) {
+    if (posiciones.has(i) && pi < repeticiones.length) salida.push(repeticiones[pi++]);
+    else if (ri < resto.length) salida.push(resto[ri++]);
+    else if (pi < repeticiones.length) salida.push(repeticiones[pi++]);
+  }
+  return salida;
+};
+
+// Un `alt` por cliente y nada más: el mismo logo aparece varias veces (las dos
+// copias del loop + las repeticiones de los principales) y un lector de
+// pantalla no tiene por qué escuchar "Nestlé, cliente de Transporte Colussi"
+// seis veces. La primera aparición lo anuncia; las demás van aria-hidden.
+const yaAnunciado = new Set<string>();
+
+const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
+  const principales = repartir(PRINCIPALES, col);
+  const ciclo = [...principales, ...intercalar(repartir(RESTO, col), principales)];
+  // DOS copias idénticas y el loop cierra desplazando exactamente una (-50%):
+  // al llegar al final de la primera, la segunda está justo donde arrancó.
+  const items = [...ciclo, ...ciclo].map((cliente) => {
+    const primera = !yaAnunciado.has(cliente.name);
+    yaAnunciado.add(cliente.name);
+    return { ...cliente, primera };
+  });
+  return {
+    items,
+    // La duración sale del largo del ciclo para que las tres columnas corran a
+    // la MISMA velocidad aunque tengan distinta cantidad de logos. Con una
+    // duración fija, la columna más corta se vería más rápida.
+    duracion: `${(ciclo.length * 1.9).toFixed(1)}s`,
+    reverse: col === 1,
+  };
+});
 
 // Notas internas (no publicar en el HTML):
 //
-// LOS NOMBRES DE CLIENTES EN TEXTO PLANO NO SE BORRAN. Están plegados en el
-// <details> de abajo, no eliminados, y la diferencia importa: es el entregable
-// central de lo que se vendió. Medido en el baseline del 25/07 — el sitio
-// aparece SOLO en las consultas cuyas palabras están escritas literales en él.
-// Los motores no leen los logos y no infieren lo que falta. Los `alt` tampoco
-// alcanzan: la cinta muestra 19 y los destacados 8, pero la lista completa es
-// la que tiene que estar legible. Si alguien vuelve a proponer "los logos
-// hablan solos", la respuesta es que hablan para las personas, no para las
-// máquinas — y este trabajo se vendió para las dos.
+// 🔴 UNA SOLA CINTA, NO DOS ZONAS (reescrito el 2026-07-30). Hasta ahora la
+// sección tenía destacados estáticos arriba + cinta horizontal abajo, y ESO era
+// lo que el cliente pidió sacar el 29/07. Juan Manuel: "que no quede claro que
+// estamos discriminando (…) que estén todos en la misma línea, pero que Arcor,
+// Nestlé y Molino se vean más". Romualdo, mirando la sección publicada: "esto
+// queda lindo, pero me dice que estos son los principales". La solución no era
+// reordenar las dos zonas: es que haya una sola y que la jerarquía la den la
+// posición inicial y la repetición, no una separación visible.
 //
-// Se pliega con CSS (<details> nativo), NUNCA con JavaScript: así el texto
-// viaja siempre en el HTML y los crawlers lo leen aunque nadie lo despliegue.
-// Mismo patrón que el detalle de Services.astro.
+// LA MECÁNICA, tal como la pidieron:
+//   · Arranca CONGELADA en los 12 principales — "el primer pantallazo tiene que
+//     ser los principales (…) la primera imagen te deja fijado los 11, 12".
+//   · El movimiento empieza CUANDO EL USUARIO LLEGA, no antes ("después empieza
+//     a correr"), y con una PAUSA de 1,2 s para que el ojo alcance a registrar
+//     el cuadro congelado. Sin esa pausa, "el primer pantallazo" no existe
+//     nunca: la cinta ya está corriendo cuando el visitante llega.
+//   · Corre en VERTICAL con foco central: la columna del medio en sentido
+//     inverso, los logos del centro a color y los extremos apagándose. Es el
+//     efecto que propuso Romualdo y aprobó Juan Manuel ("Me gusta. Probemos.").
+//   · Los principales se REPITEN, separados, para que "cuando el lector baja
+//     esté en las empresas que a nosotros nos interesan" (Juan Manuel).
+//
+// 🔑 EL FOCO CENTRAL SOLO SE APLICA MIENTRAS SE MUEVE, y no es un detalle: si
+// el gris de los extremos estuviera activo en reposo, el cuadro congelado
+// mostraría 6 principales a color y 6 apagados — o sea, volvería a decir "estos
+// son los importantes" justo en la sección donde nos pidieron que eso no se
+// notara. En reposo van los 12 a color; el foco entra con el movimiento.
+//
+// EL FOCO VA CON JS Y NO SE PUEDE HACER SOLO CON CSS: el degradado de máscara
+// apaga los extremos por opacidad, pero "el centro a color" necesita saber qué
+// logo está en la banda central en cada momento, y eso no es expresable en CSS.
+// Lo resuelve un IntersectionObserver cuyo root es el viewport de la cinta,
+// recortado por rootMargin a la banda del medio. La clase `is-js` la agrega el
+// script: SIN JavaScript los logos quedan todos a color (nunca todos en gris) y
+// el degradado sigue funcionando igual.
+//
+// El filtro va en el DIV que envuelve al logo, no en el <img>: los estilos de
+// Astro son scopeados y no alcanzan al markup que renderiza <Image>, así que
+// apuntarle al img exigiría `:global()`. Sobre el div cae igual y sin trampas.
+//
+// LA LISTA EN TEXTO NO SE TOCA. Sigue plegada en el <details> de abajo, que
+// Juan Manuel validó explícitamente ("eso está perfecto"), y sigue viajando
+// entera en el HTML: es el entregable central de lo que se vendió, y los
+// motores no leen logos. Su reparo quedó anotado: "el tema es que hay que ver
+// si lo lee bien". Se pliega con CSS, NUNCA con JS.
+//
+// NO se replicó la lista de tags visible que traía la maqueta debajo de la
+// cinta: duplicaba la lista del <details> a la vista, que es exactamente lo que
+// se había plegado para no hacer ruido visual (decisión del 28/07).
 //
 // SUBTÍTULO: la primera línea ("Los clientes ocupan la posición más
 // importante...") es TEXTUAL del brief del cliente — su filosofía operativa.
-// Es texto institucional de ellos: se copia, no se mejora. Un rediseño
-// propuso reemplazarla; se conservó por decisión de Franco y se sumó la
-// segunda línea debajo, que además absorbe los sectores.
+// Es texto institucional de ellos: se copia, no se mejora.
 //
-// BARRA "24/7 / Flota 100% Propia / NEA" — ELIMINADA el 28/07 por redundante.
-// Antes de sacarla se verificó que los tres claims viven en otro lado:
-// flota propia en About, Hero y faq.ts; monitoreo satelital en About, Hero,
-// fleet.ts, services.ts, faq.ts y CoverageMap; centro de tráfico en About,
-// fleet.ts y CoverageMap. No se perdió nada de lo comprometido. De paso muere
-// el conflicto de los dos "100%" compitiendo con el de Stats.astro.
+// El H2 lo dictó Romualdo por audio de WhatsApp el 30/07 a las 10:01 y va tal
+// cual: "Agradecemos a las siguientes empresas que confiaron en nosotros". No
+// era solo pasar "confían" a "confiaron" —eso salió de la reunión del 29/07,
+// porque "si ponemos 'confían' quiere decir que están actualmente" y varios ya
+// no operan con ellos— es el título entero. No reformularlo.
 ---
 
 <section id="clientes" class="bg-neutral-100 border-y border-neutral-200 py-20 lg:py-28">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
-      <h2 class="text-3xl sm:text-4xl text-neutral-800 mb-4 font-display">
-        Empresas que confían en Transporte Colussi
+      <h2 class="text-3xl sm:text-4xl text-neutral-800 mb-4 font-display text-balance">
+        Agradecemos a las siguientes empresas que confiaron en nosotros
       </h2>
       <p class="text-lg text-neutral-800 max-w-3xl mx-auto">
         Los clientes ocupan la posición más importante en la empresa, hacemos lo que es mejor para ellos siempre.
@@ -92,46 +148,33 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
     </div>
 
     <div
-      class="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-10 md:gap-x-12 md:gap-y-14 mb-14"
+      id="clientes-cinta"
+      class="vmarquee relative mx-auto max-w-3xl"
       role="group"
-      aria-label={`Clientes destacados de Transporte Colussi: ${featuredClientsText}`}
+      aria-label={`Clientes de Transporte Colussi: ${clientsText}`}
     >
-      {FEATURED_CLIENTS.map((client) => (
-        <div class="flex items-center justify-center h-20 md:h-24">
-          <Image
-            src={client.image}
-            alt={`${client.name}, cliente de Transporte Colussi`}
-            class="max-h-16 md:max-h-20 w-auto object-contain"
-          />
-        </div>
-      ))}
-    </div>
-
-    <p class="text-center text-sm font-medium text-neutral-500 uppercase tracking-wide mb-8">
-      Otras firmas y marcas regionales que operan con nosotros
-    </p>
-
-    <div
-      class="marquee-viewport relative overflow-hidden mb-10"
-      role="group"
-      aria-label={`Otras empresas cliente de Transporte Colussi: ${marqueeClientsText}`}
-    >
-      <div
-        class="marquee-track flex items-center gap-10 md:gap-16 w-max"
-        style={`--marquee-offset: -${marqueeOffsetPct}%; --marquee-duration: ${marqueeDurationS}s;`}
-      >
-        {marqueeLogos.map((logo, i) => (
+      <div class="grid grid-cols-3 gap-3 sm:gap-6 h-full">
+        {columnas.map((columna) => (
           <div
-            class="logo-item flex items-center justify-center h-16 shrink-0"
-            aria-hidden={i >= LOGOS.length ? 'true' : undefined}
+            class:list={['vcol flex flex-col gap-3 sm:gap-6', { rev: columna.reverse }]}
+            style={`--vdur: ${columna.duracion}`}
           >
-            <Image src={logo.img} alt={logo.alt} class="h-14 w-auto object-contain" />
+            {columna.items.map((cliente) => (
+              <div class="vlogo flex items-center justify-center h-20 sm:h-24 shrink-0">
+                <Image
+                  src={cliente.image}
+                  alt={cliente.primera ? `${cliente.name}, cliente de Transporte Colussi` : ''}
+                  aria-hidden={cliente.primera ? undefined : 'true'}
+                  class="max-h-12 sm:max-h-16 max-w-[85%] w-auto object-contain"
+                />
+              </div>
+            ))}
           </div>
         ))}
       </div>
     </div>
 
-    <details class="clients-detail max-w-3xl mx-auto text-center">
+    <details class="clients-detail max-w-3xl mx-auto text-center mt-10">
       <summary class="text-sm font-medium text-neutral-500 hover:text-brand-red transition-colors cursor-pointer select-none">
         Ver la lista completa de clientes
       </summary>
@@ -149,66 +192,154 @@ const marqueeDurationS = REPEAT * 6; // 6s "por copia": la velocidad percibida n
 </section>
 
 <style>
-  /* El pliegue es SOLO presentación: el texto está siempre en el HTML, así que
-     los crawlers lo leen aunque nadie abra el <details>. Si alguien lo
-     "mejora" renderizando el contenido con JS al hacer clic, el texto deja de
-     existir para los motores y se rompe justo lo que la sección tiene que
-     lograr. Mismo criterio que el detalle plegable de Services.astro. */
-  .clients-detail > summary {
-    list-style: none;
-  }
-  .clients-detail > summary::-webkit-details-marker {
-    display: none;
-  }
-  .clients-detail > summary::after {
-    content: '+';
-    margin-left: 0.4rem;
-    display: inline-block;
-  }
-  .clients-detail[open] > summary::after {
-    content: '–';
+  /* La altura son exactamente 4 filas + sus 3 gaps, y de ahí sale que el cuadro
+     congelado muestre 12 logos (4 filas × 3 columnas) = los 12 principales.
+     Si se cambia el alto de la fila (h-20/h-24) o el gap, hay que cambiar esto
+     o el cuadro deja de coincidir con la cantidad de principales. */
+  .vmarquee {
+    height: calc(5rem * 4 + 0.75rem * 3);
+    overflow: hidden;
+    /* El degradado apaga los extremos: no es decoración, es la mitad del efecto
+       que pidió Romualdo (la otra mitad es el color del centro, que va por JS).
+       Es suave a propósito —15%/85%— para que en reposo las 4 filas del cuadro
+       congelado se lean: con el 25% de la maqueta, la primera y la última fila
+       quedaban casi invisibles y el "primer pantallazo" mostraba 6 logos, no 12. */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
   }
 
-  .marquee-viewport {
-    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-  }
-
-  .marquee-track {
-    animation: marquee var(--marquee-duration, 24s) linear infinite;
-  }
-
-  @keyframes marquee {
-    from {
-      transform: translateX(0);
-    }
-    to {
-      transform: translateX(var(--marquee-offset));
+  @media (min-width: 640px) {
+    .vmarquee {
+      height: calc(6rem * 4 + 1.5rem * 3);
     }
   }
 
-  /* Escala de grises -> color solo con hover real (mouse/trackpad). En touch no
-     existe hover: si el filtro no estuviera detrás de este media query, los
-     logos quedarían grises para siempre en celular. Con el media query, en
-     touch directamente no se aplica ninguna de las dos reglas y se ven a color
-     desde el arranque. Solo aplica a la cinta (zona 2): los destacados de la
-     zona 1 van siempre a color, son los que tienen que leerse de un vistazo. */
-  @media (hover: hover) {
-    .logo-item {
-      filter: grayscale(1);
-      opacity: 0.6;
-      transition: filter 0.3s ease, opacity 0.3s ease;
-    }
-    .logo-item:hover {
-      filter: grayscale(0);
-      opacity: 1;
-    }
+  .vcol {
+    animation: vscroll var(--vdur, 24s) linear infinite;
+    /* PAUSADA POR DEFECTO. El script la larga cuando la sección entra en
+       pantalla y después de la pausa del cuadro congelado. Sin esto el
+       movimiento arranca con la carga de la página y el visitante llega cuando
+       los principales ya pasaron. */
+    animation-play-state: paused;
+  }
+
+  .vcol.rev {
+    animation-name: vscroll-rev;
+  }
+
+  .is-running .vcol {
+    animation-play-state: running;
+  }
+
+  @keyframes vscroll {
+    from { transform: translateY(0); }
+    to { transform: translateY(-50%); }
+  }
+
+  /* La columna del medio corre al revés. Arranca en -50% —o sea, en el inicio
+     de la segunda copia— así que en reposo muestra los mismos logos que las
+     otras dos: el cuadro congelado queda parejo en las tres. */
+  @keyframes vscroll-rev {
+    from { transform: translateY(-50%); }
+    to { transform: translateY(0); }
+  }
+
+  /* Foco central. Va sobre el div (no sobre el img) y SOLO con `is-running`:
+     en reposo los 12 principales van todos a color. Ver la nota del
+     frontmatter — si el gris estuviera activo en reposo, el cuadro congelado
+     volvería a marcar quiénes son los importantes. */
+  .vmarquee.is-js .vlogo {
+    transition: filter 0.7s ease, opacity 0.7s ease;
+  }
+
+  .vmarquee.is-js.is-running .vlogo {
+    filter: grayscale(1);
+    opacity: 0.4;
+  }
+
+  .vmarquee.is-js.is-running .vlogo.is-focus {
+    filter: none;
+    opacity: 1;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .marquee-track {
+    /* Sin movimiento queda el cuadro congelado con los principales a color, que
+       es justamente el "primer pantallazo" que pidió el cliente: degrada a la
+       vista que ellos querían, no a algo roto. */
+    .vcol {
       animation: none;
-      transform: translateX(0);
+    }
+    .vmarquee.is-js.is-running .vlogo {
+      filter: none;
+      opacity: 1;
     }
   }
 </style>
+
+<script>
+  const cinta = document.getElementById('clientes-cinta');
+  const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (cinta && !sinMovimiento) {
+    cinta.classList.add('is-js');
+
+    // Foco central: el root es la cinta, recortada por rootMargin a la banda del
+    // medio (40% de la altura). El logo que intersecta esa banda va a color. Se
+    // recrea en resize porque rootMargin va en píxeles y la altura de la cinta
+    // cambia con el breakpoint.
+    const logos = cinta.querySelectorAll('.vlogo');
+    let foco: IntersectionObserver | null = null;
+
+    const observarFoco = () => {
+      if (foco) foco.disconnect();
+      const alto = cinta.clientHeight;
+      const recorte = Math.round((alto - alto * 0.4) / 2);
+      foco = new IntersectionObserver(
+        (entradas) => {
+          for (const entrada of entradas) {
+            entrada.target.classList.toggle('is-focus', entrada.isIntersecting);
+          }
+        },
+        { root: cinta, rootMargin: `-${recorte}px 0px -${recorte}px 0px` },
+      );
+      for (const logo of logos) foco.observe(logo);
+    };
+
+    observarFoco();
+
+    let reajuste: number;
+    window.addEventListener('resize', () => {
+      clearTimeout(reajuste);
+      reajuste = window.setTimeout(observarFoco, 200);
+    });
+
+    // Arranque: el movimiento empieza cuando la sección entra en pantalla, con
+    // 1,2 s de pausa para que se vea el cuadro congelado. Se pausa al salir —no
+    // hay razón para animar lo que nadie mira— pero la pausa del arranque no se
+    // repite: se muestra una vez, en la primera llegada.
+    let espera: number;
+    let yaArranco = false;
+
+    const arranque = new IntersectionObserver(
+      (entradas) => {
+        for (const entrada of entradas) {
+          if (entrada.isIntersecting) {
+            clearTimeout(espera);
+            espera = window.setTimeout(
+              () => {
+                cinta.classList.add('is-running');
+                yaArranco = true;
+              },
+              yaArranco ? 0 : 1200,
+            );
+          } else {
+            clearTimeout(espera);
+            cinta.classList.remove('is-running');
+          }
+        }
+      },
+      { threshold: 0.25 },
+    );
+    arranque.observe(cinta);
+  }
+</script>
