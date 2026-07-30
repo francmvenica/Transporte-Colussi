@@ -126,18 +126,27 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
 // importante...") es TEXTUAL del brief del cliente — su filosofía operativa.
 // Es texto institucional de ellos: se copia, no se mejora.
 //
-// El H2 lo dictó Romualdo por audio de WhatsApp el 30/07 a las 10:01 y va tal
-// cual: "Agradecemos a las siguientes empresas que confiaron en nosotros". No
-// era solo pasar "confían" a "confiaron" —eso salió de la reunión del 29/07,
-// porque "si ponemos 'confían' quiere decir que están actualmente" y varios ya
-// no operan con ellos— es el título entero. No reformularlo.
+// El H2 lo dictó Romualdo por audio de WhatsApp el 30/07 a las 10:01:
+// "Agradecemos a las siguientes empresas que confiaron en nosotros". No era
+// solo pasar "confían" a "confiaron" —eso salió de la reunión del 29/07, porque
+// "si ponemos 'confían' quiere decir que están actualmente" y varios ya no
+// operan con ellos— es el título entero.
+// ⚠️ Franco sacó "siguientes" el mismo 30/07 al verlo publicado: "Agradecemos a
+// LAS EMPRESAS que confiaron en nosotros". Es un ajuste de él sobre el dictado,
+// no un descuido — "las siguientes" anuncia una lista y abajo hay una cinta en
+// movimiento, no una lista. El resto del título no se toca.
+//
+// El `max-w-3xl` no es decorativo: obliga al título a partirse en DOS líneas en
+// desktop. A ancho completo entraba en una sola línea larguísima y el bloque de
+// texto quedaba desbalanceado contra los dos párrafos de abajo, que son
+// angostos. Con `text-balance` las dos líneas quedan parejas.
 ---
 
 <section id="clientes" class="bg-neutral-100 border-y border-neutral-200 py-20 lg:py-28">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
-      <h2 class="text-3xl sm:text-4xl text-neutral-800 mb-4 font-display text-balance">
-        Agradecemos a las siguientes empresas que confiaron en nosotros
+      <h2 class="text-3xl sm:text-4xl text-neutral-800 mb-4 font-display max-w-3xl mx-auto text-balance">
+        Agradecemos a las empresas que confiaron en nosotros
       </h2>
       <p class="text-lg text-neutral-800 max-w-3xl mx-auto">
         Los clientes ocupan la posición más importante en la empresa, hacemos lo que es mejor para ellos siempre.
