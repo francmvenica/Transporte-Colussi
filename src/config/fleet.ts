@@ -11,7 +11,7 @@ export const FLEET_SPECS: FleetSpec[] = [
   {
     label: 'Semirremolques',
     value:
-      'Capacidad de 28 y 30 pallets (14,50 m / 15,30 m). Curtain Sider / barandas volcables con trabas para contenedor.',
+      'Capacidad de 28 y 30 pallets (14,50 m / 15,30 m). Curtain sider, baranda volcable de arco y lona y unidades escalables.',
   },
   {
     label: 'Unidades Tractoras',

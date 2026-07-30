@@ -44,7 +44,7 @@ export const CORRIDORS: Corridor[] = [
   {
     title: 'Internacional: Brasil y Paraguay',
     description:
-      'Transporte internacional de cargas al Mercosur por dos pasos fronterizos: Clorinda hacia Paraguay, con experiencia en fibra de algodón, y Paso de los Libres hacia Brasil, en alianza operativa con Polivias.',
+      'Transporte internacional de cargas al Mercosur por dos pasos fronterizos: Clorinda hacia Paraguay y Paso de los Libres hacia Brasil, con alianzas operativas con empresas de los dos países.',
     cities: ['Clorinda → Paraguay', 'Paso de los Libres → Brasil'],
   },
 ];

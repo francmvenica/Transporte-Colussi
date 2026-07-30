@@ -115,10 +115,24 @@ export const CLIENTS: Client[] = [
 ];
 
 // Sectores atendidos (brief de la empresa, sección 4 y 9).
+// Rubros que se ven en la línea debajo del H2 de Clientes. Ampliados el 30/07
+// con los que dictó Romualdo para el servicio internacional (café, chocolate,
+// química, autopartista, envases): van también acá porque para que un motor
+// asocie la empresa a un rubro, el rubro tiene que estar escrito en el sitio —
+// es el argumento que dio él mismo, "si la idea es llenar la página para que la
+// IA lea toda la clientela que tuvimos". "Industria alimenticia" no se sumó
+// aparte: ya estaba como "Alimentos".
+// ⚠️ Esta misma lista está hardcodeada en la respuesta de rubros de
+// config/faq.ts. Si se toca una, se toca la otra.
 export const SECTORS: string[] = [
   'Consumo masivo',
   'Alimentos',
+  'Café',
+  'Chocolate',
   'Yerba mate',
   'Papel y tissue',
   'Madera',
+  'Química',
+  'Autopartista',
+  'Envases',
 ];
