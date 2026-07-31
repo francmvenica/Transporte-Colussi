@@ -63,7 +63,7 @@ export const SERVICES: Service[] = [
     summary:
       'Picking, almacenaje y distribución en Chaco, Formosa, Corrientes, Misiones y norte de Santa Fe.',
     description:
-      'Base de picking y almacenaje en Fontana, Chaco, que articula con las plantas de producción de nuestros clientes: retiramos la producción desde su planta y armamos el pedido acá, con cargas consolidadas. Trabajamos como socio estratégico de la operación, no viaje por viaje.',
+      'Base de picking y almacenaje en Fontana, Chaco, que articula con las plantas de producción de nuestros clientes: retiramos la producción desde su planta y armamos el pedido acá, con cargas consolidadas. Trabajamos como socio estratégico de la operación.',
   },
   {
     icon: 'Globe',
