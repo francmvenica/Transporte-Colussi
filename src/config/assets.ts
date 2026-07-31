@@ -105,6 +105,10 @@ export const IMAGES = {
     {
       src: centroDistribucion,
       alt: 'Unidades de Transporte Colussi bajo la playa cubierta del centro de distribución',
+      // Única foto VERTICAL de la galería (más alta que ancha) dentro de una caja
+      // apaisada: el recorte centrado se comía los camiones, que están en el
+      // tercio inferior, y dejaba techo y cielo. Se baja el encuadre.
+      position: '50% 78%',
     },
     {
       src: patioOperacion,
