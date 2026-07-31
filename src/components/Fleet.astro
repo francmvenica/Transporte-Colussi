@@ -14,6 +14,17 @@ import { FLEET_SPECS } from '../config/fleet';
 // El VALOR de cada spec lleva `font-data` (Archivo condensado 75% + cifras
 // tabulares) desde el 30/07: es el caso de manual del rol Datos — pallets,
 // metros, CV y años de antigüedad. El LABEL no lo lleva: es texto, no dato.
+//
+// 🔴 LA GALERÍA NO LLEVA TÍTULOS SOBRE LAS FOTOS (pedido de Franco, 31/07).
+// Cada tarjeta mostraba un texto al pasar el mouse ("Flota propia", "En ruta")
+// sobre un degradado oscuro. Se eliminaron los dos: el degradado existía solo
+// para dar contraste a ese texto, así que sin texto no tenía función. Queda el
+// zoom del hover, que sí aporta. La descripción de cada foto vive en su `alt`
+// —que es lo que leen los buscadores y los lectores de pantalla—, no en la UI.
+// Si alguien propone devolver los títulos, esto se decidió mirando el sitio.
+//
+// La galería son 9 fotos y el grid es de 3 columnas: cierra en 3 filas exactas.
+// Agregar o sacar una deja la última fila coja — si cambia la cantidad, revisar.
 ---
 
 <section id="unidades" class="py-20 lg:py-28 bg-neutral-100">
@@ -40,10 +51,6 @@ import { FLEET_SPECS } from '../config/fleet';
             loading="lazy"
             quality={75}
           />
-          <div class="absolute inset-0 bg-gradient-to-t from-neutral-900/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <p class="absolute bottom-4 left-4 text-white font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
-            {img.label}
-          </p>
         </div>
       ))}
     </div>
