@@ -26,21 +26,17 @@
 // sola; la descripción sigue viva en el `alt`, que es lo que leen los
 // buscadores y los lectores de pantalla.
 //
-// 🔴 LA FLOTA TIENE DOS TELÉFONOS DISTINTOS PINTADOS EN LAS LONAS. Verificado
-// el 31/07 ampliando las fotos al máximo, no leído al pasar:
-//   · hero/camion-colussi-curtain-sider-ruta-nacional → "Tel: 03482 - 498191"
-//   · flota-colussi-equipo-completo-lona              → "Tel: 03482 - 492191"
-// Difieren en el tercer dígito (8 vs 2) y las dos unidades están publicadas en
-// el sitio: una en el hero, la otra en esta galería. El sitio muestra el 498191
-// como principal, así que coincide con una de las dos.
+// ✅ EL TELÉFONO DE LAS LONAS ES 03482-498191, y coincide con el del sitio.
+// Quedó anotado un rato como "hay dos números distintos" porque en un recorte
+// de baja resolución el 8 de `flota-colussi-equipo-completo-lona` parecía un 2
+// (un pliegue de la lona lo cruza justo al medio). **Franco lo desmintió y al
+// ampliar al máximo se confirmó: dice 498191**, igual que la unidad del hero.
+// Queda escrito para que nadie vuelva a "descubrir" el falso hallazgo: si una
+// cifra se lee en una foto, se amplía hasta que no quede duda ANTES de anotarla.
 //
-// Y una tercera lona trae un WhatsApp que tampoco está en el sitio:
-//   · flota-colussi-curtain-sider → "+549 3482 558666"  (el sitio usa 549842)
-//
-// NO se toca ninguno de los números por cuenta propia: puede que haya lonas
-// viejas conviviendo con nuevas, o una mal pintada. Es pregunta para el
-// cliente. Lo que no se puede seguir afirmando es que "498191 es el de las
-// lonas" a secas — hay lonas que dicen otra cosa. Ver estado-construccion.md §4.
+// Dato menor y real: la lona de `flota-colussi-curtain-sider` muestra el
+// WhatsApp +549 3482 558666, que no es el que usa el sitio (549842). Son dos
+// canales distintos de la empresa, no una contradicción.
 
 // Astro image imports (processed by build pipeline)
 import heroCamiones from '../assets/images/hero-camiones-contenedores-ruta.jpg';

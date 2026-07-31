@@ -71,11 +71,12 @@ export const SITE = {
     facebook:
       'https://www.facebook.com/Transporte-Colussi-411695562520418/',
   },
-  // ⚠️ PENDIENTE (27/07): estas coordenadas (-28.938237,-59.561470) corresponden
-  // a la dirección VIEJA (Ruta 11 Km. 814). Con el cambio de sede a Calle 7 351,
-  // Guadalupe Norte, el mapa embebido apunta al lugar equivocado. NO inventar
-  // coordenadas nuevas — falta geolocalizar la dirección nueva contra Google Maps
-  // y reemplazar este embedUrl.
+  // ✅ VERIFICADAS el 2026-07-31: estas coordenadas están BIEN y no hay que
+  // tocarlas. Estuvieron anotadas como "de la dirección vieja (Ruta 11 Km 814)"
+  // desde el 27/07, y era falso: el reverse geocoding las ubica en **Calle 7
+  // nº 344, Guadalupe Norte**, o sea a **41 metros** de Calle 7 351. Misma
+  // cuadra. A zoom 15 el embed muestra exactamente la sede.
+  // El pendiente nació de suponer, no de medir, y sobrevivió tres días.
   maps: {
     embedUrl:
       'https://maps.google.com/maps?q=-28.938237,-59.561470&hl=es&z=15&output=embed',

@@ -236,6 +236,11 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
      Si se cambia el alto de la fila (h-20/h-24) o el gap, hay que cambiar esto
      o el cuadro deja de coincidir con la cantidad de principales. */
   .vmarquee {
+    /* El gap vive acá como variable porque lo necesitan dos cosas a la vez: la
+       clase de Tailwind que separa los logos (gap-3 / sm:gap-6) y el
+       padding-bottom de .vcol que cierra el loop. Si se cambia uno hay que
+       cambiar el otro, o el salto de la vuelta vuelve. */
+    --vgap: 0.75rem;
     height: calc(5rem * 4 + 0.75rem * 3);
     overflow: hidden;
     /* El degradado apaga los extremos: no es decoración, es la mitad del efecto
@@ -249,11 +254,33 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
 
   @media (min-width: 640px) {
     .vmarquee {
+      --vgap: 1.5rem; /* acompaña a sm:gap-6 — ver la nota de --vgap arriba */
       height: calc(6rem * 4 + 1.5rem * 3);
     }
   }
 
   .vcol {
+    /* 🔴 EL PADDING NO ES ESPACIADO: ES LO QUE HACE QUE EL LOOP CIERRE.
+       La animación desplaza -50% de la altura de la columna, y con 2 copias de
+       C logos eso sería exacto… si hubiera 2C gaps. Pero `gap` pone separación
+       ENTRE elementos: con 2C logos hay 2C-1 gaps, uno menos. Así que -50%
+       queda MEDIO GAP corto y la cinta pega un salto de 12 px en cada vuelta.
+       Medido el 31/07: desplazaba 1548 px donde tenía que desplazar 1560.
+       Ese salto es lo que Franco veía como "es como que se restablece" —
+       reportado dos veces, y la primera se atribuyó entero al orden de los
+       logos, que era otro bug distinto (ese sí, el de Walmart).
+       Este padding agrega el gap que falta al final: la altura pasa a ser
+       2C·(logo+gap) y -50% cae justo en el inicio de la segunda copia. */
+    padding-bottom: var(--vgap);
+    /* 🔴 Y ESTA LÍNEA ARREGLA EL SALTO GRANDE, que era peor que el del gap.
+       Las tres columnas viven en un grid, que por defecto las estira todas a la
+       altura de la más alta. Las de 13 logos miden 3120 px; la de 12 mide 2880
+       de contenido pero el grid la estiraba a 3120 igual — y como translateY(-50%)
+       se calcula sobre la altura del elemento, esa columna desplazaba 1560 px
+       donde tenía que desplazar 1440: **120 px de salto en cada vuelta.**
+       Con `align-self: start` cada columna conserva su altura real.
+       ⚠️ Y esa era justo la columna de Walmart, que es donde Franco lo notó. */
+    align-self: start;
     animation: vscroll var(--vdur, 24s) linear infinite;
     /* PAUSADA POR DEFECTO. El script la larga cuando la sección entra en
        pantalla y después de la pausa del cuadro congelado. Sin esto el

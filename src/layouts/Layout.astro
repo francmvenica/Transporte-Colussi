@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { SITE } from '../config/site';
+import { SERVICES } from '../config/services';
 
 interface Props {
   title?: string;
@@ -39,10 +40,15 @@ const ogImageURL = `${SITE.url}/images/og-image.png`;
 // (reemplaza a 'Ruta Nacional 11 Km 814', que era un dato equivocado del brief
 // original). El postalCode 3574 no cambia: es el de la localidad, no de la calle.
 //
-// geo: sigue OMITIDO. Las coordenadas que había (-28.938237,-59.561470) estaban
-// puestas para la dirección vieja y quedaron desactualizadas con el cambio de
-// sede. NO inventar coordenadas nuevas — falta geolocalizar Calle 7 351,
-// Guadalupe Norte contra Google Maps.
+// geo: AGREGADO el 31/07, con la coordenada de Calle 7 351 geolocalizada contra
+// Nominatim. La nota anterior decía que las coordenadas que había eran "de la
+// dirección vieja" y **era falso**: el reverse geocoding las ubica en Calle 7
+// nº 344, a 41 metros de la sede. El pendiente nació de suponer en vez de
+// medir, se copió a tres archivos y sobrevivió tres días. **Solo estaba mal el
+// pin del mapa Leaflet, que caía 10 km al oeste, en Avellaneda.**
+//
+// Se declara geo SOLO en la casa central. El CD de Fontana sigue sin geo: la
+// altura de Calle 31 nº 770 no resuelve en Nominatim y acá no se inventa.
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -82,6 +88,25 @@ const organizationSchema = {
         'Transporte internacional al Mercosur',
         'Semirremolques curtain sider',
       ],
+      // Catálogo de servicios estructurado (31/07). Declara los 4 servicios con
+      // el MISMO título que muestra la página — no una versión "mejorada" — para
+      // que el vocabulario por el que buscan a la empresa (contenedores,
+      // logística NEA, internacional) exista también en la capa que leen los
+      // buscadores, y no solo dentro de un `<details>` plegado.
+      hasOfferCatalog: {
+        '@type': 'OfferCatalog',
+        name: 'Servicios de Transporte Colussi',
+        itemListElement: SERVICES.map((servicio) => ({
+          '@type': 'Offer',
+          itemOffered: {
+            '@type': 'Service',
+            name: servicio.title,
+            description: servicio.summary,
+            provider: { '@id': `${SITE.url}/#empresa` },
+            areaServed: { '@type': 'Country', name: 'Argentina' },
+          },
+        })),
+      },
       sameAs: [SITE.social.facebook],
     },
     {
@@ -99,9 +124,17 @@ const organizationSchema = {
         postalCode: '3574',
         addressCountry: 'AR',
       },
-      // geo: OMITIDO — las coordenadas viejas correspondían a "Ruta 11 Km 814" y
-      // no son válidas para Calle 7 351. NO inventar coordenadas nuevas; pendiente
-      // de geolocalizar la dirección real. Ver comentario de maps.embedUrl en site.ts.
+      // geo VERIFICADO el 31/07 contra Nominatim: Calle 7 351, Guadalupe Norte.
+      // Estuvo omitido tres días por un pendiente que resultó falso — las
+      // coordenadas que había caían a 41 m de la sede, o sea siempre fueron
+      // buenas. Declararlo importa acá más que en un sitio cualquiera: con tres
+      // homónimos disputándole la identidad, la posición es de los desempates
+      // más fuertes que se le puede dar a un buscador.
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: -28.938012,
+        longitude: -59.561138,
+      },
     },
     {
       '@type': 'LocalBusiness',

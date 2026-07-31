@@ -200,12 +200,18 @@ import 'leaflet/dist/leaflet.css';
     // (corrección explícita de Romualdo, "acá no tenemos nada"), y con la
     // leyenda de "nodos" al lado, "Casa Central" se leía como instalación
     // operativa.
-    // ⚠️ PENDIENTE: las coordenadas de abajo (heredadas del trazado que llegó
-    // para este mapa) corresponden a la dirección VIEJA. NO se inventan
-    // coordenadas nuevas acá — falta geolocalizar Calle 7 351 contra Google
-    // Maps. Mismo pendiente que site.ts (`maps.embedUrl`) y el JSON-LD de
-    // Layout.astro: son 3 lugares con el mismo dato viejo, para resolver juntos
-    // el día que se geolocalice la dirección real.
+    // ✅ COORDENADAS VERIFICADAS Y CORREGIDAS el 2026-07-31. El pin decía
+    // [-28.9382, -59.6644] y eso NO era "la dirección vieja" como estuvo
+    // anotado acá tres días: caía en el **municipio de Avellaneda, a 10 km**,
+    // que no es ni la sede vieja ni la nueva. Ahora usa Calle 7 351
+    // geolocalizada contra Nominatim.
+    //
+    // ⚠️ Y el "pendiente en 3 lugares" que decía esta nota era falso: se midió
+    // uno por uno. El iframe de site.ts apuntaba a **41 metros** de la sede
+    // real (o sea, siempre estuvo bien) y el JSON-LD de Layout.astro **omite**
+    // geo, así que no tenía ningún dato malo. **El único roto era este pin.**
+    // Moraleja: un pendiente heredado se verifica antes de propagarlo — este
+    // se copió a tres archivos sin que nadie midiera ninguno.
     //
     // Resistencia vs. Fontana: el CD (CDNoreste) está en Fontana, Chaco (Calle
     // 31 Nº770; site.ts `sedes[1]`), que es del Gran Resistencia pero NO es la
@@ -265,7 +271,7 @@ import 'leaflet/dist/leaflet.css';
       { name: "Sáenz Peña", role: "Centro Chaqueño (RN 16)", coords: [-26.7852, -60.4388] },
       { name: "Quitilipi", role: "Centro Chaqueño (RN 16)", coords: [-26.8708, -60.2150] },
       { name: "Reconquista", role: "Corredor RN 11", coords: [-29.1416, -59.6467] },
-      { name: "Guadalupe Norte", role: "Oficinas centrales", coords: [-28.9382, -59.6644] },
+      { name: "Guadalupe Norte", role: "Oficinas centrales", coords: [-28.9380, -59.5611] },
       { name: "Fontana", role: "Centro de distribución", coords: [-27.4172, -59.0342], isHub: true },
       { name: "Resistencia", role: "Corredor Chaco", coords: [-27.4514, -58.9867] },
       { name: "Formosa", role: "Corredor RN 11", coords: [-26.1849, -58.1731] },
