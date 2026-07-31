@@ -23,25 +23,55 @@ const COLUMNAS = 3;
 // por columna, y esas 4 filas son exactamente el cuadro congelado inicial.
 const repartir = (items: Client[], col: number) => items.filter((_, i) => i % COLUMNAS === col);
 
-// Intercala las repeticiones de los principales entre el resto, a distancia
-// pareja. Es el "repetir los importantes, pero que se separe la repetición" de
-// Romualdo: concatenadas al final quedarían todas juntas, que es lo contrario.
-// Las posiciones se calculan sobre el total para que queden equiespaciadas.
-const intercalar = (resto: Client[], repeticiones: Client[]): Client[] => {
-  if (!repeticiones.length) return resto;
-  const total = resto.length + repeticiones.length;
-  const posiciones = new Set(
-    repeticiones.map((_, k) => Math.floor(((k + 0.5) * total) / repeticiones.length)),
+// Arma el ciclo de una columna: el bloque de principales adelante (es el cuadro
+// congelado) y después el resto, con los principales repetidos en el medio.
+//
+// 🔴 LA CUENTA SE HACE SOBRE EL CICLO COMPLETO Y EN CÍRCULO, no sobre el tramo
+// de atrás. Esa era la versión anterior y tenía un bug real, reportado por
+// Franco el 31/07 mirando el sitio publicado ("Walmart aparece muy seguido, es
+// como que se restablece"): repartía las repeticiones dentro del tramo
+// posterior sin saber que el ciclo arranca con el bloque de principales ni que
+// la cinta vuelve a empezar. En la columna de Walmart el ciclo TERMINABA en él
+// y el bloque lo traía de vuelta 4 lugares después — contra 6, 7 y 8 de los
+// demás. Ese amontonamiento en la costura es lo que se lee como un reinicio.
+//
+// La regla ahora son dos líneas. La repetición del principal que está en la
+// posición k va cerca de k + mitad del ciclo: así las dos apariciones quedan en
+// puntos opuestos y la separación es pareja para todos, medida dando la vuelta.
+// Es el "que se separe la repetición" de Romualdo, que con la versión anterior
+// no se cumplía justo para el último de cada columna.
+//
+// Y la segunda línea: el bloque de repeticiones va CON LOS PARES INTERCAMBIADOS,
+// no en el mismo orden que el bloque de arriba. Sin eso, la misma secuencia de
+// logos se repite idéntica a media vuelta y se lee como que la cinta volvió a
+// empezar — el otro síntoma que marcó Franco ("pasan dos veces las mismas
+// marcas"). Cambiar el orden cuesta un lugar de separación (mínimo 5 en vez
+// de 6) y a cambio ninguna secuencia se repite igual. Se eligió eso: con la
+// ventana de 4 filas que se ve, 5 alcanza para que un logo salga de pantalla
+// antes de volver, y el patrón repetido sí se nota.
+const armarCiclo = (principales: Client[], resto: Client[]): Client[] => {
+  if (!principales.length) return resto;
+  const largo = principales.length * 2 + resto.length;
+  const mitad = Math.floor(largo / 2);
+
+  // [0,1,2,3] -> [1,0,3,2]: intercambia de a pares. Con impares, el último queda.
+  const intercambiado = principales.map((_, k) =>
+    k % 2 === 0 ? Math.min(k + 1, principales.length - 1) : k - 1,
   );
-  const salida: Client[] = [];
+
+  const ciclo: (Client | undefined)[] = new Array(largo);
+  principales.forEach((cliente, k) => {
+    ciclo[k] = cliente; // el bloque del cuadro congelado
+  });
+  intercambiado.forEach((origen, k) => {
+    ciclo[(mitad + k) % largo] = principales[origen]; // la repetición, a media vuelta
+  });
+
+  // El resto rellena los huecos que quedan, en orden.
   let ri = 0;
-  let pi = 0;
-  for (let i = 0; i < total; i++) {
-    if (posiciones.has(i) && pi < repeticiones.length) salida.push(repeticiones[pi++]);
-    else if (ri < resto.length) salida.push(resto[ri++]);
-    else if (pi < repeticiones.length) salida.push(repeticiones[pi++]);
-  }
-  return salida;
+  for (let i = 0; i < largo; i++) if (!ciclo[i] && ri < resto.length) ciclo[i] = resto[ri++];
+
+  return ciclo.filter((c): c is Client => Boolean(c));
 };
 
 // Un `alt` por cliente y nada más: el mismo logo aparece varias veces (las dos
@@ -52,7 +82,7 @@ const yaAnunciado = new Set<string>();
 
 const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
   const principales = repartir(PRINCIPALES, col);
-  const ciclo = [...principales, ...intercalar(repartir(RESTO, col), principales)];
+  const ciclo = armarCiclo(principales, repartir(RESTO, col));
   // DOS copias idénticas y el loop cierra desplazando exactamente una (-50%):
   // al llegar al final de la primera, la segunda está justo donde arrancó.
   const items = [...ciclo, ...ciclo].map((cliente) => {
