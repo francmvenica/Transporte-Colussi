@@ -34,13 +34,18 @@ import 'leaflet/dist/leaflet.css';
 // leía como instalación operativa. Ahora dice "Oficinas centrales".
 //
 // 🔴 FONTANA FALTABA, siendo el ÚNICO centro de distribución real de la
-// empresa. El mapa marcaba nodos que no existen y no marcaba el que sí. Los
-// nodos operativos reales son dos: Fontana (cross-docking propio) y Posadas
-// (base de un tercero de autotransporte, por eso dice "Base operativa aliada" y
-// no algo que suene a instalación propia).
+// empresa. El mapa marcaba nodos que no existen y no marcaba el que sí.
 //
-// 🔴 EL PUNTO NEGRO AHORA MARCA SOLO LAS DOS BASES REALES: Fontana (CD propio)
-// y Posadas (base de un tercero aliado). La leyenda dice "Nuestras bases".
+// 🔴 POSADAS DEJÓ DE SER "BASE" EL 08/08 (`isHub` sacado, rol cambiado a
+// "Corredor Misiones"). Hasta ahora tenía `isHub: true` y el rol "Base
+// operativa aliada" — era la base de un tercero de autotransporte, no propia.
+// Motivo explícito de Romualdo: no exhibir dependencia del aliado que opera
+// ahí ("que no me genere una dependencia… después dice: mirá, este puso acá
+// que esta es mi base"). Posadas SIGUE en el mapa, como destino normal del
+// corredor de Misiones — no se pierde información, solo el énfasis de "base".
+//
+// 🔴 EL PUNTO NEGRO GRANDE AHORA ES SOLO PARA FONTANA, el único CD propio.
+// La leyenda dice "Nuestras bases" (genérico, no hace falta tocarla).
 // Antes marcaba también Buenos Aires, Guadalupe Norte, Clorinda y Paso de los
 // Libres bajo el rótulo "Nodos Operativos" — o sea, afirmaba instalaciones
 // donde hay un origen de corredor, una oficina y dos pasos fronterizos.
@@ -280,8 +285,13 @@ import 'leaflet/dist/leaflet.css';
       { name: "Bella Vista", role: "Corredor RN 12", coords: [-28.5083, -59.0433] },
       { name: "Corrientes", role: "Corredor NEA", coords: [-27.4692, -58.8306] },
       { name: "Curuzú Cuatiá", role: "Centro Correntino", coords: [-29.7917, -58.0560] },
+      // Geolocalizada contra Nominatim el 08/08 (sumada al corredor Buenos
+      // Aires–Corrientes, ver config/corridors.ts): -28.0529, -56.0184.
+      { name: "Gobernador Virasoro", role: "Corredor RN 14", coords: [-28.0529, -56.0184] },
       { name: "Paso de los Libres", role: "Paso Fronterizo Brasil", coords: [-29.7125, -57.0877] },
-      { name: "Posadas", role: "Base operativa aliada", coords: [-27.3671, -55.8961], isHub: true },
+      // isHub SACADO el 08/08: Posadas es base de un tercero, no propia — ver
+      // la nota de arriba. Sigue en el mapa como destino del corredor Misiones.
+      { name: "Posadas", role: "Corredor Misiones", coords: [-27.3671, -55.8961] },
       { name: "Oberá", role: "Corredor Misiones", coords: [-27.4850, -55.1203] },
       { name: "Eldorado", role: "Corredor Misiones RN 12", coords: [-26.4049, -54.6262] },
       { name: "Puerto Iguazú", role: "Fin del troncal Misiones", coords: [-25.6113, -54.5763] },

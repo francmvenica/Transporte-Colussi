@@ -21,6 +21,20 @@
 // "Casa central" pasó a "OFICINAS CENTRALES" en el corredor de Santa Fe: en
 // Guadalupe Norte no hay depósito, es oficina — corrección explícita de
 // Romualdo ("acá no tenemos nada (…) no tenemos un depósito").
+//
+// 🔴 2ª RONDA (08/08):
+//   · GOBERNADOR VIRASORO entra al corredor de Corrientes (ciudades + texto).
+//     Geolocalizado contra Nominatim (no a ojo): -28.0529, -56.0184 — el
+//     mismo pin se sumó a CoverageMap.astro.
+//   · "CARGAS COMPLETAS" SE REDUNDA EN LOS SEIS CORREDORES, pedido explícito
+//     y literal: "Siempre cargas completas. 'Distribución de cargas generales
+//     completas', ponele. Siempre redundarlo nuevamente, todo." Buenos
+//     Aires–Chaco ya decía "Cargas completas y contenedores" y no se tocó —es
+//     el ejemplo que el propio cliente aprobó sin saberlo—; los otros cinco
+//     se alinearon agregando "completas" (o "generales completas", como pidió
+//     él mismo) donde faltaba. No cambia la decisión de que "cargas
+//     completas" quede FUERA de la meta description y del JSON-LD: ahí es un
+//     pedido aparte y explícito, no una regla general para todo el sitio.
 export interface Corridor {
   title: string;
   description: string;
@@ -31,7 +45,7 @@ export const CORRIDORS: Corridor[] = [
   {
     title: 'Buenos Aires – Formosa',
     description:
-      'Transporte de cargas generales y contenedores desde Buenos Aires hacia Formosa y Clorinda —paso fronterizo hacia Paraguay, con extensión a Asunción—, con unidades conectadas a nuestro centro de tráfico durante todo el trayecto.',
+      'Transporte de cargas generales completas y contenedores desde Buenos Aires hacia Formosa y Clorinda —paso fronterizo hacia Paraguay, con extensión a Asunción—, con unidades conectadas a nuestro centro de tráfico durante todo el trayecto.',
     cities: ['Formosa', 'Clorinda', 'Asunción'],
   },
   {
@@ -43,25 +57,25 @@ export const CORRIDORS: Corridor[] = [
   {
     title: 'Buenos Aires – Santa Fe',
     description:
-      'Distribución y cargas generales entre Buenos Aires y Reconquista, en el norte de Santa Fe, con oficinas centrales sobre la Ruta Nacional 11 en Guadalupe Norte.',
+      'Distribución de cargas generales completas entre Buenos Aires y Reconquista, en el norte de Santa Fe, con oficinas centrales sobre la Ruta Nacional 11 en Guadalupe Norte.',
     cities: ['Reconquista'],
   },
   {
     title: 'Buenos Aires – Misiones',
     description:
-      'Transporte de contenedores y cargas generales desde Buenos Aires hacia Posadas, Eldorado, Oberá y Puerto Iguazú, dentro de nuestra cobertura regular del NEA.',
+      'Transporte de contenedores y cargas generales completas desde Buenos Aires hacia Posadas, Eldorado, Oberá y Puerto Iguazú, dentro de nuestra cobertura regular del NEA.',
     cities: ['Posadas', 'Eldorado', 'Puerto Iguazú', 'Oberá'],
   },
   {
     title: 'Buenos Aires – Corrientes',
     description:
-      'Cargas generales y contenedores desde Buenos Aires hacia la ciudad de Corrientes, Goya, Curuzú Cuatiá y Paso de los Libres —paso fronterizo hacia Brasil—, conectando con nuestro centro de distribución en Fontana, Chaco.',
-    cities: ['Corrientes', 'Goya', 'Curuzú Cuatiá', 'Paso de los Libres'],
+      'Cargas generales completas y contenedores desde Buenos Aires hacia la ciudad de Corrientes, Goya, Curuzú Cuatiá, Gobernador Virasoro y Paso de los Libres —paso fronterizo hacia Brasil—, conectando con nuestro centro de distribución en Fontana, Chaco.',
+    cities: ['Corrientes', 'Goya', 'Curuzú Cuatiá', 'Gobernador Virasoro', 'Paso de los Libres'],
   },
   {
     title: 'Internacional: Brasil y Paraguay',
     description:
-      'Transporte internacional de cargas al Mercosur por dos pasos fronterizos: Clorinda hacia Paraguay, con extensión a Asunción, y Paso de los Libres hacia Brasil, con extensión a Uruguaiana. Operamos con alianzas operativas con empresas de los dos países.',
+      'Transporte internacional de cargas completas al Mercosur por dos pasos fronterizos: Clorinda hacia Paraguay, con extensión a Asunción, y Paso de los Libres hacia Brasil, con extensión a Uruguaiana. Operamos con alianzas operativas con empresas de los dos países.',
     cities: ['Clorinda → Paraguay', 'Paso de los Libres → Brasil', 'Uruguaiana'],
   },
 ];
