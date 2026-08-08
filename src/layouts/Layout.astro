@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { SITE } from '../config/site';
 import { SERVICES } from '../config/services';
+import { SECTORS } from '../config/clients';
 
 interface Props {
   title?: string;
@@ -81,12 +82,19 @@ const organizationSchema = {
         { '@type': 'Country', name: 'Brasil' },
         { '@type': 'Country', name: 'Paraguay' },
       ],
+      // Las industrias (SECTORS) se suman el 08/08 IMPORTADAS de clients.ts, no
+      // copiadas a mano: es legítimo declararlas acá SOLO porque siguen
+      // escritas en la página (bajaron al <details> de Clientes, pero no
+      // desaparecieron — el pliegue es CSS, los crawlers lo leen igual). El
+      // schema no puede afirmar lo que la página no afirma; importar en vez de
+      // copiar hace que ese invariante no dependa de que alguien se acuerde.
       knowsAbout: [
         'Transporte de cargas generales',
         'Transporte de contenedores',
         'Logística y distribución en el NEA',
         'Transporte internacional al Mercosur',
         'Semirremolques curtain sider',
+        ...SECTORS,
       ],
       // Catálogo de servicios estructurado (31/07). Declara los 4 servicios con
       // el MISMO título que muestra la página — no una versión "mejorada" — para

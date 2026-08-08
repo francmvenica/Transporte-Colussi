@@ -4,9 +4,6 @@ export interface Sede {
   email: string;
   phone: string;
   phoneRaw: string;
-  /** Segundo teléfono: no todas las sedes lo tienen (ver comentario en Casa Central). */
-  phoneSecondary?: string;
-  phoneSecondaryRaw?: string;
 }
 
 export const SITE = {
@@ -30,16 +27,28 @@ export const SITE = {
       return `https://wa.me/${this.number}?text=${encodeURIComponent(this.message)}`;
     },
   },
-  // 🔴 EL TELÉFONO QUE SE MUESTRA ES EL 498191 (decisión de Franco, 30/07). Es el
-  // que está pintado en las lonas de los camiones, o sea el que la gente ya
-  // asocia a la empresa. Cierra el pendiente "cuál teléfono es el principal",
-  // que venía abierto desde el 27/07 con los dos conviviendo sin jerarquía.
-  // El 545990 no se borra: sigue visible como secundario en la ficha de Casa
-  // Central. Y el de WhatsApp es OTRO (el de Leticia, tráfico) y no se toca.
+  // 🔴 LOS TRES FIJOS SALIERON DEL SITIO EL 08/08 (498191, 545990 y 4460475) —
+  // esto REVIERTE la decisión del 30-31/07 de abajo, que fijaba el 498191 como
+  // principal "porque es el pintado en las lonas". Ese argumento se cayó por
+  // un hecho nuevo, no por capricho: Romualdo está cambiando las lonas ("en
+  // las lonas ya estoy cambiando todo… son lonas viejas") y pidió todo el
+  // contacto por WhatsApp ("vamos todos a WhatsApp, la línea fija ya fue").
+  // Quedan dos celulares, los dos con icono de WhatsApp al lado (pedido
+  // explícito): el de Leticia (tráfico, Guadalupe Norte) y el de María (CD
+  // Noreste, Fontana) — ver `sedes` más abajo.
+  //
+  // 🔴 EL FORMATO NO SE HEREDA DEL QUE HABÍA. `03482-XXXXXX` es válido para un
+  // fijo e IMPOSIBLE de marcar para un celular (le falta el `9`/`15`). Los dos
+  // números nuevos van en E.164 CON EL 9 (`+549...`): sin él, el `tel:` cae en
+  // rango de fijo y el click-to-call falla en el teléfono de quien lo toca.
+  //
+  // `contact` es el general de la empresa (Footer + JSON-LD Organization). Usa
+  // el de Leticia/tráfico — mismo criterio que ya regía antes (mirror de
+  // Casa Central), solo que ahora apunta a un celular, no a un fijo.
   contact: {
     email: 'trafico@transportecolussi.com.ar',
-    phone: '03482-498191',
-    phoneRaw: '+543482498191',
+    phone: '+54 9 3482 558666',
+    phoneRaw: '+5493482558666',
   },
   sedes: [
     {
@@ -50,21 +59,24 @@ export const SITE = {
       // es el de la localidad, no depende de la calle.
       address: 'Calle 7 351, Guadalupe Norte, Santa Fe',
       email: 'trafico@transportecolussi.com.ar',
-      // 🔴 INVERTIDOS EL 30/07: el principal es el 498191, el pintado en las
-      // lonas. Cierra el pendiente que estaba anotado justo acá abajo desde el
-      // 27/07 ("confirmar cuál es el principal"). Los dos siguen a la vista, en
-      // este orden — decisión de Franco.
-      phone: '03482-498191',
-      phoneRaw: '+543482498191',
-      phoneSecondary: '03482-545990',
-      phoneSecondaryRaw: '+543482545990',
+      // Celular de Leticia (tráfico) — YA era el WhatsApp del sitio desde el
+      // 27/07 (ver `whatsapp.number` abajo) y Romualdo lo validó en la reunión
+      // del 07/08 al preguntar a dónde iba el link ("perfecto, ese está
+      // bien"). Ahora se publica TAMBIÉN como teléfono, no solo como WhatsApp.
+      phone: '+54 9 3482 558666',
+      phoneRaw: '+5493482558666',
     },
     {
       name: 'CD Noreste',
       address: 'Calle 31 Nº770, Fontana, Chaco',
       email: 'cdnoreste@transportecolussi.com.ar',
-      phone: '0362-4460475',
-      phoneRaw: '+543624460475',
+      // Celular de María, pasado por Franco el 08/08. ⚠️ A CONFIRMAR: el
+      // prefijo 3482 es de Guadalupe Norte/Reconquista, no de Fontana (que
+      // sería 0362) — puede ser una línea santafesina que conserva trabajando
+      // en Chaco, pero es un dato de contacto: si está mal, un cliente marca
+      // al vacío. Confirmar con Romualdo o Mariela.
+      phone: '+54 9 3482 617565',
+      phoneRaw: '+5493482617565',
     },
   ] as Sede[],
   social: {
