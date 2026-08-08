@@ -34,34 +34,42 @@ import { IMAGES } from '../config/assets';
 // del vocabulario por el que los motores encuentran a la empresa.
 // Una propuesta de rediseño lo eliminaba.
 //
-// 🔴 ESA TARJETA ES DONDE VIVE "SOCIO ESTRATÉGICO" (30/07). Es el concepto que
-// Romualdo más quiso instalado en la revisión del 29/07: "la otra palabra que
-// se usa mucho, que es un poco lo que busca el cliente, es que vos seas un
-// socio estratégico de ellos" / "que sepa que no es una empresa de transporte,
-// es una empresa de transporte que va a estar hoy, mañana, y te va a apoyar y
-// te va a atender en todos los sentidos". Lo definió contra el flete suelto:
-// "eso difiere a un transporte de un operador logístico".
+// 🔴 LA TARJETA "SOCIO ESTRATÉGICO" SE FUE DE ACÁ EL 08/08 — se mudó entera a
+// Hero.astro, no se duplicó. Queda su historia porque explica por qué el
+// cambio es una reversión, no una novedad:
 //
-// Se eligió esta tarjeta y NO el hero (decisión de Franco, 30/07): cae donde el
-// gerente de tráfico ya está evaluando si la empresa es confiable, no suma
-// altura a la home, y sobre todo deja libre el hero, cuyo título Franco está
-// reescribiendo aparte — meter el concepto ahí lo habría condicionado.
+// Vivió acá desde el 30/07 por decisión de Franco: "socio estratégico" es el
+// concepto que Romualdo más quiso instalado en la revisión del 29/07 ("que
+// sepa que no es una empresa de transporte, es una empresa de transporte que
+// va a estar hoy, mañana, y te va a apoyar y te va a atender en todos los
+// sentidos", contra el flete suelto: "eso difiere a un transporte de un
+// operador logístico"), y se eligió esta tarjeta y NO el hero a propósito:
+// cae donde el gerente de tráfico ya está evaluando si la empresa es
+// confiable, y sobre todo dejaba libre el hero, cuyo título Franco estaba
+// reescribiendo aparte.
 //
-// ⚠️ LA VISIÓN OFICIAL NO SE TOCA. Romualdo la validó tal cual ("eso está bien,
-// porque esa es nuestra visión"). "Socio estratégico" entra como AGREGADO en
-// esta tarjeta, nunca reemplazando la visión de las tarjetas de arriba.
+// 📌 EL 07/08 EL CLIENTE PIDIÓ LO CONTRARIO DE LO QUE SE DECIDIÓ. Romualdo dijo
+// "eso, TAMBIÉN arriba" — nunca pidió sacarla de acá, solo sumarla al hero.
+// Franco revisó la cita textual y sostuvo la mudanza igual: en el hero es el
+// titular, y repetir el mismo bloque dos veces en la misma página de arriba a
+// abajo suena a muletilla más que a énfasis. Si Romualdo pregunta por qué no
+// está más acá, se sacó a propósito — no es un olvido.
 //
-// El cierre de esa tarjeta cambió el 31/07 por pedido de Franco: decía
-// "Acompañamos la operación de nuestros clientes hoy y mañana, no viaje por
-// viaje" y quedó "…todos los días". Sale la contraposición con el flete suelto,
-// que venía del dictado de Romualdo ("eso difiere a un transporte de un
-// operador logístico"): el concepto ya lo carga el título de la tarjeta, y
-// decirlo dos veces obligaba a nombrar lo que NO son para explicar lo que son.
+// La sección no se queda coja: cierra con el párrafo de confianza operativa
+// de arriba (Nacimos, crecimos... / Know How, unidades...) y la fachada de al
+// lado, que ya eran el resto del argumento de esta sección.
+//
+// ⚠️ LA VISIÓN OFICIAL SIGUE SIN TOCARSE. Romualdo la validó tal cual ("eso
+// está bien, porque esa es nuestra visión") — nada de esto la reemplaza.
 //
 // ⚠️ Acá se dejó de nombrar a POLIVIAS ("alianza operativa con Polivias para la
-// ruta a Brasil" → "alianzas operativas para el Mercosur"). Sigue nombrada en
-// config/services.ts y config/faq.ts: si se decide sacarla del sitio entero o
-// devolverla acá, son esos tres lugares.
+// ruta a Brasil" → "alianzas operativas para el Mercosur").
+// 🔧 CORREGIDO EL 08/08: esta nota decía "sigue nombrada en config/services.ts
+// y config/faq.ts" — verificado con grep, es falso, YA NO está en ninguno de
+// los dos (esos archivos solo conservan la mención EN SUS COMENTARIOS, de que
+// el nombre salió). Si algún día se quiere devolver a la web, hay que
+// escribirla de nuevo en los tres lugares, no "restaurarla": no queda como
+// texto vivo en ningún archivo hoy.
 //
 // Fontana es el CENTRO DE DISTRIBUCIÓN. La casa central es Calle 7 351,
 // Guadalupe Norte. No llamar a Fontana "base operativa" a secas: se confunde
@@ -159,19 +167,6 @@ const VALORES = [
         </article>
       </div>
 
-      <div class="mt-6 bg-white rounded-2xl p-7 lg:p-8 border border-neutral-200 flex flex-col sm:flex-row gap-5 sm:gap-7">
-        <div class="w-12 h-12 bg-brand-red-light rounded-xl flex items-center justify-center shrink-0">
-          <svg class="w-6 h-6 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.556-3.03 8.401-7.183 9.632-.435.13-.897.13-1.334 0C8.33 20.401 5.3 16.556 5.3 12V6.741c0-.577.416-1.06.983-1.187a48.325 48.325 0 0111.434 0c.567.127.983.61.983 1.187V12z" />
-          </svg>
-        </div>
-        <div>
-          <h4 class="text-lg font-bold text-neutral-800 mb-2">Un socio estratégico, no solo un transporte</h4>
-          <p class="text-neutral-800 leading-relaxed">
-            Flota 100% propia, con monitoreo satelital 24/7 desde nuestro centro de tráfico. Alianzas operativas para el Mercosur y base de cross-docking en Fontana (Chaco) para la logística y distribución en el NEA. Acompañamos la operación de nuestros clientes todos los días.
-          </p>
-        </div>
-      </div>
     </div>
   </div>
 </section>
