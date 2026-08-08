@@ -34,9 +34,11 @@
 // Queda escrito para que nadie vuelva a "descubrir" el falso hallazgo: si una
 // cifra se lee en una foto, se amplía hasta que no quede duda ANTES de anotarla.
 //
-// Dato menor y real: la lona de `flota-colussi-curtain-sider` muestra el
-// WhatsApp +549 3482 558666, que no es el que usa el sitio (549842). Son dos
-// canales distintos de la empresa, no una contradicción.
+// 🔧 CORREGIDO EL 08/08 — este comentario decía la relación al revés: la lona
+// de `flota-colussi-curtain-sider` muestra el WhatsApp +549 3482 558666, que
+// SÍ ES el que usa el sitio (site.ts, `whatsapp.number`, y desde el 08/08
+// también publicado como teléfono de Casa Central). El 549842 es el que está
+// DADO DE BAJA — no un canal alternativo vigente.
 
 // Astro image imports (processed by build pipeline)
 import heroCamiones from '../assets/images/hero-camiones-contenedores-ruta.jpg';
