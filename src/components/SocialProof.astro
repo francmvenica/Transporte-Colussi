@@ -8,9 +8,15 @@ const joinWithY = (items: string[]) =>
     : items[0];
 
 const clientsText = joinWithY(CLIENTS.map((c) => c.name));
-// Los sectores van separados por COMAS, no con joinWithY: uno de ellos es
-// "papel y tissue", que ya trae su propia "y" adentro. Con el join queda
-// "...papel y tissue y madera", que se lee como un error. Con comas, no.
+// Los sectores van separados por COMAS, no con joinWithY. Hasta el 08/08 la
+// razón concreta era "papel y tissue" (traía su propia "y" adentro y el join
+// daba "...papel y tissue y madera", que se lee como un error). "tissue" salió
+// de la lista, pero el principio se sostiene: es un config que puede editar
+// otro, y el próximo ítem con una "y" o un "&" propios rompería el join de
+// nuevo. Con comas no se rompe nunca.
+// 🔴 DESDE EL 08/08 esto ya NO va en la línea visible bajo el H2: se renderiza
+// dentro del <details> de abajo, a pedido explícito de Romualdo ("para que la
+// IA te lo tome").
 const sectorsText = SECTORS.map((s) => s.toLowerCase()).join(', ');
 
 const PRINCIPALES = CLIENTS.filter((c) => c.featured);
@@ -115,9 +121,10 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
 //   · Arranca CONGELADA en los 12 principales — "el primer pantallazo tiene que
 //     ser los principales (…) la primera imagen te deja fijado los 11, 12".
 //   · El movimiento empieza CUANDO EL USUARIO LLEGA, no antes ("después empieza
-//     a correr"), y con una PAUSA de 1,2 s para que el ojo alcance a registrar
-//     el cuadro congelado. Sin esa pausa, "el primer pantallazo" no existe
-//     nunca: la cinta ya está corriendo cuando el visitante llega.
+//     a correr"), y con una PAUSA de 3 s (subida de 1,2 s el 08/08, pedido del
+//     cliente) para que el ojo alcance a registrar el cuadro congelado. Sin esa
+//     pausa, "el primer pantallazo" no existe nunca: la cinta ya está corriendo
+//     cuando el visitante llega.
 //   · Corre en VERTICAL con foco central: la columna del medio en sentido
 //     inverso, los logos del centro a color y los extremos apagándose. Es el
 //     efecto que propuso Romualdo y aprobó Juan Manuel ("Me gusta. Probemos.").
@@ -152,38 +159,49 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
 // cinta: duplicaba la lista del <details> a la vista, que es exactamente lo que
 // se había plegado para no hacer ruido visual (decisión del 28/07).
 //
-// SUBTÍTULO: la primera línea ("Los clientes ocupan la posición más
-// importante...") es TEXTUAL del brief del cliente — su filosofía operativa.
-// Es texto institucional de ellos: se copia, no se mejora.
+// 🔴 JERARQUÍA INVERTIDA EL 08/08. Hasta ahora "Agradecemos a las empresas..."
+// era el H2 y "Los clientes ocupan la posición más importante..." un párrafo
+// debajo. Se dieron vuelta: la frase de filosofía operativa pasa a H2 y el
+// agradecimiento baja a H3, pegado arriba de la cinta. Ninguna de las dos
+// frases se reescribió — es un cambio de jerarquía visual, no de copy — así
+// que sigue valiendo todo lo que dice el resto de esta nota sobre CADA frase:
 //
-// El H2 lo dictó Romualdo por audio de WhatsApp el 30/07 a las 10:01:
-// "Agradecemos a las siguientes empresas que confiaron en nosotros". No era
-// solo pasar "confían" a "confiaron" —eso salió de la reunión del 29/07, porque
-// "si ponemos 'confían' quiere decir que están actualmente" y varios ya no
-// operan con ellos— es el título entero.
-// ⚠️ Franco sacó "siguientes" el mismo 30/07 al verlo publicado: "Agradecemos a
-// LAS EMPRESAS que confiaron en nosotros". Es un ajuste de él sobre el dictado,
-// no un descuido — "las siguientes" anuncia una lista y abajo hay una cinta en
-// movimiento, no una lista. El resto del título no se toca.
+// "Los clientes ocupan la posición más importante..." es TEXTUAL del brief del
+// cliente — su filosofía operativa. Texto institucional de ellos: se copia, no
+// se mejora.
 //
-// El `max-w-3xl` no es decorativo: obliga al título a partirse en DOS líneas en
-// desktop. A ancho completo entraba en una sola línea larguísima y el bloque de
-// texto quedaba desbalanceado contra los dos párrafos de abajo, que son
-// angostos. Con `text-balance` las dos líneas quedan parejas.
+// "Agradecemos a las empresas que confiaron en nosotros" lo dictó Romualdo por
+// audio de WhatsApp el 30/07 a las 10:01: "Agradecemos a las siguientes
+// empresas que confiaron en nosotros". No era solo pasar "confían" a
+// "confiaron" —eso salió de la reunión del 29/07, porque "si ponemos 'confían'
+// quiere decir que están actualmente" y varios ya no operan con ellos— es el
+// título entero. Franco sacó "siguientes" el mismo 30/07 al verlo publicado:
+// "las siguientes" anuncia una lista y abajo hay una cinta en movimiento, no
+// una lista.
+//
+// ⚠️ EL H3 TIENE QUE VERSE CLARAMENTE SUBORDINADO AL H2 (pedido del director,
+// 08/08), o la jerarquía se invierte a la vista aunque el HTML esté bien: va
+// más chico, más liviano y en un gris más apagado que el H2 (que sigue en
+// font-display y neutral-800).
+//
+// El `max-w-*` de cada título no es decorativo: controla en cuántas líneas
+// parte. El H2 viejo (54 caracteres) usaba max-w-3xl para partir en dos líneas
+// parejas; el nuevo (98 caracteres, la frase de filosofía) es casi el doble de
+// largo, así que se recalibró mirando 1280 y 375 — con `text-balance` puesto,
+// que reparte el texto entre las líneas que el navegador elija sin dejar una
+// palabra sola. Si se vuelve a tocar el texto de cualquiera de los dos
+// títulos, volver a mirar el recorte de línea: no se hereda del anterior.
 ---
 
 <section id="clientes" class="bg-neutral-100 border-y border-neutral-200 py-20 lg:py-28">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
-      <h2 class="text-3xl sm:text-4xl text-neutral-800 mb-4 font-display max-w-3xl mx-auto text-balance">
-        Agradecemos a las empresas que confiaron en nosotros
+      <h2 class="text-3xl sm:text-4xl text-neutral-800 mb-3 font-display max-w-2xl mx-auto text-balance">
+        Los clientes ocupan la posición más importante en la empresa, hacemos lo que es mejor para ellos siempre
       </h2>
-      <p class="text-lg text-neutral-800 max-w-3xl mx-auto">
-        Los clientes ocupan la posición más importante en la empresa, hacemos lo que es mejor para ellos siempre.
-      </p>
-      <p class="text-base text-neutral-800 max-w-3xl mx-auto mt-3">
-        Acompañamos la logística de marcas líderes de {sectorsText}.
-      </p>
+      <h3 class="text-base sm:text-lg font-semibold text-neutral-500 max-w-2xl mx-auto">
+        Agradecemos a las empresas que confiaron en nosotros
+      </h3>
     </div>
 
     <div
@@ -200,12 +218,22 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
           >
             {columna.items.map((cliente) => (
               <div class="vlogo flex items-center justify-center h-20 sm:h-24 shrink-0">
-                <Image
-                  src={cliente.image}
-                  alt={cliente.primera ? `${cliente.name}, cliente de Transporte Colussi` : ''}
-                  aria-hidden={cliente.primera ? undefined : 'true'}
-                  class="max-h-12 sm:max-h-16 max-w-[85%] w-auto object-contain"
-                />
+                {cliente.image ? (
+                  <Image
+                    src={cliente.image}
+                    alt={cliente.primera ? `${cliente.name}, cliente de Transporte Colussi` : ''}
+                    aria-hidden={cliente.primera ? undefined : 'true'}
+                    class="max-h-12 sm:max-h-16 max-w-[85%] w-auto object-contain"
+                    style={cliente.visualScale ? `transform: scale(${cliente.visualScale})` : undefined}
+                  />
+                ) : (
+                  <p
+                    class="font-bold text-neutral-600 text-lg sm:text-xl text-center leading-tight px-1"
+                    aria-hidden={cliente.primera ? undefined : 'true'}
+                  >
+                    {cliente.name}
+                  </p>
+                )}
               </div>
             ))}
           </div>
@@ -215,15 +243,15 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
 
     <details class="clients-detail max-w-3xl mx-auto text-center mt-10">
       <summary class="text-sm font-medium text-neutral-500 hover:text-brand-red transition-colors cursor-pointer select-none">
-        Ver la lista completa de clientes
+        Ver más clientes
       </summary>
       <div class="pt-5 space-y-3">
         <p class="text-neutral-800">
-          Trabajamos para compañías líderes del país y de la región:
+          Trabajamos para compañías del país y de la región:
           <span class="font-semibold text-neutral-800">{clientsText}</span>.
         </p>
         <p class="text-neutral-800">
-          Combinamos clientes de alcance nacional con la industria del norte santafesino: Buyatti, la Unión Agrícola de Avellaneda y Vicentin operan a minutos de nuestra casa central.
+          Acompañamos la logística de {sectorsText}.
         </p>
       </div>
     </details>
@@ -380,9 +408,10 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
     });
 
     // Arranque: el movimiento empieza cuando la sección entra en pantalla, con
-    // 1,2 s de pausa para que se vea el cuadro congelado. Se pausa al salir —no
-    // hay razón para animar lo que nadie mira— pero la pausa del arranque no se
-    // repite: se muestra una vez, en la primera llegada.
+    // 3 s de pausa para que se vea el cuadro congelado (subida de 1,2 s el
+    // 08/08, pedido del cliente). Se pausa al salir —no hay razón para animar
+    // lo que nadie mira— pero la pausa del arranque no se repite: se muestra
+    // una vez, en la primera llegada.
     let espera: number;
     let yaArranco = false;
 
@@ -396,7 +425,7 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
                 cinta.classList.add('is-running');
                 yaArranco = true;
               },
-              yaArranco ? 0 : 1200,
+              yaArranco ? 0 : 3000,
             );
           } else {
             clearTimeout(espera);
