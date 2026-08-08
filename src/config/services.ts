@@ -40,12 +40,42 @@ export interface Service {
 // de servicios y corridors.ts repite lo internacional: si se cambia una ficha
 // aca y no alla, el sitio se contradice solo. Cambio en una ficha = grep en
 // todo src/ por la frase vieja.
+//
+// 🔴 2ª RONDA (08/08) — tres de las cuatro fichas cambian:
+//
+//   · CARGAS GENERALES: la línea visible ahora trae TODO lo que antes solo
+//     estaba en el detalle plegado (secas, paletizadas, a granel) más las
+//     industrias a las que sirve (alimenticia, maderera, automotriz, química,
+//     agroquímica). Decisión de Franco: queda larga pero se ve sin desplegar.
+//     El detalle técnico (semirremolques, pallets, tonelajes) NO se toca.
+//   · CONTENEDORES: SALE "NEA–Salta y desde el puerto de Corrientes" — mismo
+//     motivo que en 29/07 pero al revés esta vez: les pidieron cotización a
+//     esos destinos y TODAVÍA NO LO HACEN. Declarar un servicio que no
+//     prestan. Queda "Buenos Aires–NEA, NEA–Buenos Aires y el resto del país".
+//   · LOGÍSTICA: entra "Cross-docking" al frente de la línea visible. El
+//     detalle se reescribe con el dictado de Romualdo: "retiramos cargas
+//     consolidadas" (no "la producción"), "armamos el pedido en el corazón
+//     mismo del NEA, optimizando los volúmenes y bajando costos" (no "acá").
+//     🔎 Y ENTRAN LAS CAPACIDADES DEL DEPÓSITO — personal propio de picking y
+//     autoelevador — porque es la ÚNICA vez en toda la reunión que el cliente
+//     dijo qué necesita que el sitio le produzca: "de paso promociono mi
+//     depósito, que es lo que necesito, que facture más el depósito. Para eso
+//     tengo la gente para armar picking, tengo el autoelevador, tengo todo."
+//     Esta ficha deja de ser "una de cuatro": es la que el cliente necesita
+//     que venda. Si en el futuro hay que recortar contenido, no es candidata.
+//   · INTERNACIONAL: se agrega "y cargas generales" al final del detalle.
+//
+// La frase de "socio estratégico" en el cierre del detalle de Logística SE
+// QUEDA, aunque el concepto suba también al Hero (src/components/Hero.astro):
+// en el hero es el titular, acá es el cierre del argumento de carga
+// consolidada — no es la misma función, así que no es la redundancia que se
+// verifica antes de borrar.
 export const SERVICES: Service[] = [
   {
     icon: 'Truck',
     title: 'Transporte de Cargas Generales',
     summary:
-      'Cargas generales, secas y paletizadas, por las rutas nacionales troncales del país.',
+      'Cargas generales completas, secas, paletizadas y a granel, para la industria alimenticia, maderera, automotriz, química y agroquímica.',
     description:
       'Semirremolques curtain sider y de baranda volcable de arco y lona, con capacidad de 28 y 30 pallets. Unidades escalables de 52,5 y 55,5 toneladas, con monitoreo satelital 24/7 y conexión permanente con nuestro centro de tráfico.',
   },
@@ -53,7 +83,7 @@ export const SERVICES: Service[] = [
     icon: 'Container',
     title: 'Transporte de Contenedores',
     summary:
-      'Contenedores ISO por todo el país: Buenos Aires–NEA, NEA–Salta y desde el puerto de Corrientes.',
+      'Contenedores ISO: Buenos Aires–NEA, NEA–Buenos Aires y el resto del país.',
     description:
       'Semirremolques con trabas para contenedores de 20 y 40 pies, estándar y High Cube (HC).',
   },
@@ -61,15 +91,15 @@ export const SERVICES: Service[] = [
     icon: 'Package',
     title: 'Logística y distribución (NEA)',
     summary:
-      'Picking, almacenaje y distribución en Chaco, Formosa, Corrientes, Misiones y norte de Santa Fe.',
+      'Cross-docking, picking, almacenaje y distribución en Chaco, Formosa, Corrientes, Misiones y norte de Santa Fe.',
     description:
-      'Base de picking y almacenaje en Fontana, Chaco, que articula con las plantas de producción de nuestros clientes: retiramos la producción desde su planta y armamos el pedido acá, con cargas consolidadas. Trabajamos como socio estratégico de la operación.',
+      'Base de cross-docking, picking y almacenaje en Fontana, Chaco, que articula con las plantas de producción de nuestros clientes. Retiramos cargas consolidadas desde su planta y armamos el pedido en el corazón mismo del NEA, optimizando los volúmenes y bajando costos para nuestros clientes. Contamos con personal propio de picking y autoelevador. Trabajamos como socio estratégico de la operación.',
   },
   {
     icon: 'Globe',
     title: 'Transporte Internacional, Brasil y Paraguay',
     summary: 'Rutas al Mercosur hacia Brasil y Paraguay.',
     description:
-      'Alianzas operativas con empresas de Brasil y Paraguay. Transportamos café, chocolate, industria alimenticia, química, autopartista y de envases.',
+      'Alianzas operativas con empresas de Brasil y Paraguay. Transportamos café, chocolate, industria alimenticia, química, autopartista, de envases y cargas generales.',
   },
 ];
