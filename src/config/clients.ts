@@ -91,7 +91,13 @@ export interface Client {
   name: string;
   /** Sin imagen = se renderiza como celda de TEXTO (ver Dorinka). Es el caso de
    *  una marca denominativa: no hay logo que reproducir porque la marca ES el
-   *  nombre. */
+   *  nombre.
+   *  ⚠️ La celda de texto NO usa `visualScale` — su tamaño es la clase de fuente
+   *  en SocialProof.astro, hoy `text-2xl sm:text-4xl`. Subió desde
+   *  `text-lg sm:text-xl` el 10/08 a pedido del cliente: 20px de texto al lado
+   *  de logos de 64px de alto se leía como un cliente de segunda. Si algún día
+   *  entra otra marca denominativa con nombre LARGO, revisar que no se corte —
+   *  la celda mide un tercio del ancho de la cinta. */
   image?: ImageMetadata;
   featured: boolean;
   /** Ajuste fino de escala visual (1 = tamaño base), calibrado el 08/08 en DOS
@@ -133,7 +139,14 @@ export const CLIENTS: Client[] = [
   { name: 'SolFrut', image: solfrut, featured: true, visualScale: 1.0 },
   { name: 'Colven', image: colven, featured: true, visualScale: 0.8 }, // ⚠️ grande: señalado por el cliente
   { name: 'CHEP', image: chep, featured: true, visualScale: 1.45 },
-  { name: 'Malsa', image: malsa, featured: true, visualScale: 1.2 }, // el corte: "hasta Malsa"
+  // ⚠️ SUBIDO DE 1.2 A 1.7 EL 10/08, a pedido del cliente. Malsa era el logo
+  // MÁS CHICO de los 25: área visual 2563 contra una mediana de 5096, o sea la
+  // mitad. La causa es el margen interno del PNG — canvas 383×256 con el
+  // contenido ocupando 282×101, apenas el 39% del alto —, así que el
+  // `object-contain` fitea aire y el logo queda diminuto. 1.7 lo deja en ~5140,
+  // prácticamente la mediana. El canvas escalado desborda la celda, pero lo que
+  // desborda es transparente: no se ve ni tapa al vecino.
+  { name: 'Malsa', image: malsa, featured: true, visualScale: 1.7 }, // el corte: "hasta Malsa"
   { name: 'Walmart', image: walmart, featured: true, visualScale: 0.84 }, // ⚠️ último por decisión de Franco, ver nota
   // ── Resto: aparecen una vez en la cinta, en la misma línea que los de arriba.
   { name: 'Quilmes', image: quilmes, featured: false }, // ⚠️ a confirmar con la foto
