@@ -110,7 +110,25 @@ export const IMAGES = {
     },
     {
       src: patioOperacion,
-      alt: 'Unidades de la flota de Transporte Colussi en el patio de operaciones',
+      alt: 'Formación de tractoras rojas de la flota propia de Transporte Colussi en el patio de operaciones',
+      // 🔴 IMAGEN EDITADA, NO FOTOGRAFÍA DIRECTA (10/08). La versión original de
+      // esta toma tenía tres unidades BLANCAS y una azul en el medio de la fila
+      // —de terceros—, y Romualdo pidió sacarlas: "que sean rojos, no se puede
+      // ver otro color acá" es regla para toda la sección de unidades, no una
+      // nota al pie de esta foto. Franco la editó y pasó la versión con la fila
+      // completa en rojo.
+      //
+      // ⚠️ LO QUE HAY QUE SABER ANTES DE REUTILIZARLA EN OTRO LADO: la edición
+      // regeneró las cabinas, y con ellas el LETRERO de la marca. En el archivo
+      // fuente (4780×3584) los frentes dicen "Colusgi", "Colusel" y "Coluged" en
+      // vez de Colussi, y uno dice "IVECG" en vez de IVECO. **Acá no se ve** y
+      // por eso se publica: la galería sirve 400/600 px (`widths` en
+      // Fleet.astro) y a ese tamaño el letrero es una mancha ilegible —
+      // verificado ampliando el render real, no el original. Pero si alguna vez
+      // esta imagen va a un lightbox, a una impresión, a redes o a cualquier
+      // uso que la muestre a más de ~800 px, el nombre del cliente aparece mal
+      // escrito en sus propios camiones. En ese caso NO se usa: se pide la
+      // edición sobre la foto real sin regenerar las cabinas.
     },
   ],
   // Logos pendientes del cliente — usar placeholders
