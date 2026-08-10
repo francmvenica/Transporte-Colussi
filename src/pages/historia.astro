@@ -4,21 +4,62 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
 import { SITE } from '../config/site';
+import { HISTORIA } from '../config/historia';
 
 // BASE_URL puede venir sin slash final (p. ej. "/Transporte-Colussi") — se normaliza
 // para que `${base}${href}` nunca pegue el path con lo que sigue.
 const rawBase = import.meta.env.BASE_URL;
 const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
-// Nota interna (no publicar en el HTML) — el pt-32 del primer <section>: esta
-// pagina carga completa (no llega por scroll de ancla), asi que ese padding-top
-// es lo unico que evita que el header fijo (Header.astro, h-16 = 4rem) tape el
-// titulo. Si cambia la altura del header, ajustar aca tambien.
+// Notas internas (no publicar en el HTML):
+//
+// EL TEXTO NO VIVE ACA. Vive en `src/config/historia.ts`, con el registro de su
+// origen y de las dos ediciones que se le hicieron al original de Juan Manuel.
+// Este archivo solo lo maqueta. Si hay que cambiar una palabra, se cambia alla.
+//
+// El pt-32 del primer <section>: esta pagina carga completa (no llega por scroll
+// de ancla), asi que ese padding-top es lo unico que evita que el header fijo
+// (Header.astro, h-16 = 4rem) tape el titulo. Si cambia la altura del header,
+// ajustar aca tambien.
+//
+// ANCHO DE LECTURA: es la unica pagina del sitio con prosa larga corrida (el
+// resto es texto en tarjetas), y a max-w-4xl los renglones se pasan de largo
+// para leer comodo. Por eso el cuerpo se limita a max-w-3xl.
+//
+// ⚠️ PERO va como div ANIDADO dentro del contenedor max-w-4xl, sin `mx-auto`
+// propio. La primera version usaba `max-w-3xl mx-auto` directo y **el cuerpo
+// quedaba centrado en un ancho distinto al del encabezado**: el texto arrancaba
+// ~58 px a la derecha del H1 y del breadcrumb, con un escalon visible al hacer
+// scroll. Anidado, el renglon sigue corto pero el margen izquierdo es el mismo
+// de toda la pagina. El cierre si va centrado a 4xl, que ahi es a proposito.
+//
+// SIN IMAGENES, a proposito. No hay foto nueva para esta pagina, y repetir una
+// de la home o de la galeria no aporta. Tampoco se armo una linea de tiempo
+// visual: el unico año que el cliente confirmo es el 2000, y una linea de
+// tiempo con un solo punto obliga a inventar los demas (hueco honesto > dato
+// inventado). Si Romualdo manda material historico, aca entra.
+
+const schemaHistoria = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  '@id': `${SITE.url}/historia#pagina`,
+  url: `${SITE.url}/historia`,
+  name: 'Nuestra Historia',
+  description: HISTORIA.lead,
+  inLanguage: 'es-AR',
+  // La pagina no es una entidad nueva: es la biografia de la empresa que el
+  // Organization del Layout ya declara. Se apunta por @id en vez de repetir los
+  // datos, asi el buscador une las dos piezas en una sola entidad en vez de
+  // creerse que hay dos.
+  about: { '@id': `${SITE.url}/#empresa` },
+  mainEntity: { '@id': `${SITE.url}/#empresa` },
+};
 ---
 
 <Layout
   title="Nuestra Historia"
-  description="Conocé la historia de Transporte Colussi, empresa de transporte de cargas con casa central en Guadalupe Norte (Santa Fe) y centro de distribución en Fontana (Chaco)."
+  description="La historia de Transporte Colussi: de un camión en la Ruta Nacional 11 en el año 2000 a una flota propia, un centro de distribución en Fontana (Chaco) y el transporte al Mercosur."
+  schema={schemaHistoria}
 >
   <Header />
   <main>
@@ -32,22 +73,45 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
 
         <p class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-3">{SITE.name}</p>
         <h1 class="text-4xl sm:text-5xl text-neutral-800 font-display">Nuestra Historia</h1>
+        <p class="mt-4 text-lg sm:text-xl text-neutral-600 leading-relaxed text-balance">
+          {HISTORIA.lead}
+        </p>
       </div>
     </section>
 
-    <section class="py-20 lg:py-28 bg-white">
+    <section class="py-16 lg:py-24 bg-white">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* PENDIENTE: texto de Nuestra Historia — lo redacta Juan Manuel */}
-        <div class="text-center border border-dashed border-neutral-300 rounded-2xl py-16 px-6">
-          <div class="w-14 h-14 bg-brand-red-light rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <svg class="w-7 h-7 text-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.75a5.25 5.25 0 016.775-5.025.75.75 0 01.313 1.248l-3.32 3.319c.063.475.276.934.641 1.299.365.365.824.578 1.3.64l3.318-3.319a.75.75 0 011.248.313 5.25 5.25 0 01-5.472 6.756c-1.018-.086-1.87.1-2.309.634L7.344 21.3A3.298 3.298 0 112.7 16.657l8.684-7.151c.533-.44.72-1.291.634-2.309A5.342 5.342 0 0112 6.75z" />
-            </svg>
-          </div>
-          <p class="text-lg text-neutral-800 max-w-xl mx-auto">
-            Estamos escribiendo esta sección. Muy pronto vas a poder conocer la historia completa de {SITE.name}.
+       <div class="max-w-3xl">
+        {HISTORIA.parrafos.map((parrafo, i) => (
+          <p
+            class:list={[
+              'text-neutral-800 leading-relaxed',
+              i === 0 ? 'text-xl sm:text-2xl mb-7' : 'text-lg mb-6',
+            ]}
+          >
+            {parrafo}
           </p>
-        </div>
+        ))}
+
+        <figure class="mt-10 border-l-4 border-brand-red bg-neutral-100 rounded-r-2xl py-7 px-6 sm:px-8">
+          <figcaption class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-3">
+            {HISTORIA.reglaDeOro.titulo}
+          </figcaption>
+          <blockquote class="text-lg sm:text-xl text-neutral-800 font-medium leading-relaxed">
+            “{HISTORIA.reglaDeOro.cita}”
+          </blockquote>
+        </figure>
+       </div>
+      </div>
+    </section>
+
+    <section class="py-14 lg:py-16 bg-neutral-100 border-t border-neutral-200">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <p class="text-lg sm:text-xl text-neutral-800 font-semibold">
+          {HISTORIA.cierre.linea}
+        </p>
+        <p class="mt-5 text-2xl sm:text-3xl text-neutral-800 font-display">{SITE.name}</p>
+        <p class="mt-1 text-brand-red font-semibold">{HISTORIA.cierre.tagline}</p>
       </div>
     </section>
   </main>

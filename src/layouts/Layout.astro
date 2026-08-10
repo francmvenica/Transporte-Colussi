@@ -7,9 +7,16 @@ import { SECTORS } from '../config/clients';
 interface Props {
   title?: string;
   description?: string;
+  /**
+   * JSON-LD extra de la página, emitido en un <script> aparte del schema de la
+   * empresa. Para tipos que describen la PÁGINA (AboutPage, FAQPage), no para
+   * sumarle campos al Organization: eso va en el `@graph` de acá abajo, que es
+   * global al sitio y se genera una sola vez.
+   */
+  schema?: Record<string, unknown>;
 }
 
-const { title = SITE.name, description = SITE.description } = Astro.props;
+const { title = SITE.name, description = SITE.description, schema } = Astro.props;
 const pageTitle = title === SITE.name ? title : `${title} | ${SITE.name}`;
 
 // Canonical: siempre derivado de SITE.url (el dominio final), nunca del base path
@@ -65,14 +72,25 @@ const organizationSchema = {
       email: SITE.contact.email,
       telephone: SITE.contact.phoneRaw,
       taxID: '30-71137821-5', // confirmado por el cliente 27/07
-      // 🔴 `foundingDate` ELIMINADO el 29/07. Estaba en '2000' como confirmado
-      // por el cliente, pero Franco puso esa fecha en duda y la sacamos del
-      // texto visible del sitio. **Si no se afirma en la página, tampoco puede
-      // afirmarse acá — y menos acá.** El JSON-LD es la capa que define la
-      // identidad de la empresa ante los buscadores, y esta empresa tiene tres
-      // homónimos contaminando sus resultados: un dato dudoso en el schema
-      // hace exactamente lo contrario de lo que vinimos a resolver. Se
-      // devuelve cuando Romualdo confirme el año.
+      // 🟢 `foundingDate` REPUESTO el 10/08, después de once días afuera.
+      //
+      // Se había eliminado el 29/07 con este criterio, que sigue valiendo: **si
+      // no se afirma en la página, tampoco puede afirmarse acá, y menos acá.**
+      // El JSON-LD es la capa que define la identidad de la empresa ante los
+      // buscadores, y esta empresa tiene tres homónimos contaminándole los
+      // resultados, así que un dato dudoso en el schema hace lo contrario de lo
+      // que vinimos a resolver. Estaba como '2000' "confirmado por el cliente"
+      // pero Franco puso la fecha en duda, y salió del sitio entero.
+      //
+      // Lo que cambió no es el criterio: es que **ahora el año está escrito en
+      // la página**. El texto de /historia, que redactó Juan Manuel Colussi y
+      // mandó el 10/08, abre con "Todo empezó en el año 2000". Fuente correcta,
+      // por escrito, y Franco lo dio por bueno ese día. Cierra consigo mismo
+      // con el "+25 años" de stats.ts (2026 − 2000 = 26).
+      //
+      // ⚠️ Si alguna vez sale el año del texto de /historia, este campo se va
+      // con él. La regla es que el schema no afirme lo que la página no afirma.
+      foundingDate: '2000',
       areaServed: [
         { '@type': 'State', name: 'Chaco' },
         { '@type': 'State', name: 'Formosa' },
@@ -220,6 +238,7 @@ const organizationSchema = {
     <title>{pageTitle}</title>
 
     <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)} is:inline />
+    {schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />}
   </head>
   <body class="bg-neutral-100 antialiased">
     <slot />
