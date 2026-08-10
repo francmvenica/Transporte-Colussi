@@ -196,7 +196,9 @@ import 'leaflet/dist/leaflet.css';
     // (OpenStreetMap) y no de memoria — y no es un detalle de proceso: la
     // primera versión de este cambio puso Fontana a ojo y quedó **3,3 km
     // corrida**. Quitilipi, Oberá y Eldorado a ojo daban <400 m, que a zoom 6 no
-    // se nota; Fontana sí se notaba. Si hay que sumar una ciudad, se consulta:
+    // se nota; Fontana sí se notaba. (Oberá salió del mapa el 10/08 por estar
+    // lejos del trazado, no por la coordenada — ver su nota más abajo.)
+    // Si hay que sumar una ciudad, se consulta:
     // curl "https://nominatim.openstreetmap.org/search?q=CIUDAD,+PROVINCIA,+Argentina&format=json&limit=1"
     //
     // Guadalupe Norte: la sede es Calle 7 351 (site.ts), no "RN 11 Km 814" —
@@ -292,7 +294,16 @@ import 'leaflet/dist/leaflet.css';
       // isHub SACADO el 08/08: Posadas es base de un tercero, no propia — ver
       // la nota de arriba. Sigue en el mapa como destino del corredor Misiones.
       { name: "Posadas", role: "Corredor Misiones", coords: [-27.3671, -55.8961] },
-      { name: "Oberá", role: "Corredor Misiones", coords: [-27.4850, -55.1203] },
+      // 🔴 OBERÁ SACADA DEL MAPA EL 10/08, por pedido de Franco, y NO porque la
+      // coordenada estuviera mal: está bien geolocalizada. El problema es que la
+      // troncal de Misiones va Posadas → Eldorado → Iguazú bordeando el Paraná
+      // por la RN 12, y Oberá está tierra adentro, ~60 km al sudeste de esa
+      // línea. El pin quedaba colgado lejos del trazado, como si fuera un error
+      // de dibujo. **Sigue en `corridors.ts`** (texto del corredor Misiones y su
+      // array `cities`): la empresa sí llega a Oberá, lo que no funciona es
+      // mostrarla como nodo de un troncal que no la toca. Si algún día se
+      // dibuja el ramal RN 14 hacia Oberá, el pin puede volver — la coordenada
+      // verificada era [-27.4850, -55.1203].
       { name: "Eldorado", role: "Corredor Misiones RN 12", coords: [-26.4049, -54.6262] },
       { name: "Puerto Iguazú", role: "Fin del troncal Misiones", coords: [-25.6113, -54.5763] },
     ];
