@@ -4,6 +4,27 @@ import { HERO_VIDEOS, HERO_VIDEO_SLIDE_MS } from '../config/hero';
 
 // Notas internas (no publicar en el HTML):
 //
+// TARJETA "SOCIO ESTRATÉGICO" — SE ACHICA SOLO EN MOBILE (11/08). Subió al hero
+// el 08/08 y quedó con medidas fijas: `p-6`, `mt-8`, título `text-lg`, cuerpo
+// `leading-relaxed`, todas sin prefijo responsive. O sea que un celular de 375
+// px la mostraba EXACTAMENTE igual que un monitor de 1280.
+//
+// Medido antes de tocar nada, a 375 px: la tarjeta ocupaba 295 px de alto (el
+// 44% de la pantalla en un viewport de 667) y **se cortaba 76 px** — los dos
+// últimos renglones del párrafo caían abajo del pliegue. Era el riesgo que ya
+// estaba anotado al mudarla acá ("en mobile puede quedar cargado").
+//
+// Lo que se achicó, TODO con `sm:` para que el desktop no cambie un pixel:
+// padding 24→16, margen superior 32→24, título 18→16 px e interlineado del
+// párrafo de `relaxed` a `snug`.
+//
+// 🔴 EL CUERPO SE QUEDA EN `text-sm` (14 px) A PROPÓSITO. Bajarlo a `text-xs`
+// ahorraba otros ~40 px, pero 12 px para un párrafo largo se lee mal justo en
+// la pantalla por donde entra la mayoría del tráfico. Si alguna vez hace falta
+// achicarla más, el camino NO es apretar más la letra: es cortar el párrafo en
+// mobile y dejar solo la frase-título (el plan B que propuso Franco y que
+// Romualdo prefería). No cuesta posicionamiento — el texto seguiría en el HTML.
+//
 // HERO CON VIDEO. Reemplazó al carrusel de 7 fotos el 29/07. La estructura
 // (slides, controles, gradientes dobles, puntos de navegación) vino de un
 // handoff de Antigravity; acá quedó ya saneada para producción.
@@ -148,11 +169,11 @@ const getVideoUrl = (src: string) => {
       <p class="text-lg sm:text-xl text-neutral-300 max-w-2xl animate-fade-up" style="animation-delay: 0.2s">
         Corredores regulares desde Buenos Aires al NEA, ida y vuelta con carga en las dos puntas.
       </p>
-      <div class="mt-8 max-w-xl bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-6 flex items-start gap-3 animate-fade-up" style="animation-delay: 0.3s">
+      <div class="mt-6 sm:mt-8 max-w-xl bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-4 sm:p-6 flex items-start gap-2.5 sm:gap-3 animate-fade-up" style="animation-delay: 0.3s">
         <span class="w-3 h-3 rounded-full bg-brand-red mt-1.5 shrink-0"></span>
         <div class="min-w-0">
-          <p class="text-lg font-bold text-white">Un socio estratégico, no solo un transporte</p>
-          <p class="text-neutral-200 text-sm mt-2 leading-relaxed">
+          <p class="text-base sm:text-lg font-bold text-white">Un socio estratégico, no solo un transporte</p>
+          <p class="text-neutral-200 text-sm mt-1.5 sm:mt-2 leading-snug sm:leading-relaxed">
             Flota 100% propia, con monitoreo satelital 24/7 desde nuestro centro de tráfico. Alianzas operativas para el Mercosur y base de cross-docking en Fontana (Chaco) para la logística y distribución en el NEA. Acompañamos la operación de nuestros clientes todos los días.
           </p>
         </div>
