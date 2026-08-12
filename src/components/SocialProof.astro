@@ -179,10 +179,23 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
 // "las siguientes" anuncia una lista y abajo hay una cinta en movimiento, no
 // una lista.
 //
-// ⚠️ EL H3 TIENE QUE VERSE CLARAMENTE SUBORDINADO AL H2 (pedido del director,
-// 08/08), o la jerarquía se invierte a la vista aunque el HTML esté bien: va
-// más chico, más liviano y en un gris más apagado que el H2 (que sigue en
-// font-display y neutral-800).
+// ⚠️ EL H3 TIENE QUE VERSE SUBORDINADO AL H2 (pedido del director, 08/08), o la
+// jerarquía se invierte a la vista aunque el HTML esté bien: va más chico, más
+// liviano y en un gris más apagado que el H2 (que sigue en font-display y
+// neutral-800).
+//
+// 🔴 PERO EL 11/08 ROMUALDO PIDIÓ LO CONTRARIO: "este «agradecemos» tendría que
+// ser como más importante que todo". Los dos pedidos no se pueden cumplir
+// enteros, así que se subió el H3 **un escalón y no más**: de
+// `text-base sm:text-lg` a `text-lg sm:text-xl`, y de `neutral-500` a
+// `neutral-700`. Gana presencia sin invertir nada — el H2 sigue casi al doble
+// de tamaño y en la tipografía de titulares.
+//
+// **Por qué no se le dio más:** el H2 es la frase de filosofía que el propio
+// Romualdo mandó poner arriba el 07/08. Agrandar el agradecimiento hasta
+// superarlo desarma lo que él mismo pidió tres días antes. Si al verlo insiste,
+// el camino no es seguir subiendo este: es **volver a dar vuelta los dos**,
+// que es un cambio de jerarquía consciente y no una escalada de tamaños.
 //
 // El `max-w-*` de cada título no es decorativo: controla en cuántas líneas
 // parte. El H2 viejo (54 caracteres) usaba max-w-3xl para partir en dos líneas
@@ -199,7 +212,7 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
       <h2 class="text-3xl sm:text-4xl text-neutral-800 mb-3 font-display max-w-2xl mx-auto text-balance">
         Los clientes ocupan la posición más importante en la empresa, hacemos lo que es mejor para ellos siempre
       </h2>
-      <h3 class="text-base sm:text-lg font-semibold text-neutral-500 max-w-2xl mx-auto">
+      <h3 class="text-lg sm:text-xl font-semibold text-neutral-700 max-w-2xl mx-auto">
         Agradecemos a las empresas que confiaron en nosotros
       </h3>
     </div>

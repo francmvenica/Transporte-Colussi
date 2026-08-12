@@ -121,48 +121,98 @@ export const CLIENTS: Client[] = [
   // El ORDEN de este bloque es el que se ve en el primer pantallazo, así que
   // importa. Este orden lo definió Franco el 30/07.
   //
-  // ⚠️ WALMART VA ÚLTIMO POR DECISIÓN DE FRANCO, y conviene saber que eso
-  // CONTRADICE lo que dictó Romualdo en la reunión del 29/07: "Walmart y Dorinka
-  // van juntos, 1º Walmart y 2º Dorinka". Se le marcó la contradicción y
-  // respondió "Walmart dejalo último". No se re-litiga — pero queda anotado
-  // acá para poder contrastarlo cuando llegue la foto con el orden que Romualdo
-  // se comprometió a pasar, que es la que manda sobre este bloque.
+  // 🟢 DORINKA VUELVE A IR PEGADA A WALMART (11/08). Este bloque decía que
+  // Franco había decidido "Walmart último", contradiciendo lo que Romualdo
+  // dictó el 29/07 ("Walmart y Dorinka van juntos"). El 11/08 Romualdo lo
+  // repitió sin que se lo preguntaran —"Dorinka iría junto con Walmart, uno es
+  // sucesión del otro"— y Franco lo aprobó. **Se cumple el pedido original:**
+  // Walmart cierra los destacados y Dorinka abre el resto, así que en la cinta
+  // quedan una atrás de la otra. Tiene sentido de negocio: son la misma firma
+  // (Dorinka S.R.L. es la sociedad operativa del Grupo de Narváez, que compró
+  // Walmart Argentina en 2020).
   //
-  // Dorinka sigue sin aparecer: falta su logo (ver nota de arriba).
-  { name: 'Molinos Río de la Plata', image: molinosRioDeLaPlata, featured: true, visualScale: 1.22 },
-  { name: 'Nestlé', image: nestle, featured: true, visualScale: 1.45 }, // ⚠️ chico: canvas casi cuadrado con mucho margen interno
-  { name: 'Arcor', image: arcor, featured: true, visualScale: 1.45 }, // ⚠️ chico: señalado por el cliente
-  { name: 'Establecimiento Las Marías', image: establecimientoLasMarias, featured: true },
-  { name: 'Softys', image: softys, featured: true },
-  { name: 'ACON TIMBER', image: aconTimber, featured: true },
-  { name: 'NutriCorrientes', image: nutricorrientes, featured: true },
-  { name: 'SolFrut', image: solfrut, featured: true, visualScale: 1.0 },
-  { name: 'Colven', image: colven, featured: true, visualScale: 0.8 }, // ⚠️ grande: señalado por el cliente
-  { name: 'CHEP', image: chep, featured: true, visualScale: 1.45 },
-  // ⚠️ SUBIDO DE 1.2 A 1.7 EL 10/08, a pedido del cliente. Malsa era el logo
-  // MÁS CHICO de los 25: área visual 2563 contra una mediana de 5096, o sea la
-  // mitad. La causa es el margen interno del PNG — canvas 383×256 con el
-  // contenido ocupando 282×101, apenas el 39% del alto —, así que el
-  // `object-contain` fitea aire y el logo queda diminuto. 1.7 lo deja en ~5140,
-  // prácticamente la mediana. El canvas escalado desborda la celda, pero lo que
-  // desborda es transparente: no se ve ni tapa al vecino.
-  { name: 'Malsa', image: malsa, featured: true, visualScale: 1.7 }, // el corte: "hasta Malsa"
-  { name: 'Walmart', image: walmart, featured: true, visualScale: 0.84 }, // ⚠️ último por decisión de Franco, ver nota
+  // ══════════════════════════════════════════════════════════════════════════
+  // 🔴 JERARQUÍA POR TAMAÑO — 11/08. LEER ESTO ANTES DE TOCAR UN `visualScale`.
+  // ══════════════════════════════════════════════════════════════════════════
+  //
+  // Hasta el 10/08 el criterio era **igualar**: todos los logos con el mismo
+  // peso óptico, porque el 07/08 Romualdo fue explícito ("todos iguales", nadie
+  // se agranda por facturar más). **El 11/08 pidió lo contrario:** que los
+  // principales se destaquen y los secundarios se achiquen. Franco se lo marcó
+  // en la reunión, él contestó "tenelo en cuenta" sin cerrarlo, y **Franco
+  // decidió aplicarlo igual**. No es un descuido: es la segunda vez que el
+  // criterio se da vuelta.
+  //
+  // ⚠️ `visualScale` NO ES EL TAMAÑO PERCIBIDO: es la corrección del aire
+  // interno de cada PNG. Medido el 11/08 sobre el render real (bbox no
+  // transparente en `<canvas>`, alfa > 24), la mediana de área visual era 6940
+  // y estos eran los extremos:
+  //   · CEFAS y Buyatti tenían `0.8` y se veían en **1.01× la mediana**.
+  //   · Nestlé, Arcor y CHEP tenían `1.45` y se veían en **0.71–0.74×**.
+  // O sea que dos logos con escalas opuestas se veían casi iguales. **Por eso
+  // los números de abajo no se eligieron a ojo ni se movieron "un poco":** cada
+  // uno sale de `escalaActual × √(áreaObjetivo / áreaMedida)`, con objetivo
+  // 1,20× la mediana para los destacados y 0,72× para los secundarios.
+  //
+  // 🔎 La percepción del cliente dio EXACTA en los cinco casos que señaló. Lo
+  // más notable: dijo "UAA es más grande que Arcor" y la medición da 1,26×
+  // contra 0,73× — se veía un 73% más grande. **Cuando el dueño dice que un
+  // logo está chico, medí antes de discutir.**
+  //
+  // ⚠️ RIESGO ASUMIDO por Franco: CEFAS, Vicentin y Buyatti bajan por debajo de
+  // 0,8, que era el piso de toda la cinta. Un logo mucho más chico que su vecino
+  // se lee distinto de "no destacado", que es justo lo que Romualdo quería
+  // evitar el 07/08 (que los clientes chicos "no se sientan discriminados").
+  // **Si al verlo no cierra, el ajuste es subir el piso de los secundarios, no
+  // rehacer la calibración.**
+  { name: 'Molinos Río de la Plata', image: molinosRioDeLaPlata, featured: true, visualScale: 1.24 }, // ↑ 1.22 · medía 1.16×
+  { name: 'Nestlé', image: nestle, featured: true, visualScale: 1.88 }, // ↑ 1.45 · medía 0.71×, de los más chicos pese a la escala alta
+  { name: 'Arcor', image: arcor, featured: true, visualScale: 1.86 }, // ↑ 1.45 · medía 0.73×
+  { name: 'Establecimiento Las Marías', image: establecimientoLasMarias, featured: true, visualScale: 1.12 }, // ↑ sin escala · medía 0.96×
+  { name: 'Softys', image: softys, featured: true, visualScale: 1.06 }, // ↑ sin escala · medía 1.07×
+  { name: 'ACON TIMBER', image: aconTimber, featured: true, visualScale: 1.05 }, // ↑ sin escala · medía 1.08×
+  { name: 'NutriCorrientes', image: nutricorrientes, featured: true, visualScale: 1.04 }, // ↑ sin escala · medía 1.10×
+  { name: 'SolFrut', image: solfrut, featured: true, visualScale: 1.37 }, // ↑ 1.0 · era el MÁS CHICO de los 25 (0.64×)
+  { name: 'Colven', image: colven, featured: true, visualScale: 0.8 }, // sin cambio: no está en ninguna de las dos listas
+  { name: 'CHEP', image: chep, featured: true, visualScale: 1.84 }, // ↑ 1.45 · medía 0.74×
+  { name: 'Malsa', image: malsa, featured: true, visualScale: 2.16 }, // ↑ 1.7 · medía 0.74×. Ver nota de abajo
+  // ⚠️ MALSA ES EL CASO EXTREMO y por eso su número asusta. Su PNG tiene el
+  // contenido en el 39% del alto del canvas y el resto es aire, así que
+  // `object-contain` fitea el vacío. Ya venía de 1.2 → 1.7 el 10/08. Con 2.16
+  // el canvas escalado desborda la celda, **pero lo que desborda es
+  // transparente**: no se ve ni tapa al vecino (verificado el 10/08 y
+  // re-verificado ahora). La solución de fondo sería recortar el PNG.
+  { name: 'Walmart', image: walmart, featured: true, visualScale: 0.84 }, // sin cambio · cierra los destacados
   // ── Resto: aparecen una vez en la cinta, en la misma línea que los de arriba.
+  //
+  // 🔴 EL ORDEN DE ESTE ARRAY NO ES EL ORDEN EN PANTALLA. `SocialProof.astro`
+  // reparte la lista entre **3 columnas por módulo** (la columna `col` se queda
+  // con los índices col, col+3, col+6…), así que dos entradas consecutivas acá
+  // terminan en columnas distintas y NO se ven juntas.
+  //
+  // Por eso Dorinka está TERCERA y no primera. Para que caiga pegada a Walmart
+  // tiene que cumplir dos condiciones a la vez:
+  //   1. Caer en la **columna 2**, que es donde está Walmart (índice 11 de los
+  //      principales; 11 % 3 = 2). O sea: índice ≡ 2 (mod 3) dentro del resto.
+  //   2. Ser **la primera del resto en esa columna**, porque el ciclo de cada
+  //      columna arranca con sus principales y Walmart es el último de los suyos.
+  // Con Dorinka en el índice 2 se cumplen las dos y queda inmediatamente
+  // después de Walmart. **Si se agrega o se saca una entrada antes que ella,
+  // se rompe y hay que recontar** — verificado en el DOM, no supuesto.
   { name: 'Quilmes', image: quilmes, featured: false }, // ⚠️ a confirmar con la foto
   { name: 'Molino Cañuelas', image: molinoCanuelas, featured: false, visualScale: 1.37 }, // ⚠️ "también puede ir arriba"
+  { name: 'Dorinka', featured: false }, // 🟢 POSICIÓN CALCULADA (11/08) para caer pegada a Walmart — ver nota de arriba. Marca denominativa, sin logo: va como celda de texto
   { name: 'Aguas Danone', image: aguasDanone, featured: false, visualScale: 0.84 }, // bajado por pedido explícito
-  { name: 'Vicentin', image: vicentin, featured: false, visualScale: 0.8 },
+  { name: 'Vicentin', image: vicentin, featured: false, visualScale: 0.64 }, // ↓ 0.8 · medía 1.13× · "no es importante, ya no existe más"
   { name: 'Ferrum', image: ferrum, featured: false, visualScale: 1.38 },
-  { name: 'Buyatti', image: buyatti, featured: false, visualScale: 0.8 },
+  { name: 'Buyatti', image: buyatti, featured: false, visualScale: 0.68 }, // ↓ 0.8 · medía 1.01×, no 0.8
   { name: 'Grupo Cepas', image: grupoCepas, featured: false, visualScale: 1.24 },
-  { name: 'Unión Agrícola de Avellaneda', image: unionAgricolaAvellaneda, featured: false },
+  { name: 'Unión Agrícola de Avellaneda', image: unionAgricolaAvellaneda, featured: false, visualScale: 0.76 }, // ↓ sin escala · era el MÁS GRANDE (1.26×)
   { name: 'RPB Baggio', image: rpbBaggio, featured: false, visualScale: 1.39 },
-  { name: 'Dorinka', featured: false }, // 🔴 marca denominativa, sin logo — ver nota de arriba. Reemplaza a "Grupo de Narváez"
-  { name: 'Molinos Agro', image: molinosAgro, featured: false, visualScale: 0.86 },
+  { name: 'Molinos Agro', image: molinosAgro, featured: false, visualScale: 0.86 }, // ⚠️ NO se toca: el "Molinos" que pidió agrandar es Río de la Plata
   { name: 'Fiplasto', image: fiplasto, featured: false, visualScale: 0.8 },
   { name: 'Sanesa', image: sanesa, featured: false, visualScale: 0.86 },
-  { name: 'CEFAS', image: cefas, featured: false, visualScale: 0.8 }, // ⚠️ grande: señalado por el cliente
+  { name: 'CEFAS', image: cefas, featured: false, visualScale: 0.68 }, // ↓ 0.8 · medía 1.01× · "ni me calientan"
 ];
 
 // Sectores atendidos (brief de la empresa, sección 4 y 9).
