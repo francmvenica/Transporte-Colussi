@@ -75,7 +75,23 @@ export const CORRIDORS: Corridor[] = [
   {
     title: 'Internacional: Brasil y Paraguay',
     description:
-      'Transporte internacional de cargas completas al Mercosur por dos pasos fronterizos: Clorinda hacia Paraguay, con extensión a Asunción, y Paso de los Libres hacia Brasil, con extensión a Uruguaiana. Operamos con alianzas operativas con empresas de los dos países.',
+      // 🔴 REESCRITO EL 11/08 con el texto que dictó Franco, palabra por palabra.
+      // Resuelve las cuatro objeciones que Romualdo hizo en la reunión sobre una
+      // sola frase:
+      //   1. "Brasil y Paraguay NO son el Mercosur, es una parte del Mercosur" →
+      //      sale "al Mercosur". ⚠️ SOLO DE ACÁ: la palabra sigue en otros 8
+      //      lugares del sitio a propósito (decisión de Franco del 11/08). Él
+      //      objetó este texto, no el término en todo el sitio. NO completar el
+      //      barrido creyendo que quedó a medias.
+      //   2. "Vamos a cualquier parte de Paraguay y de Brasil" → salen las dos
+      //      "extensiones" (Asunción y Uruguaiana).
+      //   3. "Si un cliente nos pide por otros pasos, también podemos. Yo no me
+      //      encasillaría" → sale el "por dos pasos fronterizos". Los pasos
+      //      siguen nombrados en `cities` de abajo, que es lo que él mismo
+      //      ofreció conservar; lo que se elimina es la afirmación de que son
+      //      esos DOS y nada más.
+      //   4. "Operamos con alianzas operativas" es redundante → "Tenemos".
+      'Transporte internacional de cargas completas. Tenemos alianzas operativas con empresas de los dos países.',
     cities: ['Clorinda → Paraguay', 'Paso de los Libres → Brasil', 'Uruguaiana'],
   },
 ];

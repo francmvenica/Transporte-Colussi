@@ -26,12 +26,21 @@
 // tarjeta de texto (NO una sección propia con fotos de taller: eso se
 // descartó, mismo criterio que la galería). Vende CUMPLIMIENTO — que el
 // cliente entienda que no se deja de cumplir porque se rompe un camión
-// ("antes de que se rompa, ya estoy"). Dos piezas del dictado de Romualdo que
-// casi se pierden: "de todas nuestras unidades" (es la garantía real — no es
-// lo mismo mantenimiento que mantenimiento a TODA la flota) y "la limpieza"
-// (el cliente la metió DENTRO del concepto de mantenimiento, no como una foto
-// aparte: "cuando hablamos del mantenimiento, hablamos mantenimiento
-// preventivo, hablamos de la limpieza"). NO va en config/services.ts /
+// ("antes de que se rompa, ya estoy"). La pieza del dictado que hay que
+// conservar sí o sí es "de todas nuestras unidades": es la garantía real, no es
+// lo mismo hacer mantenimiento que hacerlo en TODA la flota.
+//
+// 🔴 "Y LIMPIEZA" SALIÓ EL 11/08, Y LO SACÓ EL MISMO QUE LO HABÍA PEDIDO. El
+// 08/08 la limpieza entró acá justamente porque Romualdo la había metido dentro
+// del concepto de mantenimiento ("cuando hablamos del mantenimiento, hablamos
+// mantenimiento preventivo, hablamos de la limpieza"), y se anotó como un
+// dictado recuperado que casi se pierde. Tres días después, leyendo la ficha en
+// voz alta, la bajó: "la limpieza no. Se entiende que está limpio; es como
+// decir «me baño todos los días»". **No se repone.** Se deja escrito el
+// recorrido completo para que nadie lea el comentario viejo y la devuelva
+// creyendo que se perdió otra vez.
+//
+// NO va en config/services.ts /
 // "Nuestros Servicios": Romualdo puso el límite ("ese es el servicio a los
 // clientes; después vos estás contando cosas internas") — mantenimiento y
 // monitoreo son internos, no un servicio a terceros.
@@ -61,6 +70,6 @@ export const FLEET_SPECS: FleetSpec[] = [
   {
     label: 'Mantenimiento Preventivo',
     value:
-      'Hacemos mantenimiento preventivo y limpieza de todas nuestras unidades, según manual del fabricante, para mayor seguridad en la operación.',
+      'Hacemos mantenimiento preventivo a todas nuestras unidades, según manual del fabricante, para mayor seguridad en la operación.',
   },
 ];

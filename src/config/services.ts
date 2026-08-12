@@ -93,7 +93,21 @@ export const SERVICES: Service[] = [
     summary:
       'Cross-docking, picking, almacenaje y distribución en Chaco, Formosa, Corrientes, Misiones y norte de Santa Fe.',
     description:
-      'Base de cross-docking, picking y almacenaje en Fontana, Chaco, que articula con las plantas de producción de nuestros clientes. Retiramos cargas consolidadas desde su planta y armamos el pedido en el corazón mismo del NEA, optimizando los volúmenes y bajando costos para nuestros clientes. Contamos con personal propio de picking y autoelevador. Trabajamos como socio estratégico de la operación.',
+      // Dos cambios del 11/08, dictados por Romualdo leyendo esta ficha:
+      //   · SALE "y autoelevador" — "se entiende que tenés que tener un
+      //     autoelevador y todo". ⚠️ Ojo: el 07/08 el autoelevador ENTRÓ a esta
+      //     ficha a pedido suyo, cuando declaró que necesitaba que el depósito
+      //     facturara más. No es que se arrepintió del argumento: sacó el ítem
+      //     por obvio. El personal propio de picking, que es el que NO es obvio,
+      //     se queda.
+      //   · "socio estratégico DE LA OPERACIÓN" → "DE NUESTROS CLIENTES". Lo
+      //     corrigió sobre la marcha: "no, al cliente no… ah, como socio
+      //     estratégico de nuestros clientes".
+      //
+      // ⚠️ PENDIENTE QUE NO SE EJECUTÓ: sobre "Contamos con personal propio de
+      // picking" dijo "esto va acá", señalando la pantalla. El audio no registra
+      // hacia dónde apuntaba y no se mueve a ciegas. Preguntarle.
+      'Base de cross-docking, picking y almacenaje en Fontana, Chaco, que articula con las plantas de producción de nuestros clientes. Retiramos cargas consolidadas desde su planta y armamos el pedido en el corazón mismo del NEA, optimizando los volúmenes y bajando costos para nuestros clientes. Contamos con personal propio de picking. Trabajamos como socio estratégico de nuestros clientes.',
   },
   {
     icon: 'Globe',
