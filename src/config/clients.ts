@@ -206,9 +206,9 @@ export const CLIENTS: Client[] = [
   { name: 'Vicentin', image: vicentin, featured: false, visualScale: 0.64 }, // ↓ 0.8 · medía 1.13× · "no es importante, ya no existe más"
   { name: 'Ferrum', image: ferrum, featured: false, visualScale: 1.38 },
   { name: 'Buyatti', image: buyatti, featured: false, visualScale: 0.68 }, // ↓ 0.8 · medía 1.01×, no 0.8
-  { name: 'Grupo Cepas', image: grupoCepas, featured: false, visualScale: 1.24 },
+  { name: 'Grupo Cepas', image: grupoCepas, featured: false, visualScale: 1.15 },
   { name: 'Unión Agrícola de Avellaneda', image: unionAgricolaAvellaneda, featured: false, visualScale: 0.76 }, // ↓ sin escala · era el MÁS GRANDE (1.26×)
-  { name: 'RPB Baggio', image: rpbBaggio, featured: false, visualScale: 1.39 },
+  { name: 'RPB Baggio', image: rpbBaggio, featured: false, visualScale: 1.29 },
   { name: 'Molinos Agro', image: molinosAgro, featured: false, visualScale: 0.86 }, // ⚠️ NO se toca: el "Molinos" que pidió agrandar es Río de la Plata
   { name: 'Fiplasto', image: fiplasto, featured: false, visualScale: 0.8 },
   { name: 'Sanesa', image: sanesa, featured: false, visualScale: 0.86 },

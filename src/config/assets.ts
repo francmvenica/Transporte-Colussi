@@ -95,6 +95,28 @@ export const IMAGES = {
     {
       src: formacionCompleta,
       alt: 'Formación completa de la flota de Transporte Colussi con sus semirremolques estacionados',
+      // 🔴 PEDIDO DEL CLIENTE ABIERTO — ESTA FOTO SE VE RECORTADA A PROPÓSITO.
+      // Romualdo, 11/08: "está cortada, habría que alejarla un poco, que se
+      // vean todos los camiones". **No está cumplido**, y no por olvido.
+      //
+      // La causa es geométrica y ya se midió: el archivo es 1600×709 (ratio
+      // 2,26) y la celda de la galería tiene ratio ~1,50, así que `object-cover`
+      // recorta el 31% del ancho, un 15% de CADA lado. En esta toma la formación
+      // ocupa el ancho completo de borde a borde, o sea que lo que se pierde son
+      // las unidades de las dos puntas. **`object-position` no lo arregla:** solo
+      // elige cuál punta se pierde.
+      //
+      // Se probó `object-contain` el 12/08: se veían los 13 camiones, pero la
+      // foto quedaba en 384×170 dentro de una caja de 256 de alto, con bandas
+      // blancas, desentonando contra las otras ocho que llenan su celda. **Franco
+      // lo miró y decidió volver atrás**: prefiere la prolijidad de la grilla.
+      //
+      // ✅ LO QUE SÍ LO RESUELVE, y es lo que hay que conseguir: **el archivo
+      // original de cámara, antes de que alguien lo recortara a panorámica.** Con
+      // más cielo y más asfalto el ratio baja cerca de 1,5 y la foto llena la
+      // celda entera sin perder un solo camión. Las otras dos salidas —darle dos
+      // columnas, o rediseñar la galería a 4 columnas— sirven, pero cuestan la
+      // simetría de las 3 filas de 3.
     },
     {
       src: curtainSider,
