@@ -3,6 +3,16 @@
 // "Las personas, el verdadero motor" en lugar de "RRHH" como titulo de la
 // seccion. El label del menu sigue diciendo RRHH a proposito (site.ts:103):
 // el titulo largo no entra en la barra de navegacion.
+//
+// Segunda version del texto, el mismo dia: el parrafo institucional viejo
+// ("Creemos en la cultura del trabajo...") VUELVE, ahora como segundo bloque
+// debajo del nuevo. Franco lo pidio asi: el primero explica por que el equipo
+// importa, el segundo invita a postularse. No juntar los dos en un parrafo
+// solo, que fue la version que estuvo publicada unas horas.
+//
+// Tres correcciones de tipeo sobre el texto dictado, no son cambios de
+// contenido: espacio antes del punto en "excepcional", "El talento" con
+// mayuscula despues de coma, y el punto final que faltaba en "competitiva".
 import { SITE } from '../config/site';
 ---
 
@@ -15,9 +25,13 @@ import { SITE } from '../config/site';
         </svg>
       </div>
       <h2 class="text-3xl sm:text-4xl text-neutral-800 mb-6 font-display">Las personas, el verdadero motor</h2>
-      <p class="text-lg text-neutral-800 mb-8 leading-relaxed">
-        Detrás de cada viaje no solo hay unidades de primer nivel, sino un equipo humano excepcional. Desde el sector de Tráfico que coordina cada detalle estratégico, hasta nuestros choferes que cuidan cada carga en la ruta y el personal operativo que respalda la gestión, el talento humano es nuestra mayor ventaja competitiva. Currículum Vitae por e-mail:
+      <p class="text-lg text-neutral-800 mb-5 leading-relaxed">
+        Detrás de cada viaje no solo hay unidades de primer nivel, sino un equipo humano excepcional. Desde el sector de Tráfico que coordina cada detalle estratégico, nuestros choferes que cuidan cada carga en la ruta y el personal operativo que respalda la gestión, el talento humano es nuestra mayor ventaja competitiva.
       </p>
+      <p class="text-lg text-neutral-800 mb-6 leading-relaxed">
+        Creemos en la cultura del trabajo, en la que todos podamos prosperar. Si Usted tiene potencial y desea crecer, en nuestra empresa encontrará el ámbito ideal para desarrollarse.
+      </p>
+      <p class="text-lg text-neutral-800 mb-6 leading-relaxed">Enviar CV:</p>
       <a
         href={`mailto:${SITE.contact.email}`}
         class="inline-flex items-center justify-center px-8 py-4 bg-brand-red text-white font-semibold text-lg rounded-xl hover:bg-brand-red-dark transition-all duration-300 hover:shadow-lg hover:shadow-brand-red/25 hover:-translate-y-1"
