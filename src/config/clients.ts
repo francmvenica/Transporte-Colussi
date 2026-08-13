@@ -165,6 +165,20 @@ export const CLIENTS: Client[] = [
   // evitar el 07/08 (que los clientes chicos "no se sientan discriminados").
   // **Si al verlo no cierra, el ajuste es subir el piso de los secundarios, no
   // rehacer la calibración.**
+  //
+  // 🔴 DOS AJUSTES A PEDIDO DE FRANCO (13/08), MIRANDO EL SITIO PUBLICADO, que
+  // se apartan de la calibración de arriba y por eso quedan escritos acá:
+  //   · **SolFrut baja 20%** (1.37 → 1.10). Ojo con la consecuencia: SolFrut era
+  //     uno de los 10 que Romualdo mandó AGRANDAR el 11/08, y con este ajuste
+  //     sale del grupo de destacados y cae dentro del pelotón. Es un cambio de
+  //     criterio sobre un pedido del cliente, no un error de calibración.
+  //   · **Molinos Agro sube 20%** (0.86 → 1.03), quedando arriba del pelotón sin
+  //     alcanzar a los destacados.
+  //
+  // **Un ajuste porcentual SÍ se puede aplicar directo sobre `visualScale`**,
+  // aunque el número no represente el tamaño percibido: el área renderizada es
+  // proporcional a la escala, así que multiplicar por 0,8 achica un 20% de
+  // verdad. Lo que no se puede hacer a ojo es **fijar** un valor absoluto.
   { name: 'Molinos Río de la Plata', image: molinosRioDeLaPlata, featured: true, visualScale: 1.24 }, // ↑ 1.22 · medía 1.16×
   { name: 'Nestlé', image: nestle, featured: true, visualScale: 1.88 }, // ↑ 1.45 · medía 0.71×, de los más chicos pese a la escala alta
   { name: 'Arcor', image: arcor, featured: true, visualScale: 1.86 }, // ↑ 1.45 · medía 0.73×
@@ -172,7 +186,7 @@ export const CLIENTS: Client[] = [
   { name: 'Softys', image: softys, featured: true, visualScale: 1.06 }, // ↑ sin escala · medía 1.07×
   { name: 'ACON TIMBER', image: aconTimber, featured: true, visualScale: 1.05 }, // ↑ sin escala · medía 1.08×
   { name: 'NutriCorrientes', image: nutricorrientes, featured: true, visualScale: 1.04 }, // ↑ sin escala · medía 1.10×
-  { name: 'SolFrut', image: solfrut, featured: true, visualScale: 1.37 }, // ↑ 1.0 · era el MÁS CHICO de los 25 (0.64×)
+  { name: 'SolFrut', image: solfrut, featured: true, visualScale: 1.1 }, // ↓ 1.37 (−20%, Franco 13/08) · ver la nota de abajo: sale del grupo de destacados
   { name: 'Colven', image: colven, featured: true, visualScale: 0.8 }, // sin cambio: no está en ninguna de las dos listas
   { name: 'CHEP', image: chep, featured: true, visualScale: 1.84 }, // ↑ 1.45 · medía 0.74×
   { name: 'Malsa', image: malsa, featured: true, visualScale: 2.16 }, // ↑ 1.7 · medía 0.74×. Ver nota de abajo
@@ -209,7 +223,7 @@ export const CLIENTS: Client[] = [
   { name: 'Grupo Cepas', image: grupoCepas, featured: false, visualScale: 1.15 },
   { name: 'Unión Agrícola de Avellaneda', image: unionAgricolaAvellaneda, featured: false, visualScale: 0.76 }, // ↓ sin escala · era el MÁS GRANDE (1.26×)
   { name: 'RPB Baggio', image: rpbBaggio, featured: false, visualScale: 1.29 },
-  { name: 'Molinos Agro', image: molinosAgro, featured: false, visualScale: 0.86 }, // ⚠️ NO se toca: el "Molinos" que pidió agrandar es Río de la Plata
+  { name: 'Molinos Agro', image: molinosAgro, featured: false, visualScale: 1.03 }, // ↑ 0.86 (+20%, Franco 13/08, nombrándolo completo). La advertencia vieja decía "NO se toca" porque el "Molinos" que Romualdo mandó agrandar el 11/08 era Río de la Plata, que es OTRA empresa y tiene su propia línea. Sigue valiendo: son dos clientes distintos y no se confunden
   { name: 'Fiplasto', image: fiplasto, featured: false, visualScale: 0.8 },
   { name: 'Sanesa', image: sanesa, featured: false, visualScale: 0.86 },
   { name: 'CEFAS', image: cefas, featured: false, visualScale: 0.68 }, // ↓ 0.8 · medía 1.01× · "ni me calientan"
