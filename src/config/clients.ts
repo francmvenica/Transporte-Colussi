@@ -172,13 +172,30 @@ export const CLIENTS: Client[] = [
   //     uno de los 10 que Romualdo mandó AGRANDAR el 11/08, y con este ajuste
   //     sale del grupo de destacados y cae dentro del pelotón. Es un cambio de
   //     criterio sobre un pedido del cliente, no un error de calibración.
-  //   · **Molinos Agro sube 20%** (0.86 → 1.03), quedando arriba del pelotón sin
-  //     alcanzar a los destacados.
+  //   · **Molinos Agro sube, pero MUCHO MENOS del 20% pedido** (0.86 → 0.88), y
+  //     la razón está medida: con 0.86 ya se veía en **1,17×**, o sea a la par
+  //     de los diez destacados, porque la calibración del 11/08 no lo tocó. El
+  //     +20% completo (1.03) lo dejaba en **1,40×: el logo más grande de toda la
+  //     cinta**, un cliente NO destacado por encima de Nestlé, Arcor y Malsa.
+  //     Con 0.88 queda **medido en 1,03×**: arriba del pelotón (0,72–0,99×) y
+  //     debajo de los diez destacados (1,16–1,21×), que es donde corresponde un
+  //     cliente que no está en esa lista. **Franco eligió esto sabiendo que el
+  //     aumento sobre la escala es del 3% y no del 20% que había pedido.**
+  //
+  // ⚠️ **Los múltiplos de dos corridas distintas NO se comparan entre sí:** la
+  // mediana se recalcula sobre el conjunto, así que al mover un logo se mueve la
+  // vara. El 1,17× y el 1,40× de arriba son de la corrida anterior y el 1,03× de
+  // esta. Cada corrida se lee internamente: quién está arriba de quién.
   //
   // **Un ajuste porcentual SÍ se puede aplicar directo sobre `visualScale`**,
   // aunque el número no represente el tamaño percibido: el área renderizada es
   // proporcional a la escala, así que multiplicar por 0,8 achica un 20% de
   // verdad. Lo que no se puede hacer a ojo es **fijar** un valor absoluto.
+  //
+  // 🔑 **Y la lección del caso Molinos Agro: un porcentaje se aplica sobre lo
+  // que el logo YA mide, no sobre lo que parece medir.** Pedir "+20%" sobre algo
+  // que ya estaba arriba del promedio lo dispara fuera de la escala. Antes de
+  // aplicar un ajuste relativo, mirar dónde está parado ese logo en el ranking.
   { name: 'Molinos Río de la Plata', image: molinosRioDeLaPlata, featured: true, visualScale: 1.24 }, // ↑ 1.22 · medía 1.16×
   { name: 'Nestlé', image: nestle, featured: true, visualScale: 1.88 }, // ↑ 1.45 · medía 0.71×, de los más chicos pese a la escala alta
   { name: 'Arcor', image: arcor, featured: true, visualScale: 1.86 }, // ↑ 1.45 · medía 0.73×
@@ -223,7 +240,7 @@ export const CLIENTS: Client[] = [
   { name: 'Grupo Cepas', image: grupoCepas, featured: false, visualScale: 1.15 },
   { name: 'Unión Agrícola de Avellaneda', image: unionAgricolaAvellaneda, featured: false, visualScale: 0.76 }, // ↓ sin escala · era el MÁS GRANDE (1.26×)
   { name: 'RPB Baggio', image: rpbBaggio, featured: false, visualScale: 1.29 },
-  { name: 'Molinos Agro', image: molinosAgro, featured: false, visualScale: 1.03 }, // ↑ 0.86 (+20%, Franco 13/08, nombrándolo completo). La advertencia vieja decía "NO se toca" porque el "Molinos" que Romualdo mandó agrandar el 11/08 era Río de la Plata, que es OTRA empresa y tiene su propia línea. Sigue valiendo: son dos clientes distintos y no se confunden
+  { name: 'Molinos Agro', image: molinosAgro, featured: false, visualScale: 0.88 }, // ↑ 0.86 · ver la nota de arriba: el +20% que se pidió lo dejaba PRIMERO de toda la cinta. La advertencia vieja decía "NO se toca" porque el "Molinos" que Romualdo mandó agrandar el 11/08 era Río de la Plata, que es OTRA empresa y tiene su propia línea. Sigue valiendo: son dos clientes distintos y no se confunden
   { name: 'Fiplasto', image: fiplasto, featured: false, visualScale: 0.8 },
   { name: 'Sanesa', image: sanesa, featured: false, visualScale: 0.86 },
   { name: 'CEFAS', image: cefas, featured: false, visualScale: 0.68 }, // ↓ 0.8 · medía 1.01× · "ni me calientan"
