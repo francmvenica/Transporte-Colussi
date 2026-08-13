@@ -179,23 +179,36 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
 // "las siguientes" anuncia una lista y abajo hay una cinta en movimiento, no
 // una lista.
 //
-// ⚠️ EL H3 TIENE QUE VERSE SUBORDINADO AL H2 (pedido del director, 08/08), o la
-// jerarquía se invierte a la vista aunque el HTML esté bien: va más chico, más
-// liviano y en un gris más apagado que el H2 (que sigue en font-display y
-// neutral-800).
+// ⚠️ HISTORIA DE LOS TAMAÑOS DE ESTOS DOS TÍTULOS, EN TRES ACTOS. Está escrita
+// entera porque cada acto contradice al anterior, y sin el recorrido cualquiera
+// "corrige" el estado actual creyendo que es un descuido.
 //
-// 🔴 PERO EL 11/08 ROMUALDO PIDIÓ LO CONTRARIO: "este «agradecemos» tendría que
-// ser como más importante que todo". Los dos pedidos no se pueden cumplir
-// enteros, así que se subió el H3 **un escalón y no más**: de
-// `text-base sm:text-lg` a `text-lg sm:text-xl`, y de `neutral-500` a
-// `neutral-700`. Gana presencia sin invertir nada — el H2 sigue casi al doble
-// de tamaño y en la tipografía de titulares.
+// 08/08 — el director pidió que el H3 se viera SUBORDINADO al H2, o la
+// jerarquía se invierte a la vista aunque el HTML esté bien: más chico, más
+// liviano y en un gris más apagado.
 //
-// **Por qué no se le dio más:** el H2 es la frase de filosofía que el propio
-// Romualdo mandó poner arriba el 07/08. Agrandar el agradecimiento hasta
-// superarlo desarma lo que él mismo pidió tres días antes. Si al verlo insiste,
-// el camino no es seguir subiendo este: es **volver a dar vuelta los dos**,
-// que es un cambio de jerarquía consciente y no una escalada de tamaños.
+// 11/08 — Romualdo pidió lo contrario: "este «agradecemos» tendría que ser como
+// más importante que todo". Los dos pedidos no se podían cumplir enteros, así
+// que se subió el H3 un escalón y no más (de `text-base sm:text-lg` a
+// `text-lg sm:text-xl`, y de `neutral-500` a `neutral-700`), y quedó anotado
+// que si insistía el camino NO era seguir escalando tamaños.
+//
+// 🔴 13/08 — INSISTIÓ, y Franco resolvió: el H3 va del MISMO tamaño que el H2
+// (`text-3xl sm:text-4xl`), en `font-display` y en `brand-red`. Ya no hay
+// subordinación visual: los dos títulos miden lo mismo y el agradecimiento gana
+// por color, que es exactamente lo que el cliente venía pidiendo hace dos
+// semanas.
+//
+// **Lo que se aceptó a cambio, para que nadie lo lea como un error:** la
+// jerarquía visual quedó PLANA. Dos títulos del mismo cuerpo, uno encima del
+// otro, ya no se leen como título y bajada. El H2 (la frase de filosofía que el
+// propio Romualdo mandó poner arriba el 07/08) conserva su lugar y su
+// tipografía, pero deja de dominar. Es el precio de cumplir el pedido, y se
+// pagó a sabiendas.
+//
+// **Si alguna vez hay que revisarlo, el movimiento correcto NO es volver a
+// achicar este:** es dar vuelta los dos, que es un cambio de jerarquía
+// consciente y no una escalada de tamaños.
 //
 // El `max-w-*` de cada título no es decorativo: controla en cuántas líneas
 // parte. El H2 viejo (54 caracteres) usaba max-w-3xl para partir en dos líneas
@@ -209,10 +222,10 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
 <section id="clientes" class="bg-neutral-100 border-y border-neutral-200 py-20 lg:py-28">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-12">
-      <h2 class="text-3xl sm:text-4xl text-neutral-800 mb-3 font-display max-w-2xl mx-auto text-balance">
+      <h2 class="text-3xl sm:text-4xl text-neutral-800 mb-4 font-display max-w-2xl mx-auto text-balance">
         Los clientes ocupan la posición más importante en la empresa, hacemos lo que es mejor para ellos siempre
       </h2>
-      <h3 class="text-lg sm:text-xl font-semibold text-neutral-700 max-w-2xl mx-auto">
+      <h3 class="text-3xl sm:text-4xl text-brand-red font-display max-w-2xl mx-auto text-balance">
         Agradecemos a las empresas que confiaron en nosotros
       </h3>
     </div>
