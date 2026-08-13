@@ -13,6 +13,12 @@
 // Tres correcciones de tipeo sobre el texto dictado, no son cambios de
 // contenido: espacio antes del punto en "excepcional", "El talento" con
 // mayuscula despues de coma, y el punto final que faltaba en "competitiva".
+//
+// El boton del mail baja a text-sm/px-5 SOLO en mobile. Con text-lg y px-8
+// medía 344 px de ancho contra un viewport de 360: llegaba al borde derecho,
+// se salia del padding del contenedor y el boton flotante de WhatsApp le
+// tapaba el final de la direccion. La causa es el largo del mail, no el
+// diseño del boton, asi que en sm: hacia arriba queda como estaba.
 import { SITE } from '../config/site';
 ---
 
@@ -34,7 +40,7 @@ import { SITE } from '../config/site';
       <p class="text-lg text-neutral-800 mb-6 leading-relaxed">Enviar CV:</p>
       <a
         href={`mailto:${SITE.contact.email}`}
-        class="inline-flex items-center justify-center px-8 py-4 bg-brand-red text-white font-semibold text-lg rounded-xl hover:bg-brand-red-dark transition-all duration-300 hover:shadow-lg hover:shadow-brand-red/25 hover:-translate-y-1"
+        class="inline-flex items-center justify-center px-5 py-3 text-sm sm:px-8 sm:py-4 sm:text-lg bg-brand-red text-white font-semibold rounded-xl hover:bg-brand-red-dark transition-all duration-300 hover:shadow-lg hover:shadow-brand-red/25 hover:-translate-y-1"
       >
         {SITE.contact.email}
       </a>
