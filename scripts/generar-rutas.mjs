@@ -76,6 +76,16 @@ export const RUTAS = {
     [-29.71250, -57.08784], // Paso de los Libres
   ],
 
+  // Barrido de cierre del 14/08: el conector de la RN 16 tenia el MISMO problema
+  // que el troncal a Iguazu — se ruteo con dos extremos (Resistencia y Saenz Peña)
+  // y pasaba a 9,3 km de Quitilipi, que esta sobre la RN 16 y tiene pin propio.
+  // El pin quedaba colgado al costado de la linea. Se agrega como waypoint.
+  conector_rn16: [
+    [-27.45198, -58.98735], // Resistencia
+    [-26.87077, -60.21501], // Quitilipi (Nominatim, 14/08)
+    [-26.78541, -60.43889], // Presidencia Roque Saenz Peña
+  ],
+
   // 7 y 8. Eje interior de Misiones: Virasoro -> Apostoles -> Campo Grande y
   //    de ahi el cruce a la RN 12.
   conector_misiones_interior: [
