@@ -144,6 +144,17 @@ import 'leaflet/dist/leaflet.css';
      Regla para cualquier mapa o widget de terceros: encerralo en un contenedor
      con stacking context propio. Subirle el z-index al header solo mueve la
      pelea de lugar; la próxima librería vuelve a ganarla. */
+  /* El contenedor del icono centra su contenido, así un pin de cualquier tamaño
+     queda sobre su coordenada exacta. Antes el punto de 14px vivía dentro de un
+     icono de 18x18 anclado al centro, así que estaba corrido ~2px arriba y a la
+     izquierda de su ciudad — invisible con un solo tamaño, evidente al mezclar
+     tamaños distintos. */
+  .custom-div-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .colussi-pin {
     width: 14px;
     height: 14px;
@@ -152,7 +163,34 @@ import 'leaflet/dist/leaflet.css';
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(226,32,38,0.6), 0 2px 6px rgba(0,0,0,0.3);
     cursor: pointer;
-    transition: transform 0.2s ease;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  /* CIUDADES SECUNDARIAS (14/08 → jerarquía pedida el 15/08). Son puntos de PASO,
+     no cabeceras: se dibujan más chicas y sin glow para que no compitan.
+
+     El problema que resuelven: en el interior de Misiones la red pasa por muchas
+     localidades juntas (Apóstoles, Oberá, Campo Grande, Aristóbulo del Valle,
+     San Vicente, San Pedro) y al alejar el mapa los pines se pisaban entre sí.
+
+     🔑 Achicarlos no alcanzaba: superpuestos siguen siendo un borrón. Por eso
+     además DESAPARECEN cuando el mapa está alejado (ver `.zoom-lejos` abajo) y
+     vuelven al acercarse, que es cuando hay lugar para mostrarlos. */
+  .colussi-pin-menor {
+    width: 9px;
+    height: 9px;
+    border-width: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  }
+  .colussi-pin-menor:hover {
+    transform: scale(1.6);
+  }
+
+  /* La clase la pone/saca el script según el zoom. Se ocultan con opacity y no
+     con display:none para que la transición sea suave y el tooltip no salte. */
+  .zoom-lejos .colussi-pin-menor {
+    opacity: 0;
+    pointer-events: none;
   }
   .colussi-pin:hover {
     transform: scale(1.4);
@@ -265,24 +303,29 @@ import 'leaflet/dist/leaflet.css';
       role: string;
       coords: [number, number];
       isHub?: boolean;
+      /** Punto de PASO, no cabecera: se dibuja chico y se oculta al alejar.
+       *  El criterio NO es la población sino el ROL en la red — por eso Clorinda
+       *  y Paso de los Libres quedan grandes pese a ser chicas: son los pasos
+       *  fronterizos, y son parte de lo que el sitio vende. */
+      menor?: boolean;
     }
 
     const cities: CityNode[] = [
       { name: "BUENOS AIRES", role: "Origen de los corredores", coords: [-34.6037, -58.3816] },
-      { name: "Zárate", role: "Corredor RN 12", coords: [-34.0955, -59.0245] },
-      { name: "Salto", role: "Rama oeste", coords: [-34.2918, -60.2545] },
-      { name: "Firmat", role: "Rama oeste", coords: [-33.4581, -61.4860] },
+      { name: "Zárate", role: "Corredor RN 12", coords: [-34.0955, -59.0245], menor: true },
+      { name: "Salto", role: "Rama oeste", coords: [-34.2918, -60.2545], menor: true },
+      { name: "Firmat", role: "Rama oeste", coords: [-33.4581, -61.4860], menor: true },
       { name: "Rosario", role: "Corredor Santa Fe", coords: [-32.9594, -60.6617] },
       { name: "Santa Fe", role: "Corredor RN 11", coords: [-31.6187, -60.7020] },
       { name: "Paraná", role: "Corredor RN 12", coords: [-31.7330, -60.5299] },
-      { name: "Gualeguaychú", role: "Corredor RN 14", coords: [-33.0079, -58.5110] },
+      { name: "Gualeguaychú", role: "Corredor RN 14", coords: [-33.0079, -58.5110], menor: true },
       { name: "Concordia", role: "Corredor RN 14", coords: [-31.3973, -58.0173] },
-      { name: "San Cristóbal", role: "Corredor Oeste", coords: [-30.3120, -61.2323] },
-      { name: "Tostado", role: "Corredor Oeste", coords: [-29.2319, -61.7694] },
-      { name: "Villa Ángela", role: "Sudoeste Chaqueño", coords: [-27.5779, -60.7153] },
-      { name: "Charata", role: "Sudoeste Chaqueño", coords: [-27.2144, -61.1897] },
+      { name: "San Cristóbal", role: "Corredor Oeste", coords: [-30.3120, -61.2323], menor: true },
+      { name: "Tostado", role: "Corredor Oeste", coords: [-29.2319, -61.7694], menor: true },
+      { name: "Villa Ángela", role: "Sudoeste Chaqueño", coords: [-27.5779, -60.7153], menor: true },
+      { name: "Charata", role: "Sudoeste Chaqueño", coords: [-27.2144, -61.1897], menor: true },
       { name: "Sáenz Peña", role: "Centro Chaqueño (RN 16)", coords: [-26.7852, -60.4388] },
-      { name: "Quitilipi", role: "Centro Chaqueño (RN 16)", coords: [-26.8708, -60.2150] },
+      { name: "Quitilipi", role: "Centro Chaqueño (RN 16)", coords: [-26.8708, -60.2150], menor: true },
       { name: "Reconquista", role: "Corredor RN 11", coords: [-29.1416, -59.6467] },
       { name: "Guadalupe Norte", role: "Oficinas centrales", coords: [-28.9380, -59.5611] },
       { name: "Fontana", role: "Centro de distribución", coords: [-27.4172, -59.0342], isHub: true },
@@ -290,9 +333,9 @@ import 'leaflet/dist/leaflet.css';
       { name: "Formosa", role: "Corredor RN 11", coords: [-26.1849, -58.1731] },
       { name: "Clorinda", role: "Paso Fronterizo Paraguay", coords: [-25.2848, -57.7185] },
       { name: "Goya", role: "Corredor RN 12 Corrientes", coords: [-29.1441, -59.2638] },
-      { name: "Bella Vista", role: "Corredor RN 12", coords: [-28.5083, -59.0433] },
+      { name: "Bella Vista", role: "Corredor RN 12", coords: [-28.5083, -59.0433], menor: true },
       { name: "Corrientes", role: "Corredor NEA", coords: [-27.4692, -58.8306] },
-      { name: "Curuzú Cuatiá", role: "Centro Correntino", coords: [-29.7917, -58.0560] },
+      { name: "Curuzú Cuatiá", role: "Centro Correntino", coords: [-29.7917, -58.0560], menor: true },
       // Sumadas el 14/08 con los conectores nuevos de la 4ta ronda. Las tres
       // geolocalizadas contra Nominatim ese mismo día, no puestas a ojo.
       // Saladas y Mercedes son los extremos del eje que Romualdo pidió agregar
@@ -300,8 +343,8 @@ import 'leaflet/dist/leaflet.css';
       // ahora esos dos ejes corrían paralelos sin ninguna conexión en todo el
       // centro de Corrientes. Mercedes ya estaba sobre `conector_goya_curuzu`
       // (a 0,19 km) sin pin que lo mostrara.
-      { name: "Saladas", role: "Corredor Centro Correntino", coords: [-28.2547, -58.6233] },
-      { name: "Mercedes", role: "Centro Correntino", coords: [-29.1836, -58.0800] },
+      { name: "Saladas", role: "Corredor Centro Correntino", coords: [-28.2547, -58.6233], menor: true },
+      { name: "Mercedes", role: "Centro Correntino", coords: [-29.1836, -58.0800], menor: true },
       // 🔴 MONTE CASEROS SACADO EL 15/08, un día después de haberla puesto, y por
       // el mismo criterio con el que se sacó Oberá: el pin quedó a 26,8 km de toda
       // traza y un pin lejos de la línea se lee como un error de dibujo.
@@ -318,7 +361,7 @@ import 'leaflet/dist/leaflet.css';
       // contra Nominatim el 14/08 es [-30.2497, -57.6294].
       // Geolocalizada contra Nominatim el 08/08 (sumada al corredor Buenos
       // Aires–Corrientes, ver config/corridors.ts): -28.0529, -56.0184.
-      { name: "Gobernador Virasoro", role: "Corredor RN 14", coords: [-28.0529, -56.0184] },
+      { name: "Gobernador Virasoro", role: "Corredor RN 14", coords: [-28.0529, -56.0184], menor: true },
       { name: "Paso de los Libres", role: "Paso Fronterizo Brasil", coords: [-29.7125, -57.0877] },
       // isHub SACADO el 08/08: Posadas es base de un tercero, no propia — ver
       // la nota de arriba. Sigue en el mapa como destino del corredor Misiones.
@@ -328,16 +371,16 @@ import 'leaflet/dist/leaflet.css';
       // Grande → empalme con la RN 12. Apóstoles entra porque **ahí cargan en el
       // molino**, que es el motivo que dio Romualdo. Las dos geolocalizadas
       // contra Nominatim el 14/08.
-      { name: "Apóstoles", role: "Corredor Misiones", coords: [-27.9140, -55.7549] },
-      { name: "Campo Grande", role: "Corredor Misiones interior", coords: [-27.2079, -54.9797] },
+      { name: "Apóstoles", role: "Corredor Misiones", coords: [-27.9140, -55.7549], menor: true },
+      { name: "Campo Grande", role: "Corredor Misiones interior", coords: [-27.2079, -54.9797], menor: true },
       // Ramal norte, sumado el 15/08 con `conector_misiones_norte`. Salió de cruzar
       // la reunión del 14/08 contra el mapa ya publicado: Romualdo había pedido
       // "San Vicente, San Pedro" y no se había hecho. Antes de trazarlo, San Vicente
       // estaba a 54 km de toda traza y San Pedro a 94.
       // Las tres geolocalizadas contra Nominatim el 15/08.
-      { name: "Aristóbulo del Valle", role: "Corredor Misiones interior", coords: [-27.0992, -54.8935] },
-      { name: "San Vicente", role: "Corredor Misiones interior", coords: [-26.9933, -54.4866] },
-      { name: "San Pedro", role: "Corredor Misiones interior", coords: [-26.6241, -54.1112] },
+      { name: "Aristóbulo del Valle", role: "Corredor Misiones interior", coords: [-27.0992, -54.8935], menor: true },
+      { name: "San Vicente", role: "Corredor Misiones interior", coords: [-26.9933, -54.4866], menor: true },
+      { name: "San Pedro", role: "Corredor Misiones interior", coords: [-26.6241, -54.1112], menor: true },
       // 🟢 OBERÁ VUELVE AL MAPA EL 14/08, y vuelve sola: no hubo que decidir nada
       // nuevo, se cumplió la condición que este mismo comentario había dejado
       // escrita el 10/08.
@@ -355,7 +398,7 @@ import 'leaflet/dist/leaflet.css';
       // pin puede volver — la coordenada verificada era [-27.4850, -55.1203]".
       // Ese ramal es el que se dibujó hoy, y **Oberá quedó a 1,90 km de la traza
       // nueva** (medido, no estimado). La condición se cumplió tal cual.
-      { name: "Oberá", role: "Corredor Misiones interior", coords: [-27.4850, -55.1203] },
+      { name: "Oberá", role: "Corredor Misiones interior", coords: [-27.4850, -55.1203], menor: true },
       { name: "Eldorado", role: "Corredor Misiones RN 12", coords: [-26.4049, -54.6262] },
       { name: "Puerto Iguazú", role: "Fin del troncal Misiones", coords: [-25.6113, -54.5763] },
     ];
@@ -367,7 +410,10 @@ import 'leaflet/dist/leaflet.css';
     });
 
     cities.forEach(city => {
-      const pinClass = city.isHub ? 'colussi-pin-hub' : '';
+      const pinClass = [
+        city.isHub ? 'colussi-pin-hub' : '',
+        city.menor ? 'colussi-pin-menor' : ''
+      ].filter(Boolean).join(' ');
       const icon = L.divIcon({
         className: 'custom-div-icon',
         html: `<div class="colussi-pin ${pinClass}"></div>`,
@@ -403,6 +449,29 @@ import 'leaflet/dist/leaflet.css';
     Object.keys(TRUNK_ROUTES).forEach(r => TRUNK_ROUTES[r].forEach(p => bounds.extend(p)));
     cities.forEach(c => bounds.extend(c.coords));
     map.fitBounds(bounds, { padding: [24, 24] });
+
+    // JERARQUÍA DE PINES POR ZOOM (15/08, pedido de Franco).
+    //
+    // El problema: en el interior de Misiones la red pasa por seis localidades
+    // juntas y, con el mapa alejado, los pines se pisaban entre sí y quedaba
+    // sucio. Achicarlos ayuda pero no alcanza — superpuestos siguen siendo un
+    // borrón.
+    //
+    // Solución: por debajo de este zoom se muestran SOLO las cabeceras
+    // (capitales, sedes propias y pasos fronterizos). Las secundarias aparecen
+    // al acercarse, que es cuando hay lugar para leerlas.
+    //
+    // El umbral es 7 y no un número redondo por una razón medible: el mapa abre
+    // en fitBounds sobre todo el país, que da zoom ~6, y ahí es donde se veía el
+    // amontonamiento. A 7 ya hay separación suficiente entre los pines de
+    // Misiones, que son los más juntos de la red.
+    const ZOOM_MINIMO_SECUNDARIAS = 7;
+    const contenedor = map.getContainer();
+    const ajustarDetalle = () => {
+      contenedor.classList.toggle('zoom-lejos', map.getZoom() < ZOOM_MINIMO_SECUNDARIAS);
+    };
+    map.on('zoomend', ajustarDetalle);
+    ajustarDetalle();
   };
 
   document.addEventListener('DOMContentLoaded', initMap);
