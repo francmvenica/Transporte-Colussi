@@ -151,6 +151,22 @@ export const IMAGES = {
       // uso que la muestre a más de ~800 px, el nombre del cliente aparece mal
       // escrito en sus propios camiones. En ese caso NO se usa: se pide la
       // edición sobre la foto real sin regenerar las cabinas.
+      //
+      // 🔴 UN DEFECTO MÁS, DETECTADO POR ROMUALDO EL 14/08 Y TODAVÍA SIN
+      // RESOLVER: *"acá me trocharon un camión (…) este Iveco es Tucho (…) este
+      // guardabarro no es de este camión"*. O sea que la edición no solo tocó
+      // los letreros: **también le puso a una unidad un guardabarro que no le
+      // corresponde**, y el dueño de la flota lo vio de una.
+      //
+      // Por qué importa más de lo que parece: los otros defectos son ilegibles
+      // al tamaño publicado, este es de FORMA y se ve a cualquier tamaño. Y lo
+      // nota justamente el público que importa — gente que conoce camiones.
+      //
+      // Queda pendiente identificar cuál de las unidades de la fila es. En la
+      // reunión Romualdo lo señaló en pantalla ("ya te digo cuál es") y la
+      // charla siguió para otro lado sin que quedara anotado. **Hay que
+      // preguntárselo**, y lo más probable es que la salida sea la misma que
+      // para los letreros: pedir la edición sobre la foto real.
     },
   ],
   // Logos pendientes del cliente — usar placeholders
