@@ -30,6 +30,14 @@ const ARCHIVO = 'src/config/rutas-troncales.ts';
 
 import { readFileSync, writeFileSync } from 'node:fs';
 
+// distancia real en km entre dos coordenadas (haversine)
+function dist(a, b) {
+  const R = 6371, t = (x) => (x * Math.PI) / 180;
+  const dl = t(b[0] - a[0]), dg = t(b[1] - a[1]);
+  const h = Math.sin(dl / 2) ** 2 + Math.cos(t(a[0])) * Math.cos(t(b[0])) * Math.sin(dg / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+
 function distanciaPerpendicular(p, a, b) {
   const [py, px] = p, [ay, ax] = a, [by, bx] = b;
   const dx = bx - ax, dy = by - ay;
@@ -54,6 +62,10 @@ function rdp(puntos, tol) {
 
 const [clave, desdeStr, hastaStr, ...resto] = process.argv.slice(2);
 const escribir = resto.includes('--escribir');
+// --borrar saca los vertices intermedios y NO rutea nada. Sirve para los apendices
+// de ida y vuelta: tramos donde la linea sale hacia un lado y vuelve por el mismo
+// camino, dibujando dos lineas superpuestas. Ahi no hay nada que rutear, sobra.
+const soloBorrar = resto.includes('--borrar');
 const intermedios = resto
   .filter((a) => !a.startsWith('--'))
   .map((a) => a.split(',').map(Number));
@@ -75,24 +87,35 @@ if (hasta <= desde || hasta >= puntos.length) {
   process.exit(1);
 }
 
-const wps = [puntos[desde], ...intermedios, puntos[hasta]];
-const coords = wps.map(([lat, lon]) => `${lon},${lat}`).join(';');
-const res = await fetch(`${OSRM}${coords}?overview=full&geometries=geojson`);
-const json = await res.json();
-if (json.code !== 'Ok') { console.error(`OSRM: ${json.code}`); process.exit(1); }
-
-const crudo = json.routes[0].geometry.coordinates.map(([lon, lat]) => [lat, lon]);
-const tramo = rdp(crudo, TOLERANCIA).map(([lat, lon]) => [
-  Number(lat.toFixed(DECIMALES)),
-  Number(lon.toFixed(DECIMALES)),
-]);
+let tramo;
+if (soloBorrar) {
+  const sep = dist(puntos[desde], puntos[hasta]);
+  tramo = [puntos[desde], puntos[hasta]];
+  console.error(`// --borrar: se sacan los ${hasta - desde - 1} vertices del medio`);
+  console.error(`// los extremos quedan a ${(sep * 1000).toFixed(0)} m entre si`);
+  if (sep > 1) {
+    console.error(`// OJO: estan a ${sep.toFixed(1)} km. Con --borrar quedan unidos por una RECTA,`);
+    console.error(`//      que a esa distancia se nota. Si el tramo no es un apendice, ruteá en vez de borrar.`);
+  }
+} else {
+  const wps = [puntos[desde], ...intermedios, puntos[hasta]];
+  const coords = wps.map(([lat, lon]) => `${lon},${lat}`).join(';');
+  const res = await fetch(`${OSRM}${coords}?overview=full&geometries=geojson`);
+  const json = await res.json();
+  if (json.code !== 'Ok') { console.error(`OSRM: ${json.code}`); process.exit(1); }
+  const crudo = json.routes[0].geometry.coordinates.map(([lon, lat]) => [lat, lon]);
+  tramo = rdp(crudo, TOLERANCIA).map(([lat, lon]) => [
+    Number(lat.toFixed(DECIMALES)),
+    Number(lon.toFixed(DECIMALES)),
+  ]);
+  console.error(`// tramo ruteado: ${(json.routes[0].distance / 1000).toFixed(1)} km`);
+}
 
 // Se injerta SIN repetir los vertices de corte: el tramo nuevo ya arranca y
 // termina en ellos.
 const salida = [...puntos.slice(0, desde), ...tramo, ...puntos.slice(hasta + 1)];
 
 console.error(`// ${clave}: ventana ${desde}-${hasta} (${hasta - desde + 1} pts) -> ${tramo.length} pts`);
-console.error(`// tramo ruteado: ${(json.routes[0].distance / 1000).toFixed(1)} km`);
 console.error(`// total de la linea: ${puntos.length} -> ${salida.length} puntos`);
 
 const linea = `  ${clave}: ${JSON.stringify(salida)},`;

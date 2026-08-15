@@ -302,7 +302,20 @@ import 'leaflet/dist/leaflet.css';
       // (a 0,19 km) sin pin que lo mostrara.
       { name: "Saladas", role: "Corredor Centro Correntino", coords: [-28.2547, -58.6233] },
       { name: "Mercedes", role: "Centro Correntino", coords: [-29.1836, -58.0800] },
-      { name: "Monte Caseros", role: "Corredor RN 14", coords: [-30.2497, -57.6294] },
+      // 🔴 MONTE CASEROS SACADO EL 15/08, un día después de haberla puesto, y por
+      // el mismo criterio con el que se sacó Oberá: el pin quedó a 26,8 km de toda
+      // traza y un pin lejos de la línea se lee como un error de dibujo.
+      //
+      // Por qué se movió: la puse el 14/08 porque `conector_curuzu_sur` arrancaba
+      // ahí. **Ese trazado estaba mal.** Franco marcó en el editor que el atajo NO
+      // sale de Monte Caseros: se desprende de la RN 14 unos 25 km al norte
+      // (el punto que marcó está a 0,96 km de la RN 14). Al corregir el conector,
+      // el pueblo se quedó sin línea que lo tocara.
+      //
+      // No es que Colussi no llegue a Monte Caseros: es que ninguna troncal
+      // dibujada pasa por ahí. Si algún día se dibuja el ramal que baja desde la
+      // RN 14 hasta Monte Caseros, el pin puede volver — la coordenada verificada
+      // contra Nominatim el 14/08 es [-30.2497, -57.6294].
       // Geolocalizada contra Nominatim el 08/08 (sumada al corredor Buenos
       // Aires–Corrientes, ver config/corridors.ts): -28.0529, -56.0184.
       { name: "Gobernador Virasoro", role: "Corredor RN 14", coords: [-28.0529, -56.0184] },

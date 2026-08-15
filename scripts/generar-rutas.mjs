@@ -69,11 +69,26 @@ export const RUTAS = {
     [-29.18330, -58.08330], // Mercedes (empalme con la RN 123)
   ],
 
-  // 6. Atajo al sur de Curuzu Cuatia: evita entrar al pueblo y empalma con la
-  //    RN 123 a mitad de camino a Paso de los Libres.
+  // 6. Atajo al sur de Curuzu Cuatia.
+  //
+  // 🔴 CORREGIDO EL 15/08 con las marcas que hizo Franco en el editor. La primera
+  // version (Monte Caseros -> Paso de los Libres) estaba mal por los dos extremos:
+  //  - NO sale de Monte Caseros. El punto de arranque que marco Franco esta a
+  //    0,96 km de la RN 14: el atajo se desprende de la RN 14, no del pueblo.
+  //  - NO entra a Paso de los Libres. Desde el vertice 39 hacia adelante la traza
+  //    vieja se superponia EXACTO (0,00 km) con la RN 14 y con conector_goya_curuzu:
+  //    eran tres lineas dibujadas una encima de la otra. Por eso Franco marco
+  //    "borrar este ingreso". Termina donde empalma y listo.
+  //
+  // Los intermedios son los puntos que marco el en el mapa, no invenciones mias.
   conector_curuzu_sur: [
-    [-30.25000, -57.63330], // Monte Caseros
-    [-29.71250, -57.08784], // Paso de los Libres
+    [-30.07468, -57.99342], // se desprende de la RN 14
+    [-30.07082, -57.96871],
+    [-30.06368, -57.93576],
+    [-30.06428, -57.86848],
+    [-30.06160, -57.83519],
+    [-30.05924, -57.81748],
+    [-29.82216, -57.46420], // empalme con la RN 14, donde empezaba la superposicion
   ],
 
   // Barrido de cierre del 14/08: el conector de la RN 16 tenia el MISMO problema
