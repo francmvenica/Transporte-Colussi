@@ -62,7 +62,7 @@ export const FAQ: FaqItem[] = [
   {
     question: '¿Tienen base o depósito en Fontana, Resistencia o el norte de Santa Fe?',
     answer:
-      'Sí. Nuestras oficinas centrales están en Guadalupe Norte, provincia de Santa Fe, sobre la Ruta Nacional 11. Nuestro centro de distribución (CD Noreste) está en Fontana, Chaco, cerca de la ciudad de Resistencia.',
+      'Sí. Nuestras oficinas centrales están en Guadalupe Norte, provincia de Santa Fe, sobre la Ruta Nacional 11. Nuestro centro de distribución (CD NEA) está en Fontana, Chaco, cerca de la ciudad de Resistencia.',
   },
   {
     question: '¿Operan transporte internacional?',

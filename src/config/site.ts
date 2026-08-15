@@ -52,7 +52,12 @@ export const SITE = {
   },
   sedes: [
     {
-      name: 'Casa Central',
+      // "Casa Central" hasta el 14/08. Lo cambió Franco en la reunión y
+      // Romualdo lo aceptó en el momento: "de última, casa central queda como
+      // muy cosa vieja". Alinea además con el pin del mapa, que decía
+      // "Oficinas centrales" desde el 30/07 mientras esta tarjeta seguía
+      // diciendo "Casa Central" — el sitio se contradecía solo.
+      name: 'Oficina Central',
       // Dirección CORREGIDA 27/07: Calle 7 351, Guadalupe Norte, Santa Fe.
       // Reemplaza a "Ruta 11 Km. 814", que era un dato equivocado del brief
       // original (confirmado con el cliente). El código postal 3574 no cambia:
@@ -67,7 +72,16 @@ export const SITE = {
       phoneRaw: '+5493482558666',
     },
     {
-      name: 'CD Noreste',
+      // "CD Noreste" hasta el 14/08 → "CD NEA", elegido por Franco.
+      //
+      // 📌 Lo que se habló en la reunión, porque el tema quedó a mitad de
+      // camino y conviene no reabrirlo a ciegas: Romualdo pidió "centro de
+      // distribución NEA" y sobre la sigla dijo textual "yo no sabía qué
+      // significa" (por "CD"). Terminó nombrando las dos formas seguidas
+      // ("centro de distribución NEA. CD, NEA"). Franco cerró por la sigla.
+      // Si alguna vez alguien pregunta por qué no está escrito completo, la
+      // respuesta es esta, no un descuido.
+      name: 'CD NEA',
       address: 'Calle 31 Nº770, Fontana, Chaco',
       email: 'cdnoreste@transportecolussi.com.ar',
       // Celular de María, pasado por Franco el 08/08. ⚠️ A CONFIRMAR: el

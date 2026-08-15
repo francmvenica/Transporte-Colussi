@@ -76,18 +76,24 @@ import { SITE } from '../config/site';
       </div>
 
       <div class="lg:col-span-2 space-y-8">
-        <div class="rounded-2xl overflow-hidden shadow-lg border border-neutral-200 h-64">
-          <iframe
-            src={SITE.maps.embedUrl}
-            width="100%"
-            height="100%"
-            style="border:0;"
-            allowfullscreen
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="Ubicación de Transporte Colussi en Google Maps"
-          ></iframe>
-        </div>
+        {/* ACÁ IBA EL MAPA DE GOOGLE EMBEBIDO, y se sacó el 2026-08-14 por
+            pedido del cliente. No fue una decisión de diseño ni un problema
+            técnico: fue COMERCIAL, y por eso conviene que quede escrita.
+
+            Lo propuso Juan Manuel y lo cerró Romualdo. El argumento: el mapa
+            mostraba la sede en Guadalupe Norte y "a un tipo que está en pleno
+            Capital Federal no le gusta ver que nuestra empresa está en el medio
+            de la nada". El sitio le habla también al cargador de Buenos Aires,
+            que es el de mayor volumen, y ubicar la empresa en el mapa jugaba en
+            contra. Romualdo: "si quieren ver dónde estamos, que hagan el
+            esfuerzo".
+
+            Se sumaba un problema concreto del embed: mostraba los negocios
+            vecinos y no a la empresa, que en Google figura sólo como "oficina".
+
+            ⚠️ NO reponerlo por parecer que falta algo. Si alguna vez se
+            repone, la URL verificada de la sede está abajo en `site.ts`
+            (`maps.embedUrl`), que se conserva a propósito. */}
 
         <div class="space-y-6">
           {SITE.sedes.map((sede) => (

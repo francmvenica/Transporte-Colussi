@@ -51,7 +51,7 @@ export const CORRIDORS: Corridor[] = [
   {
     title: 'Buenos Aires – Chaco',
     description:
-      'Cargas completas y contenedores desde Buenos Aires hacia Resistencia, Presidencia Roque Sáenz Peña, Quitilipi, Villa Ángela y Charata, con centro de distribución propio (CDNoreste) en Fontana.',
+      'Cargas completas y contenedores desde Buenos Aires hacia Resistencia, Presidencia Roque Sáenz Peña, Quitilipi, Villa Ángela y Charata, con centro de distribución propio (CD NEA) en Fontana.',
     cities: ['Resistencia', 'Presidencia Roque Sáenz Peña', 'Quitilipi', 'Villa Ángela', 'Charata'],
   },
   {
