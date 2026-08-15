@@ -72,7 +72,13 @@ import 'leaflet/dist/leaflet.css';
       <div class="lg:col-span-7">
         <div class="bg-white p-3 rounded-3xl shadow-xl border border-neutral-200/90 relative z-0 overflow-hidden">
 
-          <div class="absolute top-6 right-6 z-[1000] bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-neutral-200 shadow-md flex items-center gap-3 text-xs font-semibold">
+          {/* El peso de esta leyenda y el de los títulos de las tarjetas de al
+              lado subieron el 14/08: Romualdo, mirando el mapa en la revisión,
+              dijo "esto casi ni se nota la negrita". La leyenda estaba en
+              semibold y los títulos en bold; van un escalón más arriba cada uno.
+              Comentario en formato Astro y NO `<!-- -->` a propósito: los
+              comentarios HTML viajan al build y el gate del proyecto exige cero. */}
+          <div class="absolute top-6 right-6 z-[1000] bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-neutral-200 shadow-md flex items-center gap-3 text-xs font-bold">
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-brand-red"></span> Rutas Troncales</span>
             <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-brand-black"></span> Nuestras bases</span>
           </div>
@@ -96,7 +102,7 @@ import 'leaflet/dist/leaflet.css';
           <div class="flex items-start gap-3 bg-white p-4 rounded-2xl border border-neutral-200/80 shadow-sm">
             <div class="w-3 h-3 rounded-full bg-brand-red mt-1.5 flex-shrink-0"></div>
             <div>
-              <p class="font-bold text-neutral-800 text-sm">Gestión Inteligente de Flota</p>
+              <p class="font-extrabold text-neutral-800 text-sm">Gestión Inteligente de Flota</p>
               <p class="text-neutral-800 text-xs mt-0.5">Unidades conectadas permanentemente a nuestro centro de tráfico con monitoreo satelital 24/7.</p>
             </div>
           </div>
@@ -104,7 +110,7 @@ import 'leaflet/dist/leaflet.css';
           <div class="flex items-start gap-3 bg-white p-4 rounded-2xl border border-neutral-200/80 shadow-sm">
             <div class="w-3 h-3 rounded-full bg-brand-red mt-1.5 flex-shrink-0"></div>
             <div>
-              <p class="font-bold text-neutral-800 text-sm">Corredores Buenos Aires–NEA</p>
+              <p class="font-extrabold text-neutral-800 text-sm">Corredores Buenos Aires–NEA</p>
               <p class="text-neutral-800 text-xs mt-0.5">Conexión directa desde Buenos Aires hacia Formosa, Chaco, Santa Fe, Corrientes y Misiones, vía Rosario, Reconquista y Goya.</p>
             </div>
           </div>
@@ -112,7 +118,7 @@ import 'leaflet/dist/leaflet.css';
           <div class="flex items-start gap-3 bg-white p-4 rounded-2xl border border-neutral-200/80 shadow-sm">
             <div class="w-3 h-3 rounded-full bg-brand-red mt-1.5 flex-shrink-0"></div>
             <div>
-              <p class="font-bold text-neutral-800 text-sm">Conexiones al Mercosur</p>
+              <p class="font-extrabold text-neutral-800 text-sm">Conexiones al Mercosur</p>
               <p class="text-neutral-800 text-xs mt-0.5">Pasos internacionales a Brasil, por Paso de los Libres hacia Uruguaiana, y a Paraguay, por Clorinda hacia Asunción.</p>
             </div>
           </div>
@@ -287,6 +293,16 @@ import 'leaflet/dist/leaflet.css';
       { name: "Bella Vista", role: "Corredor RN 12", coords: [-28.5083, -59.0433] },
       { name: "Corrientes", role: "Corredor NEA", coords: [-27.4692, -58.8306] },
       { name: "Curuzú Cuatiá", role: "Centro Correntino", coords: [-29.7917, -58.0560] },
+      // Sumadas el 14/08 con los conectores nuevos de la 4ta ronda. Las tres
+      // geolocalizadas contra Nominatim ese mismo día, no puestas a ojo.
+      // Saladas y Mercedes son los extremos del eje que Romualdo pidió agregar
+      // (`conector_saladas_sur`), que es el que une la RN 12 con la RN 123: hasta
+      // ahora esos dos ejes corrían paralelos sin ninguna conexión en todo el
+      // centro de Corrientes. Mercedes ya estaba sobre `conector_goya_curuzu`
+      // (a 0,19 km) sin pin que lo mostrara.
+      { name: "Saladas", role: "Corredor Centro Correntino", coords: [-28.2547, -58.6233] },
+      { name: "Mercedes", role: "Centro Correntino", coords: [-29.1836, -58.0800] },
+      { name: "Monte Caseros", role: "Corredor RN 14", coords: [-30.2497, -57.6294] },
       // Geolocalizada contra Nominatim el 08/08 (sumada al corredor Buenos
       // Aires–Corrientes, ver config/corridors.ts): -28.0529, -56.0184.
       { name: "Gobernador Virasoro", role: "Corredor RN 14", coords: [-28.0529, -56.0184] },
@@ -294,16 +310,31 @@ import 'leaflet/dist/leaflet.css';
       // isHub SACADO el 08/08: Posadas es base de un tercero, no propia — ver
       // la nota de arriba. Sigue en el mapa como destino del corredor Misiones.
       { name: "Posadas", role: "Corredor Misiones", coords: [-27.3671, -55.8961] },
-      // 🔴 OBERÁ SACADA DEL MAPA EL 10/08, por pedido de Franco, y NO porque la
-      // coordenada estuviera mal: está bien geolocalizada. El problema es que la
-      // troncal de Misiones va Posadas → Eldorado → Iguazú bordeando el Paraná
-      // por la RN 12, y Oberá está tierra adentro, ~60 km al sudeste de esa
-      // línea. El pin quedaba colgado lejos del trazado, como si fuera un error
-      // de dibujo. **Sigue en `corridors.ts`** (texto del corredor Misiones y su
-      // array `cities`): la empresa sí llega a Oberá, lo que no funciona es
-      // mostrarla como nodo de un troncal que no la toca. Si algún día se
-      // dibuja el ramal RN 14 hacia Oberá, el pin puede volver — la coordenada
-      // verificada era [-27.4850, -55.1203].
+      // Sumados el 14/08 con `conector_misiones_interior`, el eje interior que
+      // pidieron Romualdo y Franco: Gobernador Virasoro → Apóstoles → Campo
+      // Grande → empalme con la RN 12. Apóstoles entra porque **ahí cargan en el
+      // molino**, que es el motivo que dio Romualdo. Las dos geolocalizadas
+      // contra Nominatim el 14/08.
+      { name: "Apóstoles", role: "Corredor Misiones", coords: [-27.9140, -55.7549] },
+      { name: "Campo Grande", role: "Corredor Misiones interior", coords: [-27.2079, -54.9797] },
+      // 🟢 OBERÁ VUELVE AL MAPA EL 14/08, y vuelve sola: no hubo que decidir nada
+      // nuevo, se cumplió la condición que este mismo comentario había dejado
+      // escrita el 10/08.
+      //
+      // El recorrido completo, porque es el ejemplo de por qué estas notas se
+      // escriben: SE SACÓ EL 10/08 por pedido de Franco, y NO porque la
+      // coordenada estuviera mal — estaba bien geolocalizada. El problema era que
+      // la única troncal de Misiones iba Posadas → Eldorado → Iguazú bordeando el
+      // Paraná por la RN 12, y Oberá está tierra adentro, ~60 km al sudeste de esa
+      // línea: el pin quedaba colgado lejos del trazado, como si fuera un error de
+      // dibujo. Nunca salió de `corridors.ts`, porque la empresa sí llega a Oberá;
+      // lo que no funcionaba era mostrarla como nodo de un troncal que no la toca.
+      //
+      // La nota cerraba con "si algún día se dibuja el ramal RN 14 hacia Oberá, el
+      // pin puede volver — la coordenada verificada era [-27.4850, -55.1203]".
+      // Ese ramal es el que se dibujó hoy, y **Oberá quedó a 1,90 km de la traza
+      // nueva** (medido, no estimado). La condición se cumplió tal cual.
+      { name: "Oberá", role: "Corredor Misiones interior", coords: [-27.4850, -55.1203] },
       { name: "Eldorado", role: "Corredor Misiones RN 12", coords: [-26.4049, -54.6262] },
       { name: "Puerto Iguazú", role: "Fin del troncal Misiones", coords: [-25.6113, -54.5763] },
     ];
