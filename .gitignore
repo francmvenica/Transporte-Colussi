@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # Config local de herramientas de desarrollo
 .claude/
+
+# Salidas de Playwright cuando se prueba el editor del mapa
+.playwright-mcp/

@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editor del mapa de troncales — Transporte Colussi</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root{
+    --rojo:#E22026; --rojo-osc:#BE171C; --negro:#1a1a1a;
+    --borde:#e2e2e5; --texto:#2a2a2e; --suave:#6b6b73; --fondo:#f6f6f7;
+    --ok:#0a7d3f; --aviso:#b45309;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--texto)}
+  body{display:flex;flex-direction:column;background:var(--fondo)}
+
+  header{background:#fff;border-bottom:1px solid var(--borde);padding:10px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  header h1{font-size:15px;margin:0;font-weight:800;letter-spacing:-.01em}
+  header h1 span{color:var(--rojo)}
+  .modos{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+  .modo{border:1px solid var(--borde);background:#fff;border-radius:8px;padding:7px 12px;font-size:13px;cursor:pointer;font-weight:600;color:var(--texto)}
+  .modo:hover{border-color:#c9c9cf}
+  .modo.on{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+  .ayuda{font-size:12px;color:var(--suave);width:100%;margin-top:2px}
+
+  main{flex:1;display:flex;min-height:0}
+  #mapa{flex:1;min-width:0}
+  aside{width:330px;background:#fff;border-left:1px solid var(--borde);display:flex;flex-direction:column;min-height:0}
+  .sec{padding:12px 14px;border-bottom:1px solid var(--borde)}
+  .sec h2{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--suave);margin:0 0 8px}
+  .lista{overflow-y:auto;flex:1;min-height:80px}
+  .fila{display:flex;align-items:center;gap:8px;padding:5px 14px;font-size:13px;border-bottom:1px solid #f2f2f4;cursor:pointer}
+  .fila:hover{background:#fafafb}
+  .fila.sel{background:#fff2f2}
+  .fila.borrar{background:#fff2f2;text-decoration:line-through;color:#a3a3ab}
+  .swatch{width:12px;height:3px;border-radius:2px;flex:none}
+  .fila .nom{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .fila .n{font-size:11px;color:var(--suave);font-variant-numeric:tabular-nums}
+
+  .btns{display:flex;gap:6px;flex-wrap:wrap}
+  button.acc{border:1px solid var(--borde);background:#fff;border-radius:8px;padding:7px 10px;font-size:12.5px;cursor:pointer;font-weight:600}
+  button.acc:hover{border-color:#c9c9cf}
+  button.acc.rojo{background:var(--rojo);color:#fff;border-color:var(--rojo)}
+  button.acc.gris{color:var(--suave)}
+  button.acc:disabled{opacity:.4;cursor:not-allowed}
+
+  #cambios{list-style:none;margin:0;padding:0;font-size:12.5px;max-height:190px;overflow-y:auto}
+  #cambios li{padding:7px 14px;border-bottom:1px solid #f2f2f4;display:flex;gap:8px;align-items:flex-start}
+  #cambios .tipo{font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.04em;padding:2px 5px;border-radius:4px;flex:none;margin-top:1px}
+  .t-borrar{background:#fee;color:#b91c1c}
+  .t-nueva{background:#e7f6ec;color:var(--ok)}
+  .t-nota{background:#fef3c7;color:var(--aviso)}
+  #cambios .x{margin-left:auto;color:#b0b0b8;cursor:pointer;font-weight:700;flex:none}
+  #cambios .x:hover{color:var(--rojo)}
+  .vacio{padding:14px;font-size:12.5px;color:var(--suave);text-align:center}
+
+  textarea{width:100%;height:130px;font-family:ui-monospace,Consolas,monospace;font-size:11px;border:1px solid var(--borde);border-radius:8px;padding:8px;resize:vertical}
+  .pill{display:inline-block;background:var(--fondo);border:1px solid var(--borde);border-radius:99px;padding:1px 7px;font-size:11px;color:var(--suave)}
+  .leaflet-container{background:#eee}
+  .wp{background:var(--rojo);width:11px;height:11px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+  .pin-old{background:var(--negro);width:8px;height:8px;border-radius:50%;border:2px solid #fff;opacity:.75}
+  .aviso{font-size:12px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;border-radius:8px;padding:8px 10px;margin-top:8px}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Editor del mapa · <span>Transporte Colussi</span></h1>
+  <div class="modos">
+    <button class="modo on" data-modo="ver">👁 Ver</button>
+    <button class="modo" data-modo="trazar">✏️ Trazar ruta</button>
+    <button class="modo" data-modo="nota">📌 Poner nota</button>
+  </div>
+  <div class="ayuda" id="ayuda">Hacé clic en una ruta del mapa o de la lista para seleccionarla. Con la ruta seleccionada podés marcarla para borrar.</div>
+</header>
+
+<main>
+  <div id="mapa"></div>
+  <aside>
+    <div class="sec">
+      <h2>Rutas en el mapa <span class="pill" id="cuenta"></span></h2>
+      <div class="btns">
+        <button class="acc" id="btn-borrar" disabled>Marcar para borrar</button>
+        <button class="acc gris" id="btn-todas">Ver todas</button>
+      </div>
+    </div>
+    <div class="lista" id="lista"></div>
+
+    <div class="sec">
+      <h2>Trazando</h2>
+      <div id="estado-traza" style="font-size:12.5px;color:var(--suave)">Ningún trazado en curso.</div>
+      <div class="btns" style="margin-top:8px">
+        <button class="acc" id="btn-deshacer" disabled>Deshacer punto</button>
+        <button class="acc rojo" id="btn-guardar" disabled>Guardar ruta</button>
+        <button class="acc gris" id="btn-cancelar" disabled>Cancelar</button>
+      </div>
+    </div>
+
+    <div class="sec" style="border-bottom:none">
+      <h2>Cambios marcados <span class="pill" id="cuenta-cambios">0</span></h2>
+    </div>
+    <ul id="cambios"><li class="vacio" style="display:block">Todavía no marcaste nada.</li></ul>
+
+    <div class="sec">
+      <div class="btns">
+        <button class="acc rojo" id="btn-copiar" style="flex:1">📋 Copiar para Claude</button>
+      </div>
+      <textarea id="salida" readonly placeholder="Acá aparece el texto para pegarle a Claude."></textarea>
+    </div>
+  </aside>
+</main>
+
+<script>
+const DATOS = __DATOS__;
+
+// ---------------------------------------------------------------- mapa
+const mapa = L.map('mapa', { scrollWheelZoom: true }).setView([-29.5, -58.5], 6);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 18, subdomains: 'abcd'
+}).addTo(mapa);
+
+const PALETA = ['#E22026','#1d4ed8','#047857','#b45309','#7c3aed','#be185d','#0891b2','#4d7c0f',
+                '#9a3412','#4338ca','#0f766e','#a16207','#6d28d9','#b91c1c'];
+
+const capas = {};   // clave -> polyline
+let seleccion = null;
+
+Object.keys(DATOS.rutas).forEach((clave, i) => {
+  const color = PALETA[i % PALETA.length];
+  const linea = L.polyline(DATOS.rutas[clave], {
+    color, weight: 4, opacity: .85, lineCap: 'round', lineJoin: 'round'
+  }).addTo(mapa);
+  linea.bindTooltip(clave, { sticky: true });
+  linea.on('click', (e) => { L.DomEvent.stop(e); seleccionar(clave); });
+  capas[clave] = { linea, color, borrar: false };
+});
+
+// pines existentes, de referencia
+DATOS.pines.forEach(p => {
+  L.marker(p.coords, {
+    icon: L.divIcon({ className: '', html: '<div class="pin-old"></div>', iconSize: [12,12], iconAnchor: [6,6] })
+  }).addTo(mapa).bindTooltip(`${p.nombre} — ${p.rol}`, { direction: 'top' });
+});
+
+mapa.fitBounds(L.latLngBounds(Object.values(DATOS.rutas).flat()), { padding: [24,24] });
+
+// ---------------------------------------------------------------- lista
+const $lista = document.getElementById('lista');
+function pintarLista() {
+  $lista.innerHTML = '';
+  Object.keys(capas).forEach(clave => {
+    const c = capas[clave];
+    const fila = document.createElement('div');
+    fila.className = 'fila' + (seleccion === clave ? ' sel' : '') + (c.borrar ? ' borrar' : '');
+    fila.innerHTML = `<span class="swatch" style="background:${c.color}"></span>
+                      <span class="nom">${clave}</span>
+                      <span class="n">${DATOS.rutas[clave].length}</span>`;
+    fila.onclick = () => seleccionar(clave);
+    $lista.appendChild(fila);
+  });
+  document.getElementById('cuenta').textContent = Object.keys(capas).length;
+}
+
+function seleccionar(clave) {
+  seleccion = clave;
+  Object.entries(capas).forEach(([k, c]) => {
+    c.linea.setStyle({ weight: k === clave ? 7 : 4, opacity: k === clave ? 1 : (seleccion ? .35 : .85) });
+  });
+  capas[clave].linea.bringToFront();
+  document.getElementById('btn-borrar').disabled = false;
+  pintarLista();
+}
+
+document.getElementById('btn-todas').onclick = () => {
+  seleccion = null;
+  Object.values(capas).forEach(c => c.linea.setStyle({ weight: 4, opacity: .85 }));
+  document.getElementById('btn-borrar').disabled = true;
+  pintarLista();
+};
+
+document.getElementById('btn-borrar').onclick = () => {
+  if (!seleccion) return;
+  const c = capas[seleccion];
+  c.borrar = !c.borrar;
+  c.linea.setStyle({ dashArray: c.borrar ? '6 8' : null, opacity: c.borrar ? .45 : 1 });
+  if (c.borrar) agregarCambio({ tipo: 'borrar', clave: seleccion });
+  else quitarCambio(x => x.tipo === 'borrar' && x.clave === seleccion);
+  pintarLista();
+};
+
+pintarLista();
+
+// ---------------------------------------------------------------- modos
+let modo = 'ver';
+const AYUDAS = {
+  ver: 'Hacé clic en una ruta del mapa o de la lista para seleccionarla. Con la ruta seleccionada podés marcarla para borrar.',
+  trazar: 'Hacé clic en el mapa marcando por dónde pasa la ruta. Con dos puntos o más se calcula el camino real por carretera. Cuando termines, "Guardar ruta".',
+  nota: 'Hacé clic donde quieras dejarme una nota escrita.'
+};
+document.querySelectorAll('.modo').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('.modo').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    modo = b.dataset.modo;
+    document.getElementById('ayuda').textContent = AYUDAS[modo];
+    document.getElementById('mapa').style.cursor = modo === 'ver' ? '' : 'crosshair';
+  };
+});
+
+// ---------------------------------------------------------------- trazar
+let waypoints = [];
+let marcadores = [];
+let preview = null;
+
+mapa.on('click', async (e) => {
+  const punto = [ +e.latlng.lat.toFixed(5), +e.latlng.lng.toFixed(5) ];
+
+  if (modo === 'nota') {
+    const texto = prompt('¿Qué querés anotar acá?');
+    if (!texto) return;
+    L.marker(punto, {
+      icon: L.divIcon({ className: '', html: '<div style="background:#b45309;width:12px;height:12px;border-radius:50%;border:2.5px solid #fff"></div>', iconSize:[14,14], iconAnchor:[7,7] })
+    }).addTo(mapa).bindTooltip(texto, { permanent: false, direction: 'top' });
+    agregarCambio({ tipo: 'nota', punto, texto });
+    return;
+  }
+
+  if (modo !== 'trazar') return;
+
+  waypoints.push(punto);
+  const m = L.marker(punto, {
+    icon: L.divIcon({ className: '', html: '<div class="wp"></div>', iconSize: [13,13], iconAnchor: [6.5,6.5] })
+  }).addTo(mapa).bindTooltip(`punto ${waypoints.length}`, { direction: 'top' });
+  marcadores.push(m);
+  await recalcular();
+});
+
+async function recalcular() {
+  const $e = document.getElementById('estado-traza');
+  document.getElementById('btn-deshacer').disabled = waypoints.length === 0;
+  document.getElementById('btn-cancelar').disabled = waypoints.length === 0;
+  document.getElementById('btn-guardar').disabled = waypoints.length < 2;
+
+  if (preview) { mapa.removeLayer(preview); preview = null; }
+  if (waypoints.length < 2) {
+    $e.textContent = waypoints.length ? '1 punto. Marcá al menos uno más.' : 'Ningún trazado en curso.';
+    return;
+  }
+
+  $e.textContent = `Calculando el camino real entre ${waypoints.length} puntos...`;
+  try {
+    const coords = waypoints.map(([la, lo]) => `${lo},${la}`).join(';');
+    const r = await fetch(`https://router.project-osrm.org/route/v1/driving/${coords}?overview=full&geometries=geojson`);
+    const j = await r.json();
+    if (j.code !== 'Ok') throw new Error(j.code);
+    const linea = j.routes[0].geometry.coordinates.map(([lo, la]) => [la, lo]);
+    preview = L.polyline(linea, { color: '#047857', weight: 6, opacity: .9, dashArray: '1 10', lineCap: 'round' }).addTo(mapa);
+    $e.innerHTML = `<b>${waypoints.length} puntos</b> · ${(j.routes[0].distance/1000).toFixed(0)} km de camino real.`;
+  } catch (err) {
+    $e.innerHTML = `<span style="color:#b91c1c">No se pudo calcular (${err.message}). Igual podés guardar: los puntos me sirven.</span>`;
+  }
+}
+
+document.getElementById('btn-deshacer').onclick = async () => {
+  waypoints.pop();
+  const m = marcadores.pop();
+  if (m) mapa.removeLayer(m);
+  await recalcular();
+};
+
+document.getElementById('btn-cancelar').onclick = () => limpiarTraza();
+
+function limpiarTraza() {
+  waypoints = [];
+  marcadores.forEach(m => mapa.removeLayer(m));
+  marcadores = [];
+  if (preview) { mapa.removeLayer(preview); preview = null; }
+  recalcular();
+}
+
+document.getElementById('btn-guardar').onclick = () => {
+  if (waypoints.length < 2) return;
+  const nombre = prompt('¿Qué es esta ruta? (ej: "de Saladas a Mercedes", "corregir el tramo de Iguazú")');
+  if (nombre === null) return;
+  const puntos = waypoints.slice();
+  agregarCambio({ tipo: 'nueva', nombre: nombre || '(sin nombre)', puntos });
+  if (preview) { preview.setStyle({ dashArray: null, opacity: .75 }); preview = null; }
+  waypoints = [];
+  marcadores = [];
+  recalcular();
+};
+
+// ---------------------------------------------------------------- cambios
+let cambios = [];
+const $cambios = document.getElementById('cambios');
+
+function agregarCambio(c) { cambios.push(c); pintarCambios(); }
+function quitarCambio(pred) { cambios = cambios.filter(x => !pred(x)); pintarCambios(); }
+
+function pintarCambios() {
+  document.getElementById('cuenta-cambios').textContent = cambios.length;
+  if (!cambios.length) {
+    $cambios.innerHTML = '<li class="vacio" style="display:block">Todavía no marcaste nada.</li>';
+    generarSalida();
+    return;
+  }
+  $cambios.innerHTML = '';
+  cambios.forEach((c, i) => {
+    const li = document.createElement('li');
+    let txt = '', clase = '', etq = '';
+    if (c.tipo === 'borrar') { etq = 'borrar'; clase = 't-borrar'; txt = c.clave; }
+    if (c.tipo === 'nueva')  { etq = 'nueva';  clase = 't-nueva';  txt = `${c.nombre} (${c.puntos.length} puntos)`; }
+    if (c.tipo === 'nota')   { etq = 'nota';   clase = 't-nota';   txt = c.texto; }
+    li.innerHTML = `<span class="tipo ${clase}">${etq}</span><span>${txt}</span><span class="x" title="quitar">✕</span>`;
+    li.querySelector('.x').onclick = () => {
+      if (c.tipo === 'borrar' && capas[c.clave]) {
+        capas[c.clave].borrar = false;
+        capas[c.clave].linea.setStyle({ dashArray: null, opacity: 1 });
+        pintarLista();
+      }
+      cambios.splice(i, 1);
+      pintarCambios();
+    };
+    $cambios.appendChild(li);
+  });
+  generarSalida();
+}
+
+function generarSalida() {
+  if (!cambios.length) { document.getElementById('salida').value = ''; return; }
+  const L = [];
+  L.push('=== CAMBIOS MARCADOS EN EL EDITOR DEL MAPA ===');
+  L.push(`(generado el ${new Date().toLocaleString('es-AR')})`);
+  L.push('');
+  cambios.forEach((c, i) => {
+    if (c.tipo === 'borrar') L.push(`${i+1}. BORRAR la ruta: ${c.clave}`);
+    if (c.tipo === 'nota')   L.push(`${i+1}. NOTA en ${c.punto[0]},${c.punto[1]} -> "${c.texto}"`);
+    if (c.tipo === 'nueva') {
+      L.push(`${i+1}. RUTA NUEVA/CORREGIDA: "${c.nombre}"`);
+      L.push(`   waypoints: ${c.puntos.map(p => p.join(',')).join(' ; ')}`);
+    }
+  });
+  L.push('');
+  L.push('(los waypoints van en lat,lon — Claude los rutea con OSRM y los simplifica igual que el resto del mapa)');
+  document.getElementById('salida').value = L.join('\n');
+}
+
+document.getElementById('btn-copiar').onclick = async () => {
+  const t = document.getElementById('salida');
+  if (!t.value) { alert('Todavía no marcaste ningún cambio.'); return; }
+  try {
+    await navigator.clipboard.writeText(t.value);
+    const b = document.getElementById('btn-copiar');
+    b.textContent = '✓ Copiado, pegáselo a Claude';
+    setTimeout(() => b.textContent = '📋 Copiar para Claude', 2200);
+  } catch {
+    t.select();
+    alert('No pude copiar solo. El texto quedó seleccionado: copialo con Ctrl+C.');
+  }
+};
+</script>
+</body>
+</html>
