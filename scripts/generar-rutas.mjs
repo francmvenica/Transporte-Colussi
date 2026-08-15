@@ -101,6 +101,24 @@ export const RUTAS = {
     [-26.78541, -60.43889], // Presidencia Roque Saenz Peña
   ],
 
+  // Ramal norte de Misiones, agregado el 15/08. Lo dicto Franco despues de cruzar
+  // la reunion contra el mapa: la RN 14 misionera se cortaba en Campo Grande, y
+  // Romualdo habia pedido "San Vicente, San Pedro" sin que quedara hecho. Medido
+  // antes de trazarlo: San Vicente estaba a 54 km de toda traza y San Pedro a 94.
+  //
+  // Sale de Campo Grande, que es donde terminaba lo dibujado, sube por la RN 14
+  // hasta San Pedro, y de ahi vuelve al oeste por la RP 20 y la RN 17 hasta
+  // Eldorado. CIERRA UN CIRCUITO: Eldorado ya esta sobre la RN 12
+  // (conector_posadas_iguazu), asi que el interior de Misiones deja de ser un
+  // ramal muerto y pasa a tener salida por los dos lados.
+  conector_misiones_norte: [
+    [-27.20794, -54.97969], // Campo Grande (Nominatim 14/08)
+    [-27.09919, -54.89352], // Aristobulo del Valle (Nominatim 15/08)
+    [-26.99327, -54.48664], // San Vicente (Nominatim 15/08)
+    [-26.62405, -54.11115], // San Pedro (Nominatim 15/08)
+    [-26.40490, -54.62620], // Eldorado, por la RP 20 y la RN 17
+  ],
+
   // 7 y 8. Eje interior de Misiones: Virasoro -> Apostoles -> Campo Grande y
   //    de ahi el cruce a la RN 12.
   conector_misiones_interior: [
