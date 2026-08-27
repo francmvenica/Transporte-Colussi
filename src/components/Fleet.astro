@@ -5,7 +5,6 @@ import { FLEET_SPECS } from '../config/fleet';
 import {
   UNIT_TABS,
   MAINTENANCE_COPY,
-  WASH_COPY,
   TRAFFIC_COPY,
   TRAFFIC_PHOTO_PENDING,
 } from '../config/units-tabs';
@@ -130,7 +129,12 @@ import {
     {/* ── Panel 2: Mantenimiento preventivo ──────────────────────────────── */}
     {/* Las dos fotos van con ALTURA IGUAL y ancho libre (`sm:h-[420px] w-auto`),
         no en dos celdas iguales: el taller es apaisado y el lavado es vertical,
-        y forzarlas a la misma caja recorta la vertical. Ver `assets.ts`. */}
+        y forzarlas a la misma caja recorta la vertical. Ver `assets.ts`.
+
+        🔴 Y VAN SIN PIE DE FOTO, a propósito. El texto es del panel, no de cada
+        imagen: el lavadero no es de la empresa y "limpieza" es una palabra que
+        el cliente bajó del sitio, así que cualquier pie sobre esa foto miente o
+        desobedece. El porqué completo está en `units-tabs.ts`. */}
     <div
       role="tabpanel"
       id="panel-mantenimiento"
@@ -141,40 +145,34 @@ import {
       hidden
     >
       <div class="flex flex-col sm:flex-row sm:items-start sm:justify-center gap-6">
-        <figure class="sm:shrink-0">
-          <div class="overflow-hidden rounded-2xl shadow-lg">
-            <Image
-              src={IMAGES.maintenance.taller.src}
-              alt={IMAGES.maintenance.taller.alt}
-              class="w-full h-auto sm:h-[420px] sm:w-auto"
-              widths={[600, 900]}
-              sizes="(max-width: 640px) 100vw, 560px"
-              loading="lazy"
-              quality={75}
-            />
-          </div>
-          <figcaption class="mt-4 text-neutral-800 text-sm leading-relaxed max-w-xl">
-            {MAINTENANCE_COPY}
-          </figcaption>
-        </figure>
+        <div class="overflow-hidden rounded-2xl shadow-lg sm:shrink-0">
+          <Image
+            src={IMAGES.maintenance.taller.src}
+            alt={IMAGES.maintenance.taller.alt}
+            class="w-full h-auto sm:h-[420px] sm:w-auto"
+            widths={[600, 900]}
+            sizes="(max-width: 640px) 100vw, 560px"
+            loading="lazy"
+            quality={75}
+          />
+        </div>
 
-        <figure class="sm:shrink-0">
-          <div class="overflow-hidden rounded-2xl shadow-lg">
-            <Image
-              src={IMAGES.maintenance.lavado.src}
-              alt={IMAGES.maintenance.lavado.alt}
-              class="w-full h-auto sm:h-[420px] sm:w-auto"
-              widths={[400, 640]}
-              sizes="(max-width: 640px) 100vw, 315px"
-              loading="lazy"
-              quality={75}
-            />
-          </div>
-          <figcaption class="mt-4 text-neutral-800 text-sm leading-relaxed max-w-xs">
-            {WASH_COPY}
-          </figcaption>
-        </figure>
+        <div class="overflow-hidden rounded-2xl shadow-lg sm:shrink-0">
+          <Image
+            src={IMAGES.maintenance.lavado.src}
+            alt={IMAGES.maintenance.lavado.alt}
+            class="w-full h-auto sm:h-[420px] sm:w-auto"
+            widths={[400, 640]}
+            sizes="(max-width: 640px) 100vw, 315px"
+            loading="lazy"
+            quality={75}
+          />
+        </div>
       </div>
+
+      <p class="mt-8 mx-auto max-w-3xl text-center text-lg text-neutral-800 leading-relaxed">
+        {MAINTENANCE_COPY}
+      </p>
     </div>
 
     {/* ── Panel 3: Sala de control y tráfico ─────────────────────────────── */}
@@ -189,20 +187,19 @@ import {
       class="mb-16"
       hidden
     >
-      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-center gap-6">
-        <figure class="sm:shrink-0 w-full sm:w-[560px]">
-          <div
-            class="flex items-center justify-center rounded-2xl border-2 border-dashed border-neutral-300 bg-white/60 h-56 sm:h-[420px]"
-          >
-            <p class="text-neutral-500 text-sm font-semibold px-6 text-center">
-              {TRAFFIC_PHOTO_PENDING}
-            </p>
-          </div>
-          <figcaption class="mt-4 text-neutral-800 text-sm leading-relaxed max-w-xl">
-            {TRAFFIC_COPY}
-          </figcaption>
-        </figure>
+      <div class="flex justify-center">
+        <div
+          class="flex items-center justify-center rounded-2xl border-2 border-dashed border-neutral-300 bg-white/60 h-56 sm:h-[420px] w-full sm:w-[560px]"
+        >
+          <p class="text-neutral-500 text-sm font-semibold px-6 text-center">
+            {TRAFFIC_PHOTO_PENDING}
+          </p>
+        </div>
       </div>
+
+      <p class="mt-8 mx-auto max-w-3xl text-center text-lg text-neutral-800 leading-relaxed">
+        {TRAFFIC_COPY}
+      </p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">

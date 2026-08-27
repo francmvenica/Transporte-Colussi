@@ -11,16 +11,28 @@
 // alguien encuentra el descarte del 08/08 en `colussi-2da-ronda-correcciones.md`
 // y cree que esto se coló, la respuesta está acá.
 //
-// 🔴 EL TALLER NO ES PROPIO Y EL TEXTO NO PUEDE DECIR QUE LO ES. Romualdo fue
-// explícito: el mantenimiento se hace en el taller de la CONCESIONARIA. Por eso
-// el copy dice "taller oficial de la marca" y no "nuestro taller".
+// 🔴 EL TEXTO DE MANTENIMIENTO LO DICTÓ ROMUALDO, NO SE REDACTA. Está en la
+// transcripción del 11/08, en la misma charla donde aprobó las pestañas, y va
+// palabra por palabra: es su voz y está aprobado por definición.
 //
-// ⚠️ Y dice "de la marca", no "de IVECO", por decisión de Franco (27/08): las
-// unidades Iveco ya se nombran en todo el sitio porque son los camiones que la
-// empresa compró, pero afirmar por escrito un vínculo con la RED OFICIAL de
-// Iveco es otra cosa, y nadie lo confirmó. Mismo criterio por el que Polivias
-// salió del sitio entero el 30/07. Si algún día el cliente confirma la relación,
-// se nombra; hasta entonces, no.
+// ⚠️ Se escribió uno inventado el 27/08 y hubo que tirarlo. El dictado llevaba
+// dos semanas en la minuta de Notion sin bajar a ningún archivo del proyecto:
+// `estado-construccion.md` avisaba que el sketch de Antigravity no servía como
+// fuente de texto, pero no decía que hubiera un texto del cliente esperando.
+// **Antes de redactar para este sitio se busca en las transcripciones.**
+//
+// 🔴 IVECO SE NOMBRA, Y LO PIDIÓ ÉL. El 27/08 se había decidido escribir "taller
+// oficial de la marca" para no afirmar por escrito un vínculo con la red oficial
+// que nadie había confirmado (el criterio con el que Polivias salió del sitio).
+// El dictado lo desmiente: Romualdo dice "el taller de la concesionaria IVECO" y
+// además es su argumento de venta, "el que más sabe de camiones es el
+// fabricante". Cuidarlo de nombrar a IVECO era cuidarlo de algo que quiere decir.
+//
+// 🔑 Y trae un dato que no estaba en ningún archivo del proyecto: HACEN CONTROL
+// DIARIO PROPIO. El taller de la concesionaria refuerza ese control, no lo
+// reemplaza — "nosotros también lo revisamos, pero además reforzamos nuestro
+// control en los talleres del concesionario de la marca". No borrar ese "además
+// de nuestro control diario": es la mitad del mensaje.
 //
 // 🔴 NINGÚN TEXTO DE ACÁ REPITE LAS SPECS DE `fleet.ts`. Es deliberado y hay que
 // mantenerlo: los textos de este sitio ya están duplicados entre `services.ts`,
@@ -40,22 +52,30 @@ export const UNIT_TABS: UnitTab[] = [
   { id: 'trafico', label: 'Sala de control y tráfico' },
 ];
 
-// Vende CUMPLIMIENTO, que es lo que Romualdo pidió que se entendiera cuando
-// dictó la spec el 08/08: "antes de que se rompa, ya estoy". No vende un taller.
+// DICTADO TEXTUAL DE ROMUALDO, 11/08. No se reescribe ni se "mejora": lo único
+// que se hizo fue unir las dos frases con las que lo dijo. Vende lo que él quiso
+// vender, que es cumplimiento — "antes de que se rompa, ya estoy" (08/08).
 export const MAINTENANCE_COPY =
-  'Cada unidad entra a servicio antes de que aparezca la falla, en el taller oficial de la marca y con los plazos que fija el fabricante. Es lo que hace que una rotura no termine siendo una entrega que no llega.';
+  'Nuestras unidades están atendidas por el que más sabe de camiones, que es el fabricante. Además de nuestro control diario, las unidades se verifican y se revisan preventivamente en el taller de la concesionaria IVECO, que es quien más sabe de la marca.';
 
-// 🔴 EL LAVADO HABLA DEL EQUIPO, NUNCA DEL HÁBITO, y esa distinción es todo el
-// motivo por el que esta línea puede existir. El 08/08 la limpieza entró a la
-// spec de mantenimiento porque el propio Romualdo la había metido ahí; el 11/08
-// la bajó leyéndola en voz alta: "la limpieza no. Se entiende que está limpio;
-// es como decir «me baño todos los días»". Lo que él bajó fue la AFIRMACIÓN de
-// que lavan las unidades, por obvia. Mostrar la instalación es otra cosa: es un
-// activo, como la fachada o la playa cubierta. Por eso este texto describe una
-// máquina y no una costumbre. **Si alguna vez esta línea empieza a decir que las
-// unidades se mantienen limpias, hay que borrarla: eso ya se decidió que no va.**
-export const WASH_COPY =
-  'Equipo de lavado automático propio, con arco de rodillos para tractora y semirremolque.';
+// 🔴 LAS DOS FOTOS DE ESTA PESTAÑA NO LLEVAN PIE. No es un olvido de maquetación:
+// es la única forma de que la del lavado pueda estar acá sin mentir.
+//
+// 1. **El lavadero NO es de la empresa** (dato de Franco, 27/08). El 27/08 esta
+//    pestaña llegó a decir "equipo de lavado automático propio", deducido de que
+//    la foto mostraba un camión de ellos. Nadie lo había verificado y era falso.
+//    Es el mismo error que la playa cubierta, donde Romualdo tuvo que aclarar
+//    "pero no es nuestra". **Ningún texto de acá afirma propiedad de nada.**
+// 2. **"Limpieza" es una palabra que él bajó del sitio** el 11/08 leyendo la
+//    spec en voz alta: "la limpieza no. Se entiende que está limpio; es como
+//    decir «me baño todos los días»". Sin pie de foto, el sitio no la usa.
+//
+// ⚠️ Y AUN ASÍ LA FOTO VA, porque la pidió él. 07/08, textual: "te pasé una foto
+// de la limpieza de las unidades (…) En la parte de mantenimiento. Cuando
+// hablamos de mantenimiento preventivo, hablamos de la limpieza. Esta foto está
+// muy buena para el mantenimiento". Mostrarla es su pedido; describirla era
+// invento nuestro. **Si alguien la ve sin pie y cree que falta algo, esto es por
+// qué está así.**
 
 // Aporta lo que la spec "Gestión de la Flota" no dice: QUIÉN es Tráfico para el
 // cliente. El sector ya está nombrado en RRHH desde el 13/08 ("Desde el sector
