@@ -121,6 +121,19 @@ export const MAINTENANCE_PHOTOS = {
   lavado: { rotulo: 'Lavado automático', pie: 'Lavado de tractora y semirremolque' },
 };
 
+// Los dos chips con tilde de la maqueta. **La FORMA se copió, el CONTENIDO no.**
+// Ahí decían "Repuestos 100% Originales" y "Garantía Oficial IVECO", dos cosas
+// que nadie dijo nunca (ver la nota de arriba). Estos dos salen del dictado:
+//
+//   · "Control diario propio" — 11/08: "además de nuestro control diario".
+//   · "Toda la flota" — es la pieza que Romualdo remarcó el 08/08 y que hay que
+//     conservar sí o sí: "de TODAS nuestras unidades". No es lo mismo hacer
+//     mantenimiento que hacerlo en toda la flota; ahí está la garantía real.
+//
+// 📌 Si algún día el cliente confirma lo de los repuestos originales o la
+// garantía oficial, entran acá y quedan perfectos. Hasta entonces, no.
+export const MAINTENANCE_CHIPS = ['Control diario propio', 'Toda la flota'];
+
 // 🔴 DOS RESTRICCIONES QUE MANDAN SOBRE CUALQUIER TEXTO QUE ACOMPAÑE ESTAS FOTOS,
 // y sobrevivieron a que el layout cambiara dos veces el mismo día:
 //
