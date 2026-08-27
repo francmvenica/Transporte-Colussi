@@ -22,7 +22,27 @@
 // reunión: "está bien, porque esto le dice al cliente cuánto puede cargar". Si
 // vuelve a aparecer la idea, ya se descartó en la mesa.
 //
-// 🔴 MANTENIMIENTO PREVENTIVO — 5ª SPEC, NUEVA EL 08/08. Vende CUMPLIMIENTO — que el
+// ══════════════════════════════════════════════════════════════════════════════
+// 🔴 LA GRILLA BAJÓ DE 5 SPECS A 3 EL 27/08 (decisión de Franco). Salieron
+// "Gestión de la Flota" y "Mantenimiento Preventivo" porque **cada una tenía ya
+// su propia pestaña arriba**, diciendo lo mismo dos veces en la misma sección.
+//
+// ⚠️ EL CONTENIDO NO SE PERDIÓ, SE MUDÓ — y hubo que rescatarlo a mano, porque
+// medido antes de borrar, **dos frases vivían UNA SOLA VEZ en todo el sitio**:
+//   · "según manual del fabricante" → es el chip 3 de Mantenimiento.
+//   · "desde nuestro centro de tráfico propio" → entró al párrafo de la pestaña
+//     Gestión de la Flota, y además es chip. El "propio" es un activo declarado.
+// Si alguien vuelve a mover estas cosas, **medir primero cuántas veces aparece
+// cada frase en `dist/`**: este sitio tiene los textos repartidos en cinco
+// archivos y una frase se puede evaporar sin que nada falle.
+//
+// 📌 La historia de las dos specs que salieron queda ABAJO a propósito. Explica
+// por qué el cliente las pidió y qué NO se puede reponer; sigue valiendo para los
+// textos de las pestañas, que es donde vive ese contenido ahora.
+// ══════════════════════════════════════════════════════════════════════════════
+//
+// 🔴 MANTENIMIENTO PREVENTIVO — FUE LA 5ª SPEC, DESDE EL 08/08 HASTA EL 27/08.
+// Hoy es una pestaña. Vende CUMPLIMIENTO — que el
 // cliente entienda que no se deja de cumplir porque se rompe un camión
 // ("antes de que se rompa, ya estoy"). La pieza del dictado que hay que
 // conservar sí o sí es "de todas nuestras unidades": es la garantía real, no es
@@ -71,16 +91,7 @@ export const FLEET_SPECS: FleetSpec[] = [
     value: '320 / 330 / 360 / 380 / 410 CV. Distintas potencias para cada servicio.',
   },
   {
-    label: 'Gestión de la Flota',
-    value: 'Optimización en tiempo real y monitoreo satelital 24/7 desde nuestro centro de tráfico propio.',
-  },
-  {
     label: 'Antigüedad Promedio',
     value: '7 años. Renovación constante.',
-  },
-  {
-    label: 'Mantenimiento Preventivo',
-    value:
-      'Hacemos mantenimiento preventivo a todas nuestras unidades, según manual del fabricante, para mayor seguridad en la operación.',
   },
 ];

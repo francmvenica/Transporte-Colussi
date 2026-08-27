@@ -51,7 +51,12 @@ export interface UnitTab {
 export const UNIT_TABS: UnitTab[] = [
   { id: 'flota', label: 'Flota' },
   { id: 'mantenimiento', label: 'Mantenimiento Preventivo' },
-  { id: 'trafico', label: 'Sala de Control y Tráfico' },
+  // Se llamaba "Sala de Control y Tráfico" hasta el 27/08. Pasa a "Gestión de la
+  // Flota" por decisión de Franco, en la misma pasada en que se saca la spec que
+  // tenía ese nombre: el término no se pierde, se muda de la grilla a la pestaña.
+  // El `id` sigue siendo `trafico` a propósito — no hay nada que gane con
+  // renombrarlo y es lo que usan el panel, el aria y el JS.
+  { id: 'trafico', label: 'Gestión de la Flota' },
 ];
 
 // REDACCIÓN SOBRE EL DICTADO DE ROMUALDO DEL 11/08, pulida por decisión de
@@ -116,10 +121,18 @@ export const MAINTENANCE_COPY =
 // 🔑 Es la segunda maqueta que llega con texto inventado adentro (la primera fue
 // el sketch de Antigravity, con "taller propio" e "higiene intensiva"). **Una
 // maqueta define el layout de esta sección, nunca su contenido.**
-export const MAINTENANCE_PHOTOS = {
-  taller: { rotulo: 'Taller Concesionaria IVECO', pie: 'Revisión preventiva con la cabina abierta' },
-  lavado: { rotulo: 'Lavado automático', pie: 'Lavado de tractora y semirremolque' },
-};
+// 🔴 LAS DOS FOTOS VAN LIMPIAS: SIN RÓTULO Y SIN PIE (decisión de Franco, 27/08).
+// La maqueta los traía y llegaron a estar publicados unas horas; se sacaron
+// porque el texto de la derecha ya dice todo y los carteles encima de la foto
+// tapan la imagen. **Es la misma decisión que ya se había tomado para la galería
+// de Flota el 31/07** (ahí se eliminó hasta el degradado que les daba contraste).
+//
+// ⚠️ Y resuelve de raíz el problema de esta pestaña: el pie de foto es donde se
+// colaron las tres afirmaciones inventadas de la maqueta y donde volvía la
+// palabra "limpieza". Sin pie, no hay dónde colarlas.
+//
+// La descripción de cada foto sigue viva en su `alt` (ver `assets.ts`), que es lo
+// que leen los buscadores y los lectores de pantalla.
 
 // Los dos chips con tilde de la maqueta. **La FORMA se copió, el CONTENIDO no.**
 // Ahí decían "Repuestos 100% Originales" y "Garantía Oficial IVECO", dos cosas
@@ -132,7 +145,17 @@ export const MAINTENANCE_PHOTOS = {
 //
 // 📌 Si algún día el cliente confirma lo de los repuestos originales o la
 // garantía oficial, entran acá y quedan perfectos. Hasta entonces, no.
-export const MAINTENANCE_CHIPS = ['Control diario propio', 'Toda la flota'];
+//
+// 🔴 EL TERCER CHIP ES UN RESCATE, NO UN ADORNO. "Según manual del fabricante"
+// vivía en la spec de Mantenimiento Preventivo de la grilla de abajo, que se
+// eliminó el 27/08 por redundante con esta pestaña. Medido antes de borrarla:
+// esa frase aparecía **una sola vez en todo el sitio**. Sin este chip, el término
+// desaparecía. Lo dictó Romualdo el 07/08 y es el respaldo técnico de la promesa.
+export const MAINTENANCE_CHIPS = [
+  'Control diario propio',
+  'Toda la flota',
+  'Según manual del fabricante',
+];
 
 // 🔴 DOS RESTRICCIONES QUE MANDAN SOBRE CUALQUIER TEXTO QUE ACOMPAÑE ESTAS FOTOS,
 // y sobrevivieron a que el layout cambiara dos veces el mismo día:
@@ -171,8 +194,17 @@ export const TRAFFIC_HEADLINE = {
   destacado: 'descarga.',
 };
 
+// 🔴 "DESDE NUESTRO CENTRO DE TRÁFICO PROPIO" ES UN RESCATE. Vivía en la spec
+// "Gestión de la Flota" de la grilla, eliminada el 27/08 por redundante con esta
+// pestaña. Medido antes de borrarla: aparecía **una sola vez en todo el sitio**.
+// El "propio" es lo que vende — es un activo declarado, no una descripción — así
+// que se movió acá en vez de perderse.
 export const TRAFFIC_COPY =
-  'El sector de Tráfico trabaja con monitoreo satelital las 24 horas. Es a quien llama el cliente para saber dónde está su carga, y quien lo llama a él cuando algo cambia en la ruta.';
+  'El sector de Tráfico trabaja desde nuestro centro de tráfico propio, con monitoreo satelital las 24 horas. Es a quien llama el cliente para saber dónde está su carga, y quien lo llama a él cuando algo cambia en la ruta.';
+
+// Mismos chips que Mantenimiento, por la forma de la maqueta. Los dos son datos
+// que ya publicaba el sitio en la spec eliminada, no afirmaciones nuevas.
+export const TRAFFIC_CHIPS = ['Centro de tráfico propio', 'Monitoreo satelital 24/7'];
 
 // 🔴 PLACEHOLDER VISIBLE A PROPÓSITO — Y ES BLOQUEANTE PARA PUBLICAR.
 //
