@@ -11,9 +11,11 @@
 // alguien encuentra el descarte del 08/08 en `colussi-2da-ronda-correcciones.md`
 // y cree que esto se coló, la respuesta está acá.
 //
-// 🔴 EL TEXTO DE MANTENIMIENTO LO DICTÓ ROMUALDO, NO SE REDACTA. Está en la
-// transcripción del 11/08, en la misma charla donde aprobó las pestañas, y va
-// palabra por palabra: es su voz y está aprobado por definición.
+// 🔴 EL TEXTO DE MANTENIMIENTO SALE DE UN DICTADO DE ROMUALDO, NO SE INVENTA.
+// Está en la transcripción del 11/08, en la misma charla donde aprobó las
+// pestañas. Franco decidió pulirlo en vez de publicarlo literal (ver la nota
+// sobre `MAINTENANCE_COPY`, que conserva el original), pero el mensaje es suyo:
+// esto no se redacta de cero.
 //
 // ⚠️ Se escribió uno inventado el 27/08 y hubo que tirarlo. El dictado llevaba
 // dos semanas en la minuta de Notion sin bajar a ningún archivo del proyecto:
@@ -52,11 +54,36 @@ export const UNIT_TABS: UnitTab[] = [
   { id: 'trafico', label: 'Sala de control y tráfico' },
 ];
 
-// DICTADO TEXTUAL DE ROMUALDO, 11/08. No se reescribe ni se "mejora": lo único
-// que se hizo fue unir las dos frases con las que lo dijo. Vende lo que él quiso
-// vender, que es cumplimiento — "antes de que se rompa, ya estoy" (08/08).
+// REDACCIÓN SOBRE EL DICTADO DE ROMUALDO DEL 11/08, pulida por decisión de
+// Franco (27/08): mismo mensaje, registro más profesional, menos literal.
+//
+// 📌 El dictado original, que es la fuente y lo que él espera leer:
+//   "Nuestras unidades están atendidas por el que más sabe de camiones, que es
+//   el fabricante. Además de nuestro control diario, las unidades se verifican y
+//   se revisan preventivamente en el taller de la concesionaria IVECO, que es
+//   quien más sabe de la marca."
+//
+// 🔴 LAS CUATRO COSAS QUE NO SE PUEDEN PERDER AL TOCAR ESTE TEXTO, porque son el
+// mensaje y no el estilo:
+//   1. El argumento de venta es que **el que más sabe de camiones es el
+//      fabricante**. Sin eso, la frase deja de decir algo y pasa a ser relleno.
+//   2. **El control diario es propio.** Dato que no está en ningún otro archivo
+//      del proyecto y que salió solo de esta transcripción.
+//   3. El taller de la concesionaria **REFUERZA ese control, no lo reemplaza**.
+//      Romualdo lo aclaró aparte: "nosotros también lo revisamos, pero además
+//      reforzamos nuestro control en los talleres del concesionario". Si el
+//      texto queda diciendo que el mantenimiento lo hace el concesionario y
+//      punto, está mal.
+//   4. **IVECO se nombra**, y lo pidió él.
+//
+// Qué se cambió y por qué: la construcción "el que más sabe de…" aparecía dos
+// veces en tres renglones, y "se verifican y se revisan" es la misma idea dicha
+// dos veces. Quedó una sola vez cada una.
+//
+// ⚠️ Franco asumió el riesgo de que Romualdo note que su dictado no está
+// textual. Si lo objeta, se repone el original de arriba tal cual.
 export const MAINTENANCE_COPY =
-  'Nuestras unidades están atendidas por el que más sabe de camiones, que es el fabricante. Además de nuestro control diario, las unidades se verifican y se revisan preventivamente en el taller de la concesionaria IVECO, que es quien más sabe de la marca.';
+  'El mantenimiento de nuestras unidades está en manos de quien más sabe de camiones: el fabricante. Al control diario que hacemos en la empresa se suma la revisión preventiva en el taller de la concesionaria IVECO, con el respaldo técnico de la marca.';
 
 // 🔴 LAS DOS FOTOS DE ESTA PESTAÑA NO LLEVAN PIE. No es un olvido de maquetación:
 // es la única forma de que la del lavado pueda estar acá sin mentir.
