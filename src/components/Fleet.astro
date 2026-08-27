@@ -2,6 +2,13 @@
 import { Image } from 'astro:assets';
 import { IMAGES } from '../config/assets';
 import { FLEET_SPECS } from '../config/fleet';
+import {
+  UNIT_TABS,
+  MAINTENANCE_COPY,
+  WASH_COPY,
+  TRAFFIC_COPY,
+  TRAFFIC_PHOTO_PENDING,
+} from '../config/units-tabs';
 
 // Nota interna (no publicar en el HTML):
 //
@@ -34,11 +41,31 @@ import { FLEET_SPECS } from '../config/fleet';
 // se mantiene `sm:grid-cols-2` en tablet — ahí sí queda una tarjeta sola en la
 // tercera fila (5 = 2+2+1), aceptado: es un rango de viewport angosto y no
 // hay forma de repartir 5 en 2 columnas sin que sobre una.
+//
+// ─────────────────────────────────────────────────────────────────────────────
+// 🆕 PESTAÑAS (27/08). Aprobadas por Romualdo el 11/08. Textos y decisiones de
+// contenido en `config/units-tabs.ts` — ahí está por qué el taller no se llama
+// "nuestro" y por qué el lavado habla del equipo y no del hábito.
+//
+// 🔴 LAS SPECS QUEDAN FUERA DE LAS PESTAÑAS, A PROPÓSITO. Describen toda la
+// sección, no una solapa: meterlas adentro de "Flota" desharía la decisión del
+// 08/08 que las llevó de 4 a 5 (la 5ª es justamente Mantenimiento Preventivo, y
+// vive ahí porque el cliente pidió que el dato estuviera a la vista).
+//
+// 🔴 VANILLA JS Y NO UNA ISLA REACT. La integración de React está instalada pero
+// el sitio no tiene un solo componente que la use: hidratar React para conmutar
+// tres paneles serían decenas de KB de JS en la ruta crítica de un sitio que se
+// vendió con posicionamiento. Son 30 líneas de DOM.
+//
+// 🔴 LOS TRES PANELES ESTÁN SIEMPRE EN EL HTML, ocultos con `hidden` y no
+// renderizados condicionalmente. Es contenido nuevo indexable: si el panel no
+// existe en el HTML servido, para un buscador —y para un motor generativo— no
+// existe. Verificarlo en `dist/`, no en el fuente.
 ---
 
 <section id="unidades" class="py-20 lg:py-28 bg-neutral-100">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
+    <div class="text-center mb-12">
       <p class="text-brand-red font-semibold text-sm uppercase tracking-widest mb-3">Nuestra flota</p>
       <h2 class="text-3xl sm:text-4xl lg:text-5xl text-neutral-800 font-display">
         Unidades
@@ -48,21 +75,134 @@ import { FLEET_SPECS } from '../config/fleet';
       </p>
     </div>
 
-    <div id="screen" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-      {IMAGES.fleet.map((img) => (
-        <div class="group relative overflow-hidden rounded-2xl shadow-lg">
-          <Image
-            src={img.src}
-            alt={img.alt}
-            class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
-            widths={[400, 600]}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            loading="lazy"
-            quality={75}
-            style={img.position ? `object-position: ${img.position}` : undefined}
-          />
-        </div>
+    {/* Barra de pestañas. `flex-wrap` y no `overflow-x-auto`: con dos labels
+        largos, en 375 px un scroll horizontal esconde la tercera pestaña sin
+        que nada indique que está ahí. Envuelto, se ven las tres siempre. */}
+    <div
+      role="tablist"
+      aria-label="Secciones de unidades"
+      class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10"
+      data-units-tablist
+    >
+      {UNIT_TABS.map((tab, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`tab-${tab.id}`}
+          aria-controls={`panel-${tab.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          data-units-tab={tab.id}
+          class="px-4 py-2.5 sm:px-5 rounded-full text-sm font-bold border transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red aria-selected:bg-brand-red aria-selected:text-white aria-selected:border-brand-red bg-white text-neutral-800 border-neutral-200 hover:border-brand-red/40"
+        >
+          {tab.label}
+        </button>
       ))}
+    </div>
+
+    {/* ── Panel 1: Flota ─────────────────────────────────────────────────── */}
+    <div
+      role="tabpanel"
+      id="panel-flota"
+      aria-labelledby="tab-flota"
+      tabindex="0"
+      data-units-panel="flota"
+      class="mb-16"
+    >
+      <div id="screen" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {IMAGES.fleet.map((img) => (
+          <div class="group relative overflow-hidden rounded-2xl shadow-lg">
+            <Image
+              src={img.src}
+              alt={img.alt}
+              class="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
+              widths={[400, 600]}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              loading="lazy"
+              quality={75}
+              style={img.position ? `object-position: ${img.position}` : undefined}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+
+    {/* ── Panel 2: Mantenimiento preventivo ──────────────────────────────── */}
+    {/* Las dos fotos van con ALTURA IGUAL y ancho libre (`sm:h-[420px] w-auto`),
+        no en dos celdas iguales: el taller es apaisado y el lavado es vertical,
+        y forzarlas a la misma caja recorta la vertical. Ver `assets.ts`. */}
+    <div
+      role="tabpanel"
+      id="panel-mantenimiento"
+      aria-labelledby="tab-mantenimiento"
+      tabindex="0"
+      data-units-panel="mantenimiento"
+      class="mb-16"
+      hidden
+    >
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-center gap-6">
+        <figure class="sm:shrink-0">
+          <div class="overflow-hidden rounded-2xl shadow-lg">
+            <Image
+              src={IMAGES.maintenance.taller.src}
+              alt={IMAGES.maintenance.taller.alt}
+              class="w-full h-auto sm:h-[420px] sm:w-auto"
+              widths={[600, 900]}
+              sizes="(max-width: 640px) 100vw, 560px"
+              loading="lazy"
+              quality={75}
+            />
+          </div>
+          <figcaption class="mt-4 text-neutral-800 text-sm leading-relaxed max-w-xl">
+            {MAINTENANCE_COPY}
+          </figcaption>
+        </figure>
+
+        <figure class="sm:shrink-0">
+          <div class="overflow-hidden rounded-2xl shadow-lg">
+            <Image
+              src={IMAGES.maintenance.lavado.src}
+              alt={IMAGES.maintenance.lavado.alt}
+              class="w-full h-auto sm:h-[420px] sm:w-auto"
+              widths={[400, 640]}
+              sizes="(max-width: 640px) 100vw, 315px"
+              loading="lazy"
+              quality={75}
+            />
+          </div>
+          <figcaption class="mt-4 text-neutral-800 text-sm leading-relaxed max-w-xs">
+            {WASH_COPY}
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+
+    {/* ── Panel 3: Sala de control y tráfico ─────────────────────────────── */}
+    {/* 🔴 El placeholder es DELIBERADO y bloquea la publicación en el dominio.
+        Ver el comentario de `TRAFFIC_PHOTO_PENDING` en units-tabs.ts. */}
+    <div
+      role="tabpanel"
+      id="panel-trafico"
+      aria-labelledby="tab-trafico"
+      tabindex="0"
+      data-units-panel="trafico"
+      class="mb-16"
+      hidden
+    >
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-center gap-6">
+        <figure class="sm:shrink-0 w-full sm:w-[560px]">
+          <div
+            class="flex items-center justify-center rounded-2xl border-2 border-dashed border-neutral-300 bg-white/60 h-56 sm:h-[420px]"
+          >
+            <p class="text-neutral-500 text-sm font-semibold px-6 text-center">
+              {TRAFFIC_PHOTO_PENDING}
+            </p>
+          </div>
+          <figcaption class="mt-4 text-neutral-800 text-sm leading-relaxed max-w-xl">
+            {TRAFFIC_COPY}
+          </figcaption>
+        </figure>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -78,3 +218,57 @@ import { FLEET_SPECS } from '../config/fleet';
     </div>
   </div>
 </section>
+
+<script>
+  // Conmutador de pestañas de Unidades.
+  //
+  // Roving tabindex + flechas: es el patrón de tabs de la APG de W3C. Sin esto
+  // un usuario de teclado queda obligado a tabular por las tres pestañas antes
+  // de llegar al contenido, y los lectores de pantalla no anuncian cuál está
+  // activa.
+  //
+  // Si el JS no corre, queda visible el panel de Flota (los otros dos nacen con
+  // `hidden`) y las tres pestañas siguen en el HTML para los buscadores. Se
+  // degrada a la sección de antes, no a una rota.
+  const tablist = document.querySelector<HTMLElement>('[data-units-tablist]');
+
+  if (tablist) {
+    const tabs = Array.from(
+      tablist.querySelectorAll<HTMLButtonElement>('[data-units-tab]')
+    );
+    const panels = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-units-panel]')
+    );
+
+    const activar = (indice: number, mueveFoco = true) => {
+      tabs.forEach((tab, i) => {
+        const activa = i === indice;
+        tab.setAttribute('aria-selected', activa ? 'true' : 'false');
+        tab.tabIndex = activa ? 0 : -1;
+      });
+
+      const id = tabs[indice]?.dataset.unitsTab;
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.unitsPanel !== id;
+      });
+
+      if (mueveFoco) tabs[indice]?.focus();
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => activar(i, false));
+      tab.addEventListener('keydown', (evento) => {
+        const teclas: Record<string, number> = {
+          ArrowRight: (i + 1) % tabs.length,
+          ArrowLeft: (i - 1 + tabs.length) % tabs.length,
+          Home: 0,
+          End: tabs.length - 1,
+        };
+        const destino = teclas[evento.key];
+        if (destino === undefined) return;
+        evento.preventDefault();
+        activar(destino);
+      });
+    });
+  }
+</script>

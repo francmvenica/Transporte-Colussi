@@ -57,6 +57,12 @@ import formacionCompleta from '../assets/images/flota-colussi-formacion-completa
 import curtainSider from '../assets/images/flota-colussi-curtain-sider.jpg';
 import centroDistribucion from '../assets/images/flota-colussi-centro-distribucion.jpg';
 import patioOperacion from '../assets/images/flota-colussi-patio-operacion.jpg';
+// Fotos de la pestaña de Mantenimiento (27/08). Llegaron el 29/07 y estuvieron
+// cuatro semanas sueltas en Temp/Colussi-material/Imagenes Web/ mientras el
+// planificador las daba por inexistentes — mismo caso que la foto del orden de
+// los clientes. Si falta un insumo, primero se busca en el material entregado.
+import tallerMantenimiento from '../assets/images/mantenimiento/tractoras-colussi-taller-mantenimiento.jpg';
+import tunelLavado from '../assets/images/mantenimiento/tractora-colussi-tunel-lavado.jpg';
 
 export const IMAGES = {
   hero: {
@@ -160,6 +166,27 @@ export const IMAGES = {
       // hallazgo nuevo.
     },
   ],
+  // ───────────────────────────────────────────────────────────────────────────
+  // PESTAÑA DE MANTENIMIENTO (27/08). Las dos fotos tienen ORIENTACIONES
+  // DISTINTAS y eso decidió el layout, no al revés: el taller es 1600×1200
+  // (apaisada 4:3) y el lavado 960×1280 (VERTICAL 3:4). Puestas en dos celdas
+  // iguales con `object-cover`, la vertical pierde ~40% de alto — es el mismo
+  // problema medido en la 6ta foto de la galería. Por eso en Fleet.astro van con
+  // ALTURA IGUAL y ancho libre según su ratio: ninguna se recorta.
+  //
+  // ⚠️ NINGÚN `alt` dice "nuestro taller" ni nombra un lugar. Lo primero porque
+  // el taller es de la concesionaria; lo segundo por la regla de arriba (tres
+  // homónimos disputando la identidad en buscadores).
+  maintenance: {
+    taller: {
+      src: tallerMantenimiento,
+      alt: 'Dos tractoras Iveco de Transporte Colussi en servicio de mantenimiento preventivo, con los capós delanteros abiertos y un mecánico trabajando sobre una de ellas',
+    },
+    lavado: {
+      src: tunelLavado,
+      alt: 'Tractora Iveco Hi-Road de Transporte Colussi ingresando al equipo de lavado automático de rodillos',
+    },
+  },
   // Logos pendientes del cliente — usar placeholders
   socialProof: {
     cnrt: '/images/placeholder-cnrt.svg',

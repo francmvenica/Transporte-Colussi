@@ -22,13 +22,24 @@
 // reunión: "está bien, porque esto le dice al cliente cuánto puede cargar". Si
 // vuelve a aparecer la idea, ya se descartó en la mesa.
 //
-// 🔴 MANTENIMIENTO PREVENTIVO — 5ª SPEC, NUEVA EL 08/08, y entra ACOTADA a esta
-// tarjeta de texto (NO una sección propia con fotos de taller: eso se
-// descartó, mismo criterio que la galería). Vende CUMPLIMIENTO — que el
+// 🔴 MANTENIMIENTO PREVENTIVO — 5ª SPEC, NUEVA EL 08/08. Vende CUMPLIMIENTO — que el
 // cliente entienda que no se deja de cumplir porque se rompe un camión
 // ("antes de que se rompa, ya estoy"). La pieza del dictado que hay que
 // conservar sí o sí es "de todas nuestras unidades": es la garantía real, no es
 // lo mismo hacer mantenimiento que hacerlo en TODA la flota.
+//
+// ⚠️ ESTE COMENTARIO DECÍA HASTA EL 27/08 que el mantenimiento entraba "acotado
+// a esta tarjeta de texto (NO una sección propia con fotos de taller: eso se
+// descartó)". Era cierto el 08/08 y dejó de serlo el 11/08, cuando Romualdo
+// aprobó las pestañas de Unidades. Se corrige porque un archivo que se
+// contradice solo hace que el próximo que lo lea revierta trabajo bueno — es
+// exactamente lo que pasó con la nota del peso de las negritas en RRHH.
+//
+// 🔴 LA SPEC Y LA PESTAÑA NO DICEN LO MISMO, Y ASÍ TIENE QUE SEGUIR. Acá vive el
+// DATO (mantenimiento en toda la flota, según manual del fabricante); en
+// `units-tabs.ts` vive lo que ese dato significa para el cliente. Si algún día
+// las dos frases empiezan a parecerse, sobra una: este sitio ya arrastra el
+// costo de tener los textos duplicados entre services.ts, faq.ts y corridors.ts.
 //
 // 🔴 "Y LIMPIEZA" SALIÓ EL 11/08, Y LO SACÓ EL MISMO QUE LO HABÍA PEDIDO. El
 // 08/08 la limpieza entró acá justamente porque Romualdo la había metido dentro
