@@ -35,6 +35,44 @@
 //     él mismo) donde faltaba. No cambia la decisión de que "cargas
 //     completas" quede FUERA de la meta description y del JSON-LD: ahí es un
 //     pedido aparte y explícito, no una regla general para todo el sitio.
+//
+// 🔴 5ª RONDA (27/08): LAS LOCALIDADES DEL MAPA ENTRAN A LOS CHIPS.
+//   Por qué: desde la 4ta ronda (14 y 15/08) el mapa dibuja ejes que este
+//   archivo no nombraba, así que había 10 localidades con pin propio que NO
+//   aparecían en ningún texto del sitio. Entran 7, todas con respaldo del
+//   cliente:
+//     · Misiones interior: Apóstoles, Campo Grande, Aristóbulo del Valle,
+//       San Vicente y San Pedro. Romualdo pidió San Vicente y San Pedro por
+//       nombre, y de Apóstoles dio el motivo: "ahí cargan en el molino".
+//     · Corrientes: Saladas y Mercedes, los dos extremos del eje que él mismo
+//       pidió sumar el 14/08 para unir la RN 12 con la RN 123.
+//
+//   ⚠️ ESTO CAMBIA EL LÍMITE DE 4-5 CHIPS POR CORREDOR que Franco fijó el
+//   30/07 ("tampoco puedo poner tanto ruido acá"). Misiones pasa a 9 chips y
+//   Corrientes a 7. El límite no se olvidó: Franco lo cambió a propósito el
+//   27/08, con el conteo a la vista, después de ver el preview renderizado.
+//   Si alguien relee la nota del 30/07 y cree que esto se fue de control,
+//   esta es la explicación. NO revertir por esa nota.
+//
+//   ⚠️ LOS TEXTOS (`description`) NO SE TOCARON, y es una decisión, no que
+//   haya quedado a medias. Se propuso sumar una oración por corredor y Franco
+//   eligió chips solos. Lo que se resigna: un chip es un nombre suelto, sin
+//   verbo, así que para una búsqueda tipo "transporte a San Vicente" pesa
+//   menos que el mismo nombre dentro de una oración. Se compensa con
+//   `areaServed` en el JSON-LD de Layout.astro — 🔴 PENDIENTE al 27/08,
+//   porque ese archivo lo estaba tocando otra sesión en paralelo.
+//
+//   ⛔ LO QUE NO ENTRA, Y NO ES OLVIDO:
+//     · Rosario, Santa Fe, Paraná, Gualeguaychú, Concordia, Salto y Zárate.
+//       Tienen pin en el mapa con rol "Corredor RN 12 / RN 14", que quiere
+//       decir ciudad POR LA QUE SE PASA. Listarlas acá sería afirmar
+//       cobertura. Decisión del 30/07, escrita en CoverageMap.astro, que
+//       además avisa textualmente: "si alguien las agrega allá, eso sí sería
+//       afirmar cobertura".
+//     · Bella Vista (RN 12) y San Cristóbal / Tostado (corredor Oeste):
+//       tienen pin, pero NADIE las nombró nunca en una reunión. Esperan a que
+//       Romualdo confirme si son destino o son paso. No inventar la respuesta.
+//     · Las Breñas, Pinedo y Gancedo: recortadas a propósito el 30/07.
 export interface Corridor {
   title: string;
   description: string;
@@ -64,13 +102,36 @@ export const CORRIDORS: Corridor[] = [
     title: 'Buenos Aires – Misiones',
     description:
       'Transporte de contenedores y cargas generales completas desde Buenos Aires hacia Posadas, Eldorado, Oberá y Puerto Iguazú, dentro de nuestra cobertura regular del NEA.',
-    cities: ['Posadas', 'Eldorado', 'Puerto Iguazú', 'Oberá'],
+    // Los 4 primeros son las cabeceras de la RN 12 y estaban desde el 30/07.
+    // Los 5 siguientes son el interior, sumado el 27/08: van DESPUÉS y no
+    // intercalados, para que las cabeceras se sigan leyendo primero.
+    cities: [
+      'Posadas',
+      'Eldorado',
+      'Puerto Iguazú',
+      'Oberá',
+      'Apóstoles',
+      'Campo Grande',
+      'Aristóbulo del Valle',
+      'San Vicente',
+      'San Pedro',
+    ],
   },
   {
     title: 'Buenos Aires – Corrientes',
     description:
       'Cargas generales completas y contenedores desde Buenos Aires hacia la ciudad de Corrientes, Goya, Curuzú Cuatiá, Gobernador Virasoro y Paso de los Libres —paso fronterizo hacia Brasil—, conectando con nuestro centro de distribución en Fontana, Chaco.',
-    cities: ['Corrientes', 'Goya', 'Curuzú Cuatiá', 'Gobernador Virasoro', 'Paso de los Libres'],
+    // Saladas y Mercedes al final por el mismo criterio que Misiones: primero
+    // las cabeceras y los pasos, después el centro de la provincia.
+    cities: [
+      'Corrientes',
+      'Goya',
+      'Curuzú Cuatiá',
+      'Gobernador Virasoro',
+      'Paso de los Libres',
+      'Saladas',
+      'Mercedes',
+    ],
   },
   {
     title: 'Internacional: Brasil y Paraguay',
