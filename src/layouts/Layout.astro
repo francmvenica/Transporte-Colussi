@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { SITE } from '../config/site';
 import { SERVICES } from '../config/services';
 import { SECTORS } from '../config/clients';
+import { CORRIDORS } from '../config/corridors';
 
 interface Props {
   title?: string;
@@ -57,6 +58,100 @@ const ogImageURL = `${SITE.url}/images/og-image.png`;
 //
 // Se declara geo SOLO en la casa central. El CD de Fontana sigue sin geo: la
 // altura de Calle 31 nº 770 no resuelve en Nominatim y acá no se inventa.
+// ---------------------------------------------------------------------------
+// areaServed A NIVEL CIUDAD (27/08), DERIVADO DE `corridors.ts`.
+//
+// POR QUÉ EXISTE: el 27/08 las localidades del mapa bajaron a los chips de la
+// sección de corredores. Un chip es un nombre suelto, sin verbo, así que para
+// una búsqueda tipo "transporte a San Vicente" pesa menos que el mismo nombre
+// dentro de una oración. Franco eligió chips y no oraciones, y ESTO es lo que
+// compensa esa elección: `areaServed` es el campo estándar donde los motores
+// esperan encontrar la cobertura, y no ocupa lugar en pantalla.
+//
+// ⚠️ NO ES TEXTO OCULTO, y la diferencia no es de matiz. Se evaluó poner el
+// texto escondido con CSS y se descartó por dos motivos, en este orden:
+//   1. NO FUNCIONA: los crawlers de IA (ChatGPT, Perplexity, Claude con
+//      búsqueda, AI Overviews) descartan el contenido oculto antes de
+//      indexarlo. El esfuerzo no compra nada.
+//   2. Además es penalizable: "hidden text and links" está en las políticas
+//      de spam de Google Search, ampliadas en mayo de 2026 para cubrir la
+//      manipulación de las respuestas de IA.
+// El dato estructurado es legítimo porque declara en un campo estándar algo
+// que la página YA dice a la vista. Si algún día los chips salen de la
+// sección, esto se va con ellos.
+//
+// 🔑 SE IMPORTA, NO SE COPIA, y es el mismo criterio que ya usan SECTORS y
+// SERVICES acá abajo: así el invariante "el schema no afirma lo que la página
+// no afirma" no depende de que alguien se acuerde de actualizar dos archivos.
+// Agregar una ciudad a `corridors.ts` la publica en los dos lados.
+//
+// 🔴 LA PROVINCIA NO ES DECORACIÓN: es lo que desambigua. Esta empresa tiene
+// tres homónimos disputándole la identidad, y varias de las ciudades nuevas se
+// repiten por todo el país (San Pedro está en Buenos Aires, Jujuy y Misiones;
+// Mercedes en Corrientes, Buenos Aires y San Luis; San Vicente en varias). Un
+// `{ name: 'Mercedes' }` a secas siembra la ambigüedad que el resto de este
+// schema viene a resolver, así que cada ciudad va con su `containedInPlace`.
+const PROVINCIA_POR_CORREDOR: Record<string, string> = {
+  'Buenos Aires – Formosa': 'Formosa',
+  'Buenos Aires – Chaco': 'Chaco',
+  'Buenos Aires – Santa Fe': 'Santa Fe',
+  'Buenos Aires – Misiones': 'Misiones',
+  'Buenos Aires – Corrientes': 'Corrientes',
+  // El corredor internacional no mapea a una provincia a propósito: sus
+  // ciudades o ya entraron por su corredor nacional (Clorinda por Formosa,
+  // Paso de los Libres por Corrientes) o son extranjeras y caen en el mapa
+  // de abajo.
+};
+
+// Ciudades que NO pertenecen a la provincia de su corredor. Asunción vive en
+// el corredor Formosa y Uruguaiana en el internacional, así que derivarlas del
+// título del corredor las pondría en la provincia equivocada.
+const PAIS_POR_CIUDAD: Record<string, string> = {
+  Asunción: 'Paraguay',
+  Uruguaiana: 'Brasil',
+};
+
+const ciudadesServidas = (() => {
+  const vistas = new Set<string>();
+  const salida: Record<string, unknown>[] = [];
+  for (const corredor of CORRIDORS) {
+    const provincia = PROVINCIA_POR_CORREDOR[corredor.title];
+    for (const entrada of corredor.cities) {
+      // Los chips del corredor internacional vienen como "Clorinda → Paraguay":
+      // se corta en la flecha y queda el nombre de la ciudad.
+      const nombre = entrada.split('→')[0].trim();
+      if (vistas.has(nombre)) continue;
+      vistas.add(nombre);
+
+      const pais = PAIS_POR_CIUDAD[nombre];
+      if (pais) {
+        salida.push({
+          '@type': 'City',
+          name: nombre,
+          containedInPlace: { '@type': 'Country', name: pais },
+        });
+      } else if (provincia) {
+        salida.push({
+          '@type': 'City',
+          name: nombre,
+          containedInPlace: {
+            '@type': 'State',
+            name: provincia,
+            containedInPlace: { '@type': 'Country', name: 'Argentina' },
+          },
+        });
+      } else {
+        // ⚠️ SIN PROVINCIA NI PAÍS CONOCIDO. Se emite igual, para que el dato
+        // no se pierda en silencio, pero SIN desambiguar. Si aparece una
+        // ciudad acá, registrala arriba: es el caso que el schema resuelve
+        // peor. Hoy no cae ninguna.
+        salida.push({ '@type': 'City', name: nombre });
+      }
+    }
+  }
+  return salida;
+})();
+
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@graph': [
@@ -91,6 +186,9 @@ const organizationSchema = {
       // ⚠️ Si alguna vez sale el año del texto de /historia, este campo se va
       // con él. La regla es que el schema no afirme lo que la página no afirma.
       foundingDate: '2000',
+      // Las provincias y los países se declaran a mano porque son el alcance
+      // que el sitio afirma en prosa (hero, servicios, FAQ). Las CIUDADES se
+      // importan de `corridors.ts` — ver el bloque de arriba.
       areaServed: [
         { '@type': 'State', name: 'Chaco' },
         { '@type': 'State', name: 'Formosa' },
@@ -99,6 +197,7 @@ const organizationSchema = {
         { '@type': 'State', name: 'Santa Fe' },
         { '@type': 'Country', name: 'Brasil' },
         { '@type': 'Country', name: 'Paraguay' },
+        ...ciudadesServidas,
       ],
       // Las industrias (SECTORS) se suman el 08/08 IMPORTADAS de clients.ts, no
       // copiadas a mano: es legítimo declararlas acá SOLO porque siguen
