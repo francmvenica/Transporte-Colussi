@@ -50,8 +50,8 @@ export interface UnitTab {
 
 export const UNIT_TABS: UnitTab[] = [
   { id: 'flota', label: 'Flota' },
-  { id: 'mantenimiento', label: 'Mantenimiento preventivo' },
-  { id: 'trafico', label: 'Sala de control y tráfico' },
+  { id: 'mantenimiento', label: 'Mantenimiento Preventivo' },
+  { id: 'trafico', label: 'Sala de Control y Tráfico' },
 ];
 
 // REDACCIÓN SOBRE EL DICTADO DE ROMUALDO DEL 11/08, pulida por decisión de
@@ -82,33 +82,84 @@ export const UNIT_TABS: UnitTab[] = [
 //
 // ⚠️ Franco asumió el riesgo de que Romualdo note que su dictado no está
 // textual. Si lo objeta, se repone el original de arriba tal cual.
-export const MAINTENANCE_COPY =
-  'El mantenimiento de nuestras unidades está en manos de quien más sabe de camiones: el fabricante. Al control diario que hacemos en la empresa se suma la revisión preventiva en el taller de la concesionaria IVECO, con el respaldo técnico de la marca.';
+// 📐 El dictado se REPARTE entre título y párrafo, no se repite en los dos. La
+// maqueta de referencia del 27/08 ponía la primera frase como título y después
+// el párrafo entero abajo, empezando otra vez por esa misma frase: el lector la
+// leía dos veces seguidas.
+export const MAINTENANCE_HEADLINE = {
+  texto: 'El mantenimiento, en manos de quien más sabe de camiones: ',
+  destacado: 'el fabricante.',
+};
 
-// 🔴 LAS DOS FOTOS DE ESTA PESTAÑA NO LLEVAN PIE. No es un olvido de maquetación:
-// es la única forma de que la del lavado pueda estar acá sin mentir.
+export const MAINTENANCE_COPY =
+  'Al control diario que hacemos en la empresa se suma la revisión preventiva en el taller de la concesionaria IVECO, con el respaldo técnico de la marca.';
+
+// 🔴 LOS RÓTULOS DE LAS FOTOS SON DESCRIPTIVOS Y NADA MÁS. Describen lo que se ve
+// en la imagen; no afirman nada sobre la operación que no esté dictado.
 //
-// 1. **El lavadero NO es de la empresa** (dato de Franco, 27/08). El 27/08 esta
-//    pestaña llegó a decir "equipo de lavado automático propio", deducido de que
-//    la foto mostraba un camión de ellos. Nadie lo había verificado y era falso.
-//    Es el mismo error que la playa cubierta, donde Romualdo tuvo que aclarar
-//    "pero no es nuestra". **Ningún texto de acá afirma propiedad de nada.**
-// 2. **"Limpieza" es una palabra que él bajó del sitio** el 11/08 leyendo la
-//    spec en voz alta: "la limpieza no. Se entiende que está limpio; es como
-//    decir «me baño todos los días»". Sin pie de foto, el sitio no la usa.
+// ⚠️ LA MAQUETA DE REFERENCIA TRAÍA CUATRO TEXTOS QUE NO SE PUBLICARON, y conviene
+// que quede escrito cuáles, porque son de los que vuelven:
+//   1. **"Repuestos 100% Originales"** — nadie lo dijo nunca. Es una afirmación
+//      sobre la operación del cliente, inventada.
+//   2. **"Garantía Oficial IVECO"** — igual, y más grave: afirma una relación de
+//      garantía con IVECO. Es justo lo que se decidió no afirmar sin
+//      confirmación, y va más lejos que el "taller oficial" ya descartado.
+//   3. **"Alistamiento & Limpieza"** — usa LIMPIEZA, la palabra que Romualdo bajó
+//      del sitio el 11/08. Hay un gate que verifica que dé 0 en todo el build.
+//   4. **"taller oficial homologado"** y **"inspección operativa diaria"** —
+//      "homologado" es un término técnico con peso que nadie confirmó, y la
+//      inspección diaria se le estaba colgando a la foto del lavado.
 //
-// ⚠️ Y AUN ASÍ LA FOTO VA, porque la pidió él. 07/08, textual: "te pasé una foto
-// de la limpieza de las unidades (…) En la parte de mantenimiento. Cuando
+// 📌 Los puntos 1 y 2 se pueden publicar el día que Romualdo los confirme: son
+// datos de su operación, no opiniones. Hasta entonces no van.
+//
+// 🔑 Es la segunda maqueta que llega con texto inventado adentro (la primera fue
+// el sketch de Antigravity, con "taller propio" e "higiene intensiva"). **Una
+// maqueta define el layout de esta sección, nunca su contenido.**
+export const MAINTENANCE_PHOTOS = {
+  taller: { rotulo: 'Taller Concesionaria IVECO', pie: 'Revisión preventiva con la cabina abierta' },
+  lavado: { rotulo: 'Lavado automático', pie: 'Lavado de tractora y semirremolque' },
+};
+
+// 🔴 DOS RESTRICCIONES QUE MANDAN SOBRE CUALQUIER TEXTO QUE ACOMPAÑE ESTAS FOTOS,
+// y sobrevivieron a que el layout cambiara dos veces el mismo día:
+//
+// 1. **El lavadero NO es de la empresa** (dato de Franco, 27/08). Esta pestaña
+//    llegó a decir "equipo de lavado automático propio", deducido de que la foto
+//    mostraba un camión de ellos. Nadie lo había verificado y era falso. Es el
+//    mismo error que la playa cubierta, donde Romualdo tuvo que aclarar "pero no
+//    es nuestra". **Ningún texto de acá afirma propiedad de nada.**
+// 2. **"Limpieza" es una palabra que él bajó del sitio** el 11/08 leyendo la spec
+//    en voz alta: "la limpieza no. Se entiende que está limpio; es como decir
+//    «me baño todos los días»". Por eso el rótulo dice "Lavado automático" y no
+//    "Alistamiento & Limpieza", como proponía la maqueta.
+//
+// ⚠️ Y LA FOTO DEL LAVADO VA PORQUE LA PIDIÓ ÉL. 07/08, textual: "te pasé una
+// foto de la limpieza de las unidades (…) En la parte de mantenimiento. Cuando
 // hablamos de mantenimiento preventivo, hablamos de la limpieza. Esta foto está
-// muy buena para el mantenimiento". Mostrarla es su pedido; describirla era
-// invento nuestro. **Si alguien la ve sin pie y cree que falta algo, esto es por
-// qué está así.**
+// muy buena para el mantenimiento."
+//
+// 📌 Primero se resolvió no ponerle pie a ninguna de las dos (27/08, mañana), y
+// funcionaba. Al llegar la maqueta con rótulos, Franco decidió ponérselos: el
+// criterio pasó a ser **describir lo que la foto muestra**, que es compatible con
+// las dos restricciones de arriba. Queda escrito el camino porque el pie de foto
+// de esta pestaña es donde se colaron las tres afirmaciones inventadas.
+//
+// ⚠️ Ojo con una decisión vecina que NO se tocó: **la galería de Flota sigue sin
+// títulos sobre las fotos** (pedido de Franco del 31/07, se le eliminó hasta el
+// degradado). Que estas dos lleven rótulo no reabre aquello: son secciones
+// distintas y pedidos distintos.
 
 // Aporta lo que la spec "Gestión de la Flota" no dice: QUIÉN es Tráfico para el
 // cliente. El sector ya está nombrado en RRHH desde el 13/08 ("Desde el sector
 // de Tráfico…"), así que el sitio no lo está inventando acá.
+export const TRAFFIC_HEADLINE = {
+  texto: 'Cada viaje, seguido desde que la unidad sale hasta que ',
+  destacado: 'descarga.',
+};
+
 export const TRAFFIC_COPY =
-  'El sector de Tráfico sigue cada viaje desde que la unidad sale hasta que descarga, con monitoreo satelital las 24 horas. Es a quien llama el cliente para saber dónde está su carga, y quien lo llama a él cuando algo cambia en la ruta.';
+  'El sector de Tráfico trabaja con monitoreo satelital las 24 horas. Es a quien llama el cliente para saber dónde está su carga, y quien lo llama a él cuando algo cambia en la ruta.';
 
 // 🔴 PLACEHOLDER VISIBLE A PROPÓSITO — Y ES BLOQUEANTE PARA PUBLICAR.
 //

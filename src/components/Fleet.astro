@@ -4,7 +4,10 @@ import { IMAGES } from '../config/assets';
 import { FLEET_SPECS } from '../config/fleet';
 import {
   UNIT_TABS,
+  MAINTENANCE_HEADLINE,
   MAINTENANCE_COPY,
+  MAINTENANCE_PHOTOS,
+  TRAFFIC_HEADLINE,
   TRAFFIC_COPY,
   TRAFFIC_PHOTO_PENDING,
 } from '../config/units-tabs';
@@ -80,7 +83,7 @@ import {
     <div
       role="tablist"
       aria-label="Secciones de unidades"
-      class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10"
+      class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 mx-auto w-fit bg-white rounded-3xl border border-neutral-200/80 shadow-sm p-2"
       data-units-tablist
     >
       {UNIT_TABS.map((tab, i) => (
@@ -127,14 +130,29 @@ import {
     </div>
 
     {/* ── Panel 2: Mantenimiento preventivo ──────────────────────────────── */}
-    {/* Las dos fotos van con ALTURA IGUAL y ancho libre (`sm:h-[420px] w-auto`),
-        no en dos celdas iguales: el taller es apaisado y el lavado es vertical,
-        y forzarlas a la misma caja recorta la vertical. Ver `assets.ts`.
+    {/* Layout de la maqueta que pasó Franco el 27/08: tarjeta blanca, fotos a la
+        izquierda con rótulo y pie superpuestos, bloque de texto a la derecha.
 
-        🔴 Y VAN SIN PIE DE FOTO, a propósito. El texto es del panel, no de cada
-        imagen: el lavadero no es de la empresa y "limpieza" es una palabra que
-        el cliente bajó del sitio, así que cualquier pie sobre esa foto miente o
-        desobedece. El porqué completo está en `units-tabs.ts`. */}
+        🔴 LAS DOS FOTOS TERMINAN CON LA MISMA ALTURA Y SIN RECORTARSE, que es lo
+        único no negociable de este bloque: el taller es apaisado (4:3) y el
+        lavado vertical (3:4), y meterlas en dos celdas iguales le come ~40% de
+        alto a la vertical. Es el problema ya medido en la 6ta foto de la galería.
+
+        📐 CÓMO SE CONSIGUE, porque no es obvio y el primer intento estaba roto:
+        cada figura lleva su `aspect-[…]` natural y un `flex-[64]` / `flex-[36]`
+        proporcional a su ancho relativo. Como 0,64 × ¾ = 0,36 × 4/3 = 0,48, las
+        dos alturas dan iguales SOLAS, a cualquier ancho de pantalla, y el
+        `object-cover` no recorta nada porque el aspecto del contenedor es el
+        mismo que el de la foto.
+
+        ⚠️ El intento anterior usaba altura fija + `shrink-0`, y las fotos
+        SE SALÍAN de la tarjeta: sumaban 641 px dentro de una columna de 542.
+        Con altura fija hay que recalcular a mano en cada breakpoint; así se
+        acomoda solo. **No volver a altura fija.**
+
+        ⚠️ Los textos de los rótulos NO salieron de la maqueta: traía tres
+        afirmaciones que nadie dictó y una palabra que el cliente bajó del sitio.
+        Está detallado en `units-tabs.ts`. */}
     <div
       role="tabpanel"
       id="panel-mantenimiento"
@@ -144,35 +162,56 @@ import {
       class="mb-16"
       hidden
     >
-      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-center gap-6">
-        <div class="overflow-hidden rounded-2xl shadow-lg sm:shrink-0">
-          <Image
-            src={IMAGES.maintenance.taller.src}
-            alt={IMAGES.maintenance.taller.alt}
-            class="w-full h-auto sm:h-[420px] sm:w-auto"
-            widths={[600, 900]}
-            sizes="(max-width: 640px) 100vw, 560px"
-            loading="lazy"
-            quality={75}
-          />
-        </div>
+      <div class="bg-white rounded-2xl border border-neutral-200/80 shadow-sm p-6 lg:p-10">
+        <div class="grid lg:grid-cols-[3fr_2fr] gap-8 lg:gap-12 lg:items-center">
+          <div class="flex flex-col sm:flex-row gap-4">
+            <figure class="relative overflow-hidden rounded-2xl shadow-lg aspect-[4/3] sm:flex-[64]">
+              <Image
+                src={IMAGES.maintenance.taller.src}
+                alt={IMAGES.maintenance.taller.alt}
+                class="w-full h-full object-cover"
+                widths={[600, 900]}
+                sizes="(max-width: 640px) 100vw, 420px"
+                loading="lazy"
+                quality={75}
+              />
+              <span class="absolute top-3 left-3 bg-brand-red text-white text-xs font-bold px-3 py-1.5 rounded-full shadow">
+                {MAINTENANCE_PHOTOS.taller.rotulo}
+              </span>
+              <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent text-white text-xs font-medium px-3 pt-8 pb-3 leading-snug">
+                {MAINTENANCE_PHOTOS.taller.pie}
+              </figcaption>
+            </figure>
 
-        <div class="overflow-hidden rounded-2xl shadow-lg sm:shrink-0">
-          <Image
-            src={IMAGES.maintenance.lavado.src}
-            alt={IMAGES.maintenance.lavado.alt}
-            class="w-full h-auto sm:h-[420px] sm:w-auto"
-            widths={[400, 640]}
-            sizes="(max-width: 640px) 100vw, 315px"
-            loading="lazy"
-            quality={75}
-          />
+            <figure class="relative overflow-hidden rounded-2xl shadow-lg aspect-[3/4] sm:flex-[36]">
+              <Image
+                src={IMAGES.maintenance.lavado.src}
+                alt={IMAGES.maintenance.lavado.alt}
+                class="w-full h-full object-cover"
+                widths={[400, 640]}
+                sizes="(max-width: 640px) 100vw, 240px"
+                loading="lazy"
+                quality={75}
+              />
+              <span class="absolute top-3 left-3 bg-neutral-900/85 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow">
+                {MAINTENANCE_PHOTOS.lavado.rotulo}
+              </span>
+              <figcaption class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent text-white text-xs font-medium px-3 pt-8 pb-3 leading-snug">
+                {MAINTENANCE_PHOTOS.lavado.pie}
+              </figcaption>
+            </figure>
+          </div>
+
+          <div>
+            <h3 class="text-2xl sm:text-3xl font-display text-neutral-800 leading-tight">
+              {MAINTENANCE_HEADLINE.texto}<span class="text-brand-red">{MAINTENANCE_HEADLINE.destacado}</span>
+            </h3>
+            <p class="mt-4 text-lg text-neutral-800 leading-relaxed">
+              {MAINTENANCE_COPY}
+            </p>
+          </div>
         </div>
       </div>
-
-      <p class="mt-8 mx-auto max-w-3xl text-center text-lg text-neutral-800 leading-relaxed">
-        {MAINTENANCE_COPY}
-      </p>
     </div>
 
     {/* ── Panel 3: Sala de control y tráfico ─────────────────────────────── */}
@@ -187,19 +226,26 @@ import {
       class="mb-16"
       hidden
     >
-      <div class="flex justify-center">
-        <div
-          class="flex items-center justify-center rounded-2xl border-2 border-dashed border-neutral-300 bg-white/60 h-56 sm:h-[420px] w-full sm:w-[560px]"
-        >
-          <p class="text-neutral-500 text-sm font-semibold px-6 text-center">
-            {TRAFFIC_PHOTO_PENDING}
-          </p>
+      <div class="bg-white rounded-2xl border border-neutral-200/80 shadow-sm p-6 lg:p-10">
+        <div class="grid lg:grid-cols-2 gap-8 lg:gap-12 lg:items-center">
+          <div
+            class="flex items-center justify-center rounded-2xl border-2 border-dashed border-neutral-300 bg-neutral-50 h-56 sm:h-[300px]"
+          >
+            <p class="text-neutral-500 text-sm font-semibold px-6 text-center">
+              {TRAFFIC_PHOTO_PENDING}
+            </p>
+          </div>
+
+          <div>
+            <h3 class="text-2xl sm:text-3xl font-display text-neutral-800 leading-tight">
+              {TRAFFIC_HEADLINE.texto}<span class="text-brand-red">{TRAFFIC_HEADLINE.destacado}</span>
+            </h3>
+            <p class="mt-4 text-lg text-neutral-800 leading-relaxed">
+              {TRAFFIC_COPY}
+            </p>
+          </div>
         </div>
       </div>
-
-      <p class="mt-8 mx-auto max-w-3xl text-center text-lg text-neutral-800 leading-relaxed">
-        {TRAFFIC_COPY}
-      </p>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
