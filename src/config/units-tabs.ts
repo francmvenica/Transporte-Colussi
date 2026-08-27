@@ -121,18 +121,9 @@ export const MAINTENANCE_COPY =
 // 🔑 Es la segunda maqueta que llega con texto inventado adentro (la primera fue
 // el sketch de Antigravity, con "taller propio" e "higiene intensiva"). **Una
 // maqueta define el layout de esta sección, nunca su contenido.**
-// 🔴 LAS DOS FOTOS VAN LIMPIAS: SIN RÓTULO Y SIN PIE (decisión de Franco, 27/08).
-// La maqueta los traía y llegaron a estar publicados unas horas; se sacaron
-// porque el texto de la derecha ya dice todo y los carteles encima de la foto
-// tapan la imagen. **Es la misma decisión que ya se había tomado para la galería
-// de Flota el 31/07** (ahí se eliminó hasta el degradado que les daba contraste).
-//
-// ⚠️ Y resuelve de raíz el problema de esta pestaña: el pie de foto es donde se
-// colaron las tres afirmaciones inventadas de la maqueta y donde volvía la
-// palabra "limpieza". Sin pie, no hay dónde colarlas.
-//
-// La descripción de cada foto sigue viva en su `alt` (ver `assets.ts`), que es lo
-// que leen los buscadores y los lectores de pantalla.
+// (La decisión de que la foto vaya sin rótulo ni pie está consolidada más abajo,
+// junto con las restricciones de texto de esta pestaña. Estaba escrita acá y
+// también allá, con las dos versiones diciendo cosas distintas.)
 
 // Los dos chips con tilde de la maqueta. **La FORMA se copió, el CONTENIDO no.**
 // Ahí decían "Repuestos 100% Originales" y "Garantía Oficial IVECO", dos cosas
@@ -157,34 +148,43 @@ export const MAINTENANCE_CHIPS = [
   'Según manual del fabricante',
 ];
 
-// 🔴 DOS RESTRICCIONES QUE MANDAN SOBRE CUALQUIER TEXTO QUE ACOMPAÑE ESTAS FOTOS,
-// y sobrevivieron a que el layout cambiara dos veces el mismo día:
+// 🔴 LA FOTO DEL TÚNEL DE LAVADO SALIÓ DE LA PESTAÑA (27/08, decisión de Franco).
+// Queda solo la del taller. **La pidió el cliente por nombre, así que esto NO se
+// revierte por creer que falta algo** — el porqué y cómo volver atrás están en el
+// comentario del panel en `Fleet.astro`. El pedido, 07/08 textual: "te pasé una
+// foto de la limpieza de las unidades (…) En la parte de mantenimiento. Cuando
+// hablamos de mantenimiento preventivo, hablamos de la limpieza. Esta foto está
+// muy buena para el mantenimiento."
+//
+// 🔴 LAS DOS RESTRICCIONES DE ABAJO SIGUEN VIGENTES aunque la foto ya no esté,
+// porque son sobre el TEXTO y no sobre la imagen:
 //
 // 1. **El lavadero NO es de la empresa** (dato de Franco, 27/08). Esta pestaña
 //    llegó a decir "equipo de lavado automático propio", deducido de que la foto
 //    mostraba un camión de ellos. Nadie lo había verificado y era falso. Es el
 //    mismo error que la playa cubierta, donde Romualdo tuvo que aclarar "pero no
-//    es nuestra". **Ningún texto de acá afirma propiedad de nada.**
+//    es nuestra". **Ningún texto de acá afirma propiedad de nada.** Con la foto
+//    afuera el riesgo baja, pero si algún día vuelve, vuelve también la trampa.
 // 2. **"Limpieza" es una palabra que él bajó del sitio** el 11/08 leyendo la spec
 //    en voz alta: "la limpieza no. Se entiende que está limpio; es como decir
-//    «me baño todos los días»". Por eso el rótulo dice "Lavado automático" y no
-//    "Alistamiento & Limpieza", como proponía la maqueta.
+//    «me baño todos los días»". **Hay un gate que verifica que dé 0 en todo el
+//    build**, y ese gate sigue corriendo.
 //
-// ⚠️ Y LA FOTO DEL LAVADO VA PORQUE LA PIDIÓ ÉL. 07/08, textual: "te pasé una
-// foto de la limpieza de las unidades (…) En la parte de mantenimiento. Cuando
-// hablamos de mantenimiento preventivo, hablamos de la limpieza. Esta foto está
-// muy buena para el mantenimiento."
+// ✅ LA FOTO VA LIMPIA: SIN RÓTULO Y SIN PIE, igual que la galería de Flota desde
+// el 31/07 (ahí se eliminó hasta el degradado que les daba contraste).
 //
-// 📌 Primero se resolvió no ponerle pie a ninguna de las dos (27/08, mañana), y
-// funcionaba. Al llegar la maqueta con rótulos, Franco decidió ponérselos: el
-// criterio pasó a ser **describir lo que la foto muestra**, que es compatible con
-// las dos restricciones de arriba. Queda escrito el camino porque el pie de foto
-// de esta pestaña es donde se colaron las tres afirmaciones inventadas.
+// ⚠️ ESTE COMENTARIO SE CONTRADECÍA SOLO Y SE ARREGLÓ EL 27/08. Decía más abajo
+// que "al llegar la maqueta con rótulos, Franco decidió ponérselos", mientras el
+// bloque de arriba y `Fleet.astro` decían que iban sin rótulo. **El código nunca
+// tuvo rótulos**: los rótulos estuvieron publicados unas horas y se sacaron
+// porque el texto de la derecha ya dice todo y los carteles tapan la foto. La
+// nota vieja iba a hacer que el próximo que la leyera los repusiera.
 //
-// ⚠️ Ojo con una decisión vecina que NO se tocó: **la galería de Flota sigue sin
-// títulos sobre las fotos** (pedido de Franco del 31/07, se le eliminó hasta el
-// degradado). Que estas dos lleven rótulo no reabre aquello: son secciones
-// distintas y pedidos distintos.
+// 🔑 Y sin pie se resuelve de raíz el problema de esta pestaña: **el pie de foto
+// es donde se colaron las tres afirmaciones inventadas de la maqueta** y donde
+// volvía la palabra "limpieza". Sin pie, no hay dónde colarlas. La descripción de
+// la foto vive en su `alt` (ver `assets.ts`), que es lo que leen los buscadores y
+// los lectores de pantalla.
 
 // Aporta lo que la spec "Gestión de la Flota" no dice: QUIÉN es Tráfico para el
 // cliente. El sector ya está nombrado en RRHH desde el 13/08 ("Desde el sector

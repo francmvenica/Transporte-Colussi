@@ -62,7 +62,11 @@ import patioOperacion from '../assets/images/flota-colussi-patio-operacion.jpg';
 // planificador las daba por inexistentes — mismo caso que la foto del orden de
 // los clientes. Si falta un insumo, primero se busca en el material entregado.
 import tallerMantenimiento from '../assets/images/mantenimiento/tractoras-colussi-taller-mantenimiento.jpg';
-import tunelLavado from '../assets/images/mantenimiento/tractora-colussi-tunel-lavado.jpg';
+// 🔴 `tractora-colussi-tunel-lavado.jpg` YA NO SE IMPORTA (27/08, decisión de
+// Franco: la pestaña queda con una sola foto). **El archivo SIGUE EN EL REPO a
+// propósito**, sin uso: la foto la pidió el cliente por nombre y puede volver a
+// pedirla. No borrarlo por "limpiar assets huérfanos" — al no estar importado
+// tampoco entra al build, así que no pesa en el sitio publicado.
 
 export const IMAGES = {
   hero: {
@@ -167,24 +171,24 @@ export const IMAGES = {
     },
   ],
   // ───────────────────────────────────────────────────────────────────────────
-  // PESTAÑA DE MANTENIMIENTO (27/08). Las dos fotos tienen ORIENTACIONES
-  // DISTINTAS y eso decidió el layout, no al revés: el taller es 1600×1200
-  // (apaisada 4:3) y el lavado 960×1280 (VERTICAL 3:4). Puestas en dos celdas
-  // iguales con `object-cover`, la vertical pierde ~40% de alto — es el mismo
-  // problema medido en la 6ta foto de la galería. Por eso en Fleet.astro van con
-  // ALTURA IGUAL y ancho libre según su ratio: ninguna se recorta.
+  // PESTAÑA DE MANTENIMIENTO. 🔴 QUEDA UNA SOLA FOTO, la del taller (1600×1200,
+  // apaisada 4:3), por decisión de Franco del 27/08. **Salió la del túnel de
+  // lavado, que la había pedido el cliente por nombre el 07/08** — el porqué de
+  // no reponerla está en `Fleet.astro`, en el comentario del panel.
   //
-  // ⚠️ NINGÚN `alt` dice "nuestro taller" ni nombra un lugar. Lo primero porque
-  // el taller es de la concesionaria; lo segundo por la regla de arriba (tres
-  // homónimos disputando la identidad en buscadores).
+  // 📐 Lo que se pierde al quedar una sola, para que no se relea como simplificación
+  // gratuita: las dos tenían ORIENTACIONES DISTINTAS (el lavado era 960×1280,
+  // VERTICAL 3:4) y el layout estaba armado para que terminaran con la misma
+  // altura sin recortarse, con anchos proporcionales a su ratio. Ese cálculo ya
+  // no aplica: la del taller toma el ancho completo de su columna.
+  //
+  // ⚠️ EL `alt` NO dice "nuestro taller" ni nombra un lugar, y no es un descuido.
+  // Lo primero porque el taller es de la concesionaria, no de la empresa; lo
+  // segundo por los tres homónimos que le disputan la identidad en buscadores.
   maintenance: {
     taller: {
       src: tallerMantenimiento,
       alt: 'Dos tractoras Iveco de Transporte Colussi en servicio de mantenimiento preventivo, con los capós delanteros abiertos y un mecánico trabajando sobre una de ellas',
-    },
-    lavado: {
-      src: tunelLavado,
-      alt: 'Tractora Iveco Hi-Road de Transporte Colussi ingresando al equipo de lavado automático de rodillos',
     },
   },
   // Logos pendientes del cliente — usar placeholders

@@ -49,7 +49,7 @@ import {
 // ─────────────────────────────────────────────────────────────────────────────
 // 🆕 PESTAÑAS (27/08). Aprobadas por Romualdo el 11/08. Textos y decisiones de
 // contenido en `config/units-tabs.ts` — ahí está por qué el taller no se llama
-// "nuestro" y por qué el lavado habla del equipo y no del hábito.
+// "nuestro" y por qué la palabra "limpieza" no puede aparecer en el sitio.
 //
 // 🔴 LAS SPECS QUEDAN FUERA DE LAS PESTAÑAS, A PROPÓSITO. Describen toda la
 // sección, no una solapa: meterlas adentro de "Flota" desharía la decisión del
@@ -139,22 +139,30 @@ import {
         después de verlos publicados). Es la misma decisión que ya regía para la
         galería de Flota desde el 31/07. El porqué está en `units-tabs.ts`.
 
-        🔴 LAS DOS FOTOS TERMINAN CON LA MISMA ALTURA Y SIN RECORTARSE, que es lo
-        único no negociable de este bloque: el taller es apaisado (4:3) y el
-        lavado vertical (3:4), y meterlas en dos celdas iguales le come ~40% de
-        alto a la vertical. Es el problema ya medido en la 6ta foto de la galería.
+        🔴 QUEDA UNA SOLA FOTO: LA DEL TALLER (decisión de Franco, 27/08). Salió
+        la del túnel de lavado.
 
-        📐 CÓMO SE CONSIGUE, porque no es obvio y el primer intento estaba roto:
-        cada figura lleva su `aspect-[…]` natural y un `flex-[64]` / `flex-[36]`
-        proporcional a su ancho relativo. Como 0,64 × ¾ = 0,36 × 4/3 = 0,48, las
-        dos alturas dan iguales SOLAS, a cualquier ancho de pantalla, y el
-        `object-cover` no recorta nada porque el aspecto del contenedor es el
-        mismo que el de la foto.
+        ⚠️ Y ESO REVIERTE UN PEDIDO EXPLÍCITO DEL CLIENTE, así que no se repone
+        por creer que falta algo. Romualdo la pidió el 07/08, textual: "te pasé
+        una foto de la limpieza de las unidades (…) En la parte de mantenimiento.
+        Cuando hablamos de mantenimiento preventivo, hablamos de la limpieza.
+        Esta foto está muy buena para el mantenimiento". **Si él la reclama, el
+        archivo sigue en el repo** (`assets/images/mantenimiento/`) y volver atrás
+        es reponer la `<figure>` con `flex-[64]`/`flex-[36]` (ver el historial de
+        este archivo).
 
-        ⚠️ El intento anterior usaba altura fija + `shrink-0`, y las fotos
-        SE SALÍAN de la tarjeta: sumaban 641 px dentro de una columna de 542.
-        Con altura fija hay que recalcular a mano en cada breakpoint; así se
-        acomoda solo. **No volver a altura fija.** */}
+        📐 EL LAYOUT SE REHIZO, no alcanzaba con borrar la figura. Las dos fotos
+        se repartían la columna con `flex-[64]` / `flex-[36]` y aspectos distintos
+        (taller 4:3 apaisado, lavado 3:4 vertical) para terminar con la MISMA
+        altura sin recortarse. Con una sola, esos números no significan nada: la
+        del taller toma el ancho completo de su columna y conserva su `aspect-[4/3]`,
+        que sigue siendo lo no negociable — `object-cover` no recorta porque el
+        contenedor tiene el aspecto de la foto.
+
+        ⚠️ NO VOLVER A ALTURA FIJA. Un intento del 27/08 usaba altura fija +
+        `shrink-0` y las fotos se salían de la tarjeta: sumaban 641 px dentro de
+        una columna de 542. Con altura fija hay que recalcular a mano en cada
+        breakpoint; con aspecto se acomoda solo. */}
     <div
       role="tabpanel"
       id="panel-mantenimiento"
@@ -166,31 +174,17 @@ import {
     >
       <div class="bg-white rounded-2xl border border-neutral-200/80 shadow-sm p-6 lg:p-10">
         <div class="grid lg:grid-cols-[3fr_2fr] gap-8 lg:gap-12 lg:items-center">
-          <div class="flex flex-col sm:flex-row gap-4">
-            <figure class="relative overflow-hidden rounded-2xl shadow-lg aspect-[4/3] sm:flex-[64]">
-              <Image
-                src={IMAGES.maintenance.taller.src}
-                alt={IMAGES.maintenance.taller.alt}
-                class="w-full h-full object-cover"
-                widths={[600, 900]}
-                sizes="(max-width: 640px) 100vw, 420px"
-                loading="lazy"
-                quality={75}
-              />
-            </figure>
-
-            <figure class="relative overflow-hidden rounded-2xl shadow-lg aspect-[3/4] sm:flex-[36]">
-              <Image
-                src={IMAGES.maintenance.lavado.src}
-                alt={IMAGES.maintenance.lavado.alt}
-                class="w-full h-full object-cover"
-                widths={[400, 640]}
-                sizes="(max-width: 640px) 100vw, 240px"
-                loading="lazy"
-                quality={75}
-              />
-            </figure>
-          </div>
+          <figure class="relative overflow-hidden rounded-2xl shadow-lg aspect-[4/3]">
+            <Image
+              src={IMAGES.maintenance.taller.src}
+              alt={IMAGES.maintenance.taller.alt}
+              class="w-full h-full object-cover"
+              widths={[600, 900, 1200]}
+              sizes="(max-width: 1024px) 100vw, 660px"
+              loading="lazy"
+              quality={75}
+            />
+          </figure>
 
           <div>
             <h3 class="text-2xl sm:text-3xl font-display text-neutral-800 leading-tight">
