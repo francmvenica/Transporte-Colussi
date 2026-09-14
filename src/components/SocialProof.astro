@@ -1,6 +1,15 @@
 ---
 import { Image } from 'astro:assets';
-import { CLIENTS, SECTORS, type Client } from '../config/clients';
+import { CLIENTS, CLIENTES_MODO, SECTORS, type Client } from '../config/clients';
+
+// 🔴 CINTA EN MODO NOMBRES DESDE EL 14/09 (sin autorización de uso de marca).
+// El interruptor, el porqué y la receta para volver a los logos están en
+// config/clients.ts. Acá lo único que cambia según el modo es QUÉ SE DIBUJA en
+// cada celda: la lista, el orden, el reparto por columnas, la repetición de los
+// principales, la pausa y el foco son los mismos en los dos modos.
+// En modo nombres cada celda usa exactamente el <p> que ya usaba Dorinka. No se
+// inventó un estilo: para el que mira, todos se ven como se veía Dorinka.
+const conLogos = CLIENTES_MODO === 'logos';
 
 const joinWithY = (items: string[]) =>
   items.length > 1
@@ -244,7 +253,7 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
           >
             {columna.items.map((cliente) => (
               <div class="vlogo flex items-center justify-center h-20 sm:h-24 shrink-0">
-                {cliente.image ? (
+                {conLogos && cliente.image ? (
                   <Image
                     src={cliente.image}
                     alt={cliente.primera ? `${cliente.name}, cliente de Transporte Colussi` : ''}
@@ -257,7 +266,7 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
                     class="font-bold text-neutral-600 text-2xl sm:text-4xl text-center leading-tight px-1"
                     aria-hidden={cliente.primera ? undefined : 'true'}
                   >
-                    {cliente.name}
+                    {conLogos ? cliente.name : (cliente.shortName ?? cliente.name)}
                   </p>
                 )}
               </div>

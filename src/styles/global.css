@@ -62,6 +62,17 @@
    cae en la otra tipográfica de la marca, que ya está descargada. */
 :root {
   --font-display: 'Chivo', 'Archivo', ui-sans-serif, system-ui, sans-serif;
+  /* 🔴 FONDO FIJO EN BLANCO (14/09). A Romualdo, en su Samsung, el sitio le
+     cargaba NEGRO y a Franco blanco, al mismo tiempo. Causa: el modo oscuro
+     FORZADO del navegador, que oscurece por algoritmo cualquier página que no
+     declare `color-scheme`. El sitio no lo declaraba. Romualdo decidió que
+     quede blanco siempre.
+     `only light` (acá y en la <meta> de Layout.astro) es el opt-out
+     documentado de Chrome: https://developer.chrome.com/blog/auto-dark-theme
+     ⚠️ En Samsung Internet NO está garantizado: su oscurecido forzado viene
+     activado por defecto y no siempre respeta la etiqueta. Si le sigue
+     cargando negro, el ajuste está en su navegador, no en este archivo. */
+  color-scheme: only light;
 }
 
 html {
@@ -74,6 +85,9 @@ html {
 }
 
 body {
+  /* Explícito desde el 14/09: antes el body no tenía fondo y dependía del
+     default del navegador. Ver la nota de color-scheme en :root. */
+  background-color: #fff;
   font-family: var(--font-sans);
   color: var(--color-neutral-800);
   /* Rol "Texto" del manual de marca: wght 400 (peso normal del body),

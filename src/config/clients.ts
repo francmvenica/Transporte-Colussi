@@ -61,6 +61,33 @@
 // ─────────────────────────────────────────────────────────────────────────────
 import type { ImageMetadata } from 'astro';
 
+// ═════════════════════════════════════════════════════════════════════════════
+// 🔴 INTERRUPTOR DE LA CINTA DE CLIENTES: 'logos' o 'nombres'. TEMPORAL.
+// ═════════════════════════════════════════════════════════════════════════════
+//
+// DESDE EL 14/09 LA CINTA MUESTRA NOMBRES, NO LOGOS. No hay autorización de uso
+// de marca de ninguno de los clientes (Nestlé, Arcor, Walmart…), y si alguno
+// objeta le cae a Romualdo. Mientras tanto cada cliente se ve escrito con el
+// mismo estilo con el que ya se veía Dorinka. Decisión de Franco (14/09).
+//
+// ⚠️ La minuta de la recorrida del 14/09 dice que Romualdo prefería sacar la
+// cinta y dejar solo el párrafo de rubros. Franco eligió la cinta de nombres
+// sabiéndolo.
+//
+// QUÉ DISPARA LA VUELTA: Romualdo quedó a cargo de sondear a los clientes,
+// empezando por Arcor ("si los principales no tienen problema, listo").
+//
+// ✅ CÓMO VOLVER A LOS LOGOS (nada más que esto):
+//   1. Cambiar 'nombres' por 'logos' en la línea de abajo.
+//   2. npm run build, y comprobar que sale igual a lo que estaba publicado:
+//      node scripts/extraer-cinta.mjs --comparar
+//      (la única diferencia esperada es el alt de Quilmes, ver su línea).
+//   3. Merge a main.
+// No hay que reponer imágenes, descomentar código ni tocar otro archivo: todo
+// el modo logos (imports, visualScale, orden, posición de Dorinka) sigue vivo
+// en este archivo y en SocialProof.astro.
+export const CLIENTES_MODO: 'logos' | 'nombres' = 'nombres';
+
 import nestle from '../assets/images/clientes/nestle.png';
 import arcor from '../assets/images/clientes/arcor.png';
 import walmart from '../assets/images/clientes/walmart.png';
@@ -99,6 +126,12 @@ export interface Client {
    *  entra otra marca denominativa con nombre LARGO, revisar que no se corte —
    *  la celda mide un tercio del ancho de la cinta. */
   image?: ImageMetadata;
+  /** Nombre que se ve en la cinta cuando CLIENTES_MODO = 'nombres' (14/09).
+   *  Solo lo llevan los nombres que no entran en un tercio de la cinta al
+   *  tamaño de la celda de Dorinka. La lista de texto de "Ver más clientes" y
+   *  el aria-label usan siempre `name`, completo: es lo que leen los motores.
+   *  En modo logos no se usa. */
+  shortName?: string;
   featured: boolean;
   /** Ajuste fino de escala visual (1 = tamaño base), calibrado el 08/08 en DOS
    *  pasadas: primero con el bbox de contenido no-transparente de cada PNG
@@ -199,7 +232,7 @@ export const CLIENTS: Client[] = [
   { name: 'Molinos Río de la Plata', image: molinosRioDeLaPlata, featured: true, visualScale: 1.24 }, // ↑ 1.22 · medía 1.16×
   { name: 'Nestlé', image: nestle, featured: true, visualScale: 1.88 }, // ↑ 1.45 · medía 0.71×, de los más chicos pese a la escala alta
   { name: 'Arcor', image: arcor, featured: true, visualScale: 1.86 }, // ↑ 1.45 · medía 0.73×
-  { name: 'Establecimiento Las Marías', image: establecimientoLasMarias, featured: true, visualScale: 1.12 }, // ↑ sin escala · medía 0.96×
+  { name: 'Establecimiento Las Marías', shortName: 'Las Marías', image: establecimientoLasMarias, featured: true, visualScale: 1.12 }, // ↑ sin escala · medía 0.96×
   { name: 'Softys', image: softys, featured: true, visualScale: 1.06 }, // ↑ sin escala · medía 1.07×
   { name: 'ACON TIMBER', image: aconTimber, featured: true, visualScale: 1.05 }, // ↑ sin escala · medía 1.08×
   { name: 'NutriCorrientes', image: nutricorrientes, featured: true, visualScale: 1.04 }, // ↑ sin escala · medía 1.10×
@@ -230,7 +263,14 @@ export const CLIENTS: Client[] = [
   // Con Dorinka en el índice 2 se cumplen las dos y queda inmediatamente
   // después de Walmart. **Si se agrega o se saca una entrada antes que ella,
   // se rompe y hay que recontar** — verificado en el DOM, no supuesto.
-  { name: 'Quilmes', image: quilmes, featured: false }, // ⚠️ a confirmar con la foto
+  // 🔴 NOMBRE DE LA SOCIEDAD, NO DE LA MARCA (14/09). Romualdo: "ese era el
+  // nombre de la empresa cuando yo trabajaba, porque ahora Quilmes es una
+  // marca". Corrige también el alt del logo: es la única diferencia del modo
+  // logos contra lo publicado antes del 14/09.
+  // ⚠️ En la cinta de nombres va "Quilmes" corto porque el completo no entra en
+  // la celda. Tensión aceptada por Franco: la cinta muestra la marca que él
+  // corrigió; la lista de texto lleva la sociedad.
+  { name: 'Cervecería y Maltería Quilmes', shortName: 'Quilmes', image: quilmes, featured: false }, // ⚠️ a confirmar con la foto
   { name: 'Molino Cañuelas', image: molinoCanuelas, featured: false, visualScale: 1.37 }, // ⚠️ "también puede ir arriba"
   { name: 'Dorinka', featured: false }, // 🟢 POSICIÓN CALCULADA (11/08) para caer pegada a Walmart — ver nota de arriba. Marca denominativa, sin logo: va como celda de texto
   { name: 'Aguas Danone', image: aguasDanone, featured: false, visualScale: 0.84 }, // bajado por pedido explícito
@@ -238,7 +278,7 @@ export const CLIENTS: Client[] = [
   { name: 'Ferrum', image: ferrum, featured: false, visualScale: 1.38 },
   { name: 'Buyatti', image: buyatti, featured: false, visualScale: 0.68 }, // ↓ 0.8 · medía 1.01×, no 0.8
   { name: 'Grupo Cepas', image: grupoCepas, featured: false, visualScale: 1.15 },
-  { name: 'Unión Agrícola de Avellaneda', image: unionAgricolaAvellaneda, featured: false, visualScale: 0.76 }, // ↓ sin escala · era el MÁS GRANDE (1.26×)
+  { name: 'Unión Agrícola de Avellaneda', shortName: 'UAA', image: unionAgricolaAvellaneda, featured: false, visualScale: 0.76 }, // ↓ sin escala · era el MÁS GRANDE (1.26×)
   { name: 'RPB Baggio', image: rpbBaggio, featured: false, visualScale: 1.29 },
   { name: 'Molinos Agro', image: molinosAgro, featured: false, visualScale: 0.88 }, // ↑ 0.86 · ver la nota de arriba: el +20% que se pidió lo dejaba PRIMERO de toda la cinta. La advertencia vieja decía "NO se toca" porque el "Molinos" que Romualdo mandó agrandar el 11/08 era Río de la Plata, que es OTRA empresa y tiene su propia línea. Sigue valiendo: son dos clientes distintos y no se confunden
   { name: 'Fiplasto', image: fiplasto, featured: false, visualScale: 0.8 },

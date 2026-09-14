@@ -22,6 +22,11 @@ const currentYear = new Date().getFullYear();
 // lo que el cliente espera, el archivo que tenemos puede no ser la versión
 // que él tiene en mente — es un dato a confirmar con Romualdo/Juan Manuel,
 // no algo que se arregle tocando el markup.
+//
+// ⛔ SALIÓ EL BLOQUE "SEGUINOS" CON EL ÍCONO DE FACEBOOK (14/09). La cuenta
+// está abandonada y el sitio invitaba a seguirla. La columna queda con
+// "Trabajá con nosotros", que pasa a ser su título. Para reponerlo, ver la
+// nota en config/site.ts.
 // BASE_URL puede venir sin slash final (p. ej. "/Transporte-Colussi") — se normaliza
 // para que `${base}${href}` nunca pegue el path con lo que sigue.
 const rawBase = import.meta.env.BASE_URL;
@@ -76,26 +81,10 @@ const base = rawBase.endsWith('/') ? rawBase : `${rawBase}/`;
       </div>
 
       <div>
-        <h3 class="font-semibold text-sm uppercase tracking-wider text-neutral-400 mb-4">Seguinos</h3>
-        <div class="flex gap-3">
-          <a
-            href={SITE.social.facebook}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="w-10 h-10 bg-neutral-800 rounded-lg flex items-center justify-center text-neutral-400 hover:bg-brand-red hover:text-white transition-all"
-            aria-label="Facebook de Transporte Colussi"
-          >
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-            </svg>
-          </a>
-        </div>
-        <div class="mt-6">
-          <h4 class="font-semibold text-sm text-neutral-400 mb-2">Trabajá con nosotros</h4>
-          <a href={`mailto:${SITE.contact.email}`} class="text-sm text-neutral-300 hover:text-brand-red transition-colors">
-            Enviá tu CV →
-          </a>
-        </div>
+        <h3 class="font-semibold text-sm uppercase tracking-wider text-neutral-400 mb-4">Trabajá con nosotros</h3>
+        <a href={`mailto:${SITE.contact.email}`} class="text-sm text-neutral-300 hover:text-brand-red transition-colors">
+          Enviá tu CV →
+        </a>
       </div>
     </div>
   </div>

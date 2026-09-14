@@ -232,7 +232,10 @@ const organizationSchema = {
           },
         })),
       },
-      sameAs: [SITE.social.facebook],
+      // ⛔ `sameAs: [SITE.social.facebook]` SALIÓ EL 14/09. La cuenta de Facebook
+      // está abandonada (la abrió un tercero y nadie la usa), y declararla como
+      // perfil oficial le decía a Google y a las IA que la empresa es eso. Se
+      // repone si Romualdo la reactiva. Ver la nota en config/site.ts.
     },
     {
       '@type': 'LocalBusiness',
@@ -308,6 +311,7 @@ const organizationSchema = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="only light" />
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonicalURL} />

@@ -189,9 +189,20 @@ export const MAINTENANCE_CHIPS = [
 // Aporta lo que la spec "Gestión de la Flota" no dice: QUIÉN es Tráfico para el
 // cliente. El sector ya está nombrado en RRHH desde el 13/08 ("Desde el sector
 // de Tráfico…"), así que el sitio no lo está inventando acá.
+//
+// 🔴 REESCRITO EN LA RECORRIDA EN VIVO CON ROMUALDO (14/09). Dos cambios, los
+// dos suyos:
+//   · Entra la PLANIFICACIÓN, que el sitio no mencionaba y es trabajo que la
+//     empresa hace. El arco que pidió es "desde la planificación hasta la
+//     entrega". Él dijo "programación"; Franco propuso "planificación" y lo
+//     aceptó. No volver a "programación".
+//   · El cierre pasa de "descarga" a "se entrega" (él había dicho "hasta que
+//     descarga" y lo cambió).
+// La planificación va en el título y no en el párrafo por decisión de Franco:
+// es la frase que más se lee, y así el párrafo queda textual del dictado.
 export const TRAFFIC_HEADLINE = {
-  texto: 'Cada viaje, seguido desde que la unidad sale hasta que ',
-  destacado: 'descarga.',
+  texto: 'Cada viaje, desde la planificación hasta que ',
+  destacado: 'se entrega.',
 };
 
 // 🔴 "DESDE NUESTRO CENTRO DE TRÁFICO PROPIO" ES UN RESCATE. Vivía en la spec
@@ -199,8 +210,15 @@ export const TRAFFIC_HEADLINE = {
 // pestaña. Medido antes de borrarla: aparecía **una sola vez en todo el sitio**.
 // El "propio" es lo que vende — es un activo declarado, no una descripción — así
 // que se movió acá en vez de perderse.
+//
+// 🔴 TEXTUAL DEL DICTADO DE ROMUALDO (14/09). No se pule: es su voz y ya está
+// aprobado. Conserva el rescate de arriba ("desde nuestro centro de tráfico
+// propio").
+// ⛔ SALIÓ "a quien llama el cliente para saber dónde está su carga". Romualdo
+// lo descartó explícitamente leyéndolo en voz alta: "esto no hace falta". No
+// reponerlo.
 export const TRAFFIC_COPY =
-  'El sector de Tráfico trabaja desde nuestro centro de tráfico propio, con monitoreo satelital las 24 horas. Es a quien llama el cliente para saber dónde está su carga, y quien lo llama a él cuando algo cambia en la ruta.';
+  'El sector de tráfico trabaja desde nuestro centro de tráfico propio, con monitoreo satelital, las 24 horas, para asegurar que se cumpla el objetivo de nuestros clientes en cada camión.';
 
 // Mismos chips que Mantenimiento, por la forma de la maqueta. Los dos son datos
 // que ya publicaba el sitio en la spec eliminada, no afirmaciones nuevas.

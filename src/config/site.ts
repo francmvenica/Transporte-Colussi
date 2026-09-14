@@ -93,6 +93,12 @@ export const SITE = {
       phoneRaw: '+5493482617565',
     },
   ] as Sede[],
+  // ⛔ SIN USO DESDE EL 14/09: el ícono del footer y el `sameAs` del JSON-LD
+  // salieron. Romualdo no tiene Facebook activo: la cuenta la abrió un tercero
+  // y quedó abandonada (buscándola en vivo aparecieron publicaciones ajenas y
+  // postulantes de empleo de hace más de un año). La URL queda acá para
+  // reponerla si la reactiva: volver a poner el bloque en Footer.astro y el
+  // `sameAs` en Layout.astro.
   social: {
     facebook:
       'https://www.facebook.com/Transporte-Colussi-411695562520418/',
