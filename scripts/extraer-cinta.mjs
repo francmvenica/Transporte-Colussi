@@ -8,9 +8,16 @@
 //   node scripts/extraer-cinta.mjs                 → imprime la sección
 //   node scripts/extraer-cinta.mjs --comparar      → diff contra tools/referencia-cinta-logos.html
 //
-// La referencia se generó sobre el build de main en 8e80bcb (14/09). La única
-// diferencia aceptada al comparar el modo logos es el `alt` de Quilmes, que pasó
-// a "Cervecería y Maltería Quilmes" por pedido de Romualdo.
+// La referencia es la cinta de LOGOS con los ajustes de contenido que no son
+// parte de la cinta: el nombre "Cervecería y Maltería Quilmes" (alt, lista y
+// aria-label) y "Walmart, Dorinka" juntos en la lista de texto (14/09).
+// Se regeneró en modo logos solo después de comprobar que esas eran las únicas
+// líneas distintas contra la cinta publicada en 8e80bcb. Hoy tiene que dar 0.
+// ⚠️ Si alguna vez se cambia contenido que también se ve en modo logos (la
+// lista, un nombre, un alt), el diff lo va a marcar: verificar que sean solo
+// esas líneas y recién ahí regenerar con
+//   node scripts/extraer-cinta.mjs > tools/referencia-cinta-logos.html
+// (con CLIENTES_MODO = 'logos' y el build hecho).
 import { readFileSync } from 'node:fs';
 
 const html = readFileSync(new URL('../dist/index.html', import.meta.url), 'utf8');

@@ -81,7 +81,7 @@ import type { ImageMetadata } from 'astro';
 //   1. Cambiar 'nombres' por 'logos' en la línea de abajo.
 //   2. npm run build, y comprobar que sale igual a lo que estaba publicado:
 //      node scripts/extraer-cinta.mjs --comparar
-//      (la única diferencia esperada es el alt de Quilmes, ver su línea).
+//      Tiene que dar 0 diferencias.
 //   3. Merge a main.
 // No hay que reponer imágenes, descomentar código ni tocar otro archivo: todo
 // el modo logos (imports, visualScale, orden, posición de Dorinka) sigue vivo
@@ -159,6 +159,15 @@ export interface Client {
    *  vive en un flex centrado que se estira al texto: la comparación da siempre
    *  igual y nunca detecta nada. Se mide el Range del texto contra `.vlogo`. */
   textoTamanos?: string;
+  /** En la LISTA DE TEXTO ("Ver más clientes" y el aria-label de la cinta),
+   *  este cliente va inmediatamente después del nombrado acá. No toca la cinta:
+   *  el orden de la cinta sale del orden de este array, que está calculado.
+   *  Hoy: Dorinka junto a Walmart (14/09, pedido de Franco mirando el sitio
+   *  publicado: "Walmart, Dorinka" juntos con una coma). En la cinta ya iban
+   *  pegadas por la posición calculada del 11/08; en la lista quedaban
+   *  separadas por Quilmes y Molino Cañuelas, porque ahí manda el orden del
+   *  array tal cual. */
+  listaJuntoA?: string;
   featured: boolean;
   /** Ajuste fino de escala visual (1 = tamaño base), calibrado el 08/08 en DOS
    *  pasadas: primero con el bbox de contenido no-transparente de cada PNG
@@ -299,7 +308,7 @@ export const CLIENTS: Client[] = [
   // corrigió; la lista de texto lleva la sociedad.
   { name: 'Cervecería y Maltería Quilmes', shortName: 'Quilmes', image: quilmes, featured: false }, // ⚠️ a confirmar con la foto
   { name: 'Molino Cañuelas', image: molinoCanuelas, featured: false, visualScale: 1.37 }, // ⚠️ "también puede ir arriba"
-  { name: 'Dorinka', featured: false }, // 🟢 POSICIÓN CALCULADA (11/08) para caer pegada a Walmart — ver nota de arriba. Marca denominativa, sin logo: va como celda de texto
+  { name: 'Dorinka', listaJuntoA: 'Walmart', featured: false }, // 🟢 POSICIÓN CALCULADA (11/08) para caer pegada a Walmart — ver nota de arriba. Marca denominativa, sin logo: va como celda de texto
   { name: 'Aguas Danone', image: aguasDanone, featured: false, visualScale: 0.84 }, // bajado por pedido explícito
   { name: 'Vicentin', image: vicentin, featured: false, visualScale: 0.64 }, // ↓ 0.8 · medía 1.13× · "no es importante, ya no existe más"
   { name: 'Ferrum', image: ferrum, featured: false, visualScale: 1.38 },

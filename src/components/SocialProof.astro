@@ -32,7 +32,15 @@ const joinWithY = (items: string[]) =>
     ? `${items.slice(0, -1).join(', ')} y ${items[items.length - 1]}`
     : items[0];
 
-const clientsText = joinWithY(CLIENTS.map((c) => c.name));
+// La lista de texto respeta el orden de CLIENTS salvo los que declaran
+// `listaJuntoA`, que se mudan inmediatamente después de ese cliente (hoy:
+// "Walmart, Dorinka", 14/09). La cinta NO usa esto: su orden sale de CLIENTS
+// tal cual, porque la posición de cada logo está calculada.
+const listaTexto = CLIENTS.filter((c) => !c.listaJuntoA).flatMap((c) => [
+  c,
+  ...CLIENTS.filter((otro) => otro.listaJuntoA === c.name),
+]);
+const clientsText = joinWithY(listaTexto.map((c) => c.name));
 // Los sectores van separados por COMAS, no con joinWithY. Hasta el 08/08 la
 // razón concreta era "papel y tissue" (traía su propia "y" adentro y el join
 // daba "...papel y tissue y madera", que se lee como un error). "tissue" salió
