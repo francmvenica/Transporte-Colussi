@@ -132,6 +132,16 @@ export interface Client {
    *  el aria-label usan siempre `name`, completo: es lo que leen los motores.
    *  En modo logos no se usa. */
   shortName?: string;
+  /** Clase de tamaño de letra EN CELULAR para la cinta de nombres, solo para
+   *  el nombre que no entra con el general (text-xl). En desktop todos siguen
+   *  en sm:text-4xl. En modo logos no se usa.
+   *  Hoy lo lleva solo NutriCorrientes (14/09): es una sola palabra, a 20 px
+   *  medía 148 px en una celda de 106 (101 a 360 px de pantalla) y no se puede
+   *  partir. Decisión de Franco: achicar solo esa celda. Queda en text-xs
+   *  (12 px), el tamaño más grande que entra también a 360 px: a 14 px medía
+   *  ~104 px contra 93 útiles. Se ve más chico que los otros once principales
+   *  del cuadro inicial; aceptado a sabiendas. */
+  textoCelular?: 'text-xs' | 'text-sm' | 'text-base' | 'text-lg';
   featured: boolean;
   /** Ajuste fino de escala visual (1 = tamaño base), calibrado el 08/08 en DOS
    *  pasadas: primero con el bbox de contenido no-transparente de cada PNG
@@ -235,7 +245,7 @@ export const CLIENTS: Client[] = [
   { name: 'Establecimiento Las Marías', shortName: 'Las Marías', image: establecimientoLasMarias, featured: true, visualScale: 1.12 }, // ↑ sin escala · medía 0.96×
   { name: 'Softys', image: softys, featured: true, visualScale: 1.06 }, // ↑ sin escala · medía 1.07×
   { name: 'ACON TIMBER', image: aconTimber, featured: true, visualScale: 1.05 }, // ↑ sin escala · medía 1.08×
-  { name: 'NutriCorrientes', image: nutricorrientes, featured: true, visualScale: 1.04 }, // ↑ sin escala · medía 1.10×
+  { name: 'NutriCorrientes', textoCelular: 'text-xs', image: nutricorrientes, featured: true, visualScale: 1.04 }, // ↑ sin escala · medía 1.10×
   { name: 'SolFrut', image: solfrut, featured: true, visualScale: 1.1 }, // ↓ 1.37 (−20%, Franco 13/08) · ver la nota de abajo: sale del grupo de destacados
   { name: 'Colven', image: colven, featured: true, visualScale: 0.8 }, // sin cambio: no está en ninguna de las dos listas
   { name: 'CHEP', image: chep, featured: true, visualScale: 1.84 }, // ↑ 1.45 · medía 0.74×
