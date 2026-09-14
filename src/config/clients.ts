@@ -147,6 +147,13 @@ export interface Client {
    *  ⚠️ A 768 la celda mide 219 y text-3xl (222) NO entra: por eso el salto va
    *  en lg y no en md.
    *
+   *  También lo lleva "Molinos Río de la Plata", pero por ALTO y no por ancho:
+   *  entre 640 y ~720 px, a 36 px partía en 3 renglones (130 px de alto en una
+   *  fila de 96), invadía la fila de abajo y el cuadro inicial mostraba 11
+   *  principales. Desde 730 entra en 2. Queda a 30 px solo entre 640 y 767
+   *  (70 px de alto) y vuelve a 36 desde md. En celular sigue en text-xl, igual
+   *  que el resto. Decisión de Franco (14/09).
+   *
    *  🔴 EL CORTE EN DESKTOP LO ENCONTRÓ FRANCO MIRANDO EL SITIO PUBLICADO, no la
    *  verificación. Se había medido el `<p>` contra su propio ancho, y el `<p>`
    *  vive en un flex centrado que se estira al texto: la comparación da siempre
@@ -249,7 +256,7 @@ export const CLIENTS: Client[] = [
   // que el logo YA mide, no sobre lo que parece medir.** Pedir "+20%" sobre algo
   // que ya estaba arriba del promedio lo dispara fuera de la escala. Antes de
   // aplicar un ajuste relativo, mirar dónde está parado ese logo en el ranking.
-  { name: 'Molinos Río de la Plata', image: molinosRioDeLaPlata, featured: true, visualScale: 1.24 }, // ↑ 1.22 · medía 1.16×
+  { name: 'Molinos Río de la Plata', textoTamanos: 'text-xl sm:text-3xl md:text-4xl', image: molinosRioDeLaPlata, featured: true, visualScale: 1.24 }, // ↑ 1.22 · medía 1.16×
   { name: 'Nestlé', image: nestle, featured: true, visualScale: 1.88 }, // ↑ 1.45 · medía 0.71×, de los más chicos pese a la escala alta
   { name: 'Arcor', image: arcor, featured: true, visualScale: 1.86 }, // ↑ 1.45 · medía 0.73×
   { name: 'Establecimiento Las Marías', shortName: 'Las Marías', image: establecimientoLasMarias, featured: true, visualScale: 1.12 }, // ↑ sin escala · medía 0.96×
