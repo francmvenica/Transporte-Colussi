@@ -7,8 +7,18 @@ import { CLIENTS, CLIENTES_MODO, SECTORS, type Client } from '../config/clients'
 // config/clients.ts. Acá lo único que cambia según el modo es QUÉ SE DIBUJA en
 // cada celda: la lista, el orden, el reparto por columnas, la repetición de los
 // principales, la pausa y el foco son los mismos en los dos modos.
-// En modo nombres cada celda usa exactamente el <p> que ya usaba Dorinka. No se
-// inventó un estilo: para el que mira, todos se ven como se veía Dorinka.
+// En modo nombres cada celda usa el <p> que ya usaba Dorinka. No se inventó un
+// estilo: para el que mira, todos se ven como se veía Dorinka.
+//
+// 📏 CON UNA EXCEPCIÓN MEDIDA, SOLO EN CELULAR (14/09): la letra baja un paso,
+// de text-2xl a text-xl. A 375 px y al tamaño de Dorinka, "NutriCorrientes" y
+// "Molino Cañuelas" se salían de su celda (un tercio de la cinta), y "Molinos
+// Río de la Plata" ocupaba 3 renglones (90 px en una fila de 80), invadía la
+// fila de abajo y el cuadro inicial mostraba 11 principales en vez de 12.
+// Decisión de Franco: bajar la letra en celular antes que acortar nombres de
+// marca. En desktop (sm:text-4xl) quedan idénticos a Dorinka.
+// ⚠️ En modo logos la celda de Dorinka conserva text-2xl, para que volver a los
+// logos dé 0 diferencias contra lo publicado (scripts/extraer-cinta.mjs).
 const conLogos = CLIENTES_MODO === 'logos';
 
 const joinWithY = (items: string[]) =>
@@ -263,7 +273,9 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
                   />
                 ) : (
                   <p
-                    class="font-bold text-neutral-600 text-2xl sm:text-4xl text-center leading-tight px-1"
+                    class={conLogos
+                      ? 'font-bold text-neutral-600 text-2xl sm:text-4xl text-center leading-tight px-1'
+                      : 'font-bold text-neutral-600 text-xl sm:text-4xl text-center leading-tight px-1'}
                     aria-hidden={cliente.primera ? undefined : 'true'}
                   >
                     {conLogos ? cliente.name : (cliente.shortName ?? cliente.name)}
