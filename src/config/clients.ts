@@ -132,16 +132,26 @@ export interface Client {
    *  el aria-label usan siempre `name`, completo: es lo que leen los motores.
    *  En modo logos no se usa. */
   shortName?: string;
-  /** Clase de tamaño de letra EN CELULAR para la cinta de nombres, solo para
-   *  el nombre que no entra con el general (text-xl). En desktop todos siguen
-   *  en sm:text-4xl. En modo logos no se usa.
-   *  Hoy lo lleva solo NutriCorrientes (14/09): es una sola palabra, a 20 px
-   *  medía 148 px en una celda de 106 (101 a 360 px de pantalla) y no se puede
-   *  partir. Decisión de Franco: achicar solo esa celda. Queda en text-xs
-   *  (12 px), el tamaño más grande que entra también a 360 px: a 14 px medía
-   *  ~104 px contra 93 útiles. Se ve más chico que los otros once principales
-   *  del cuadro inicial; aceptado a sabiendas. */
-  textoCelular?: 'text-xs' | 'text-sm' | 'text-base' | 'text-lg';
+  /** Clases de TAMAÑO de letra para la cinta de nombres, en TODOS los anchos,
+   *  solo para el nombre que no entra con el general (`text-xl sm:text-4xl`).
+   *  Reemplaza a esas dos clases enteras. En modo logos no se usa.
+   *
+   *  Hoy lo lleva solo NutriCorrientes. Es una sola palabra y no se puede
+   *  partir: mide ~7,4 px de ancho por cada px de letra. Decisión de Franco:
+   *  achicar solo esa celda, y aceptar que se vea más chica que los otros once
+   *  principales. Medido contra el ancho de la CELDA (.vlogo), el 14/09:
+   *    · Celular: celda de 106 px (101 a 360). text-xs (12 px → 89 px). A 14 px
+   *      medía ~104 contra 93 útiles.
+   *    · 640 a 1023: celda de 181 a 219. text-2xl (24 px → ~177).
+   *    · Desde 1024: celda de 240. text-3xl (30 px → ~222). A 36 px medía 266.
+   *  ⚠️ A 768 la celda mide 219 y text-3xl (222) NO entra: por eso el salto va
+   *  en lg y no en md.
+   *
+   *  🔴 EL CORTE EN DESKTOP LO ENCONTRÓ FRANCO MIRANDO EL SITIO PUBLICADO, no la
+   *  verificación. Se había medido el `<p>` contra su propio ancho, y el `<p>`
+   *  vive en un flex centrado que se estira al texto: la comparación da siempre
+   *  igual y nunca detecta nada. Se mide el Range del texto contra `.vlogo`. */
+  textoTamanos?: string;
   featured: boolean;
   /** Ajuste fino de escala visual (1 = tamaño base), calibrado el 08/08 en DOS
    *  pasadas: primero con el bbox de contenido no-transparente de cada PNG
@@ -245,7 +255,7 @@ export const CLIENTS: Client[] = [
   { name: 'Establecimiento Las Marías', shortName: 'Las Marías', image: establecimientoLasMarias, featured: true, visualScale: 1.12 }, // ↑ sin escala · medía 0.96×
   { name: 'Softys', image: softys, featured: true, visualScale: 1.06 }, // ↑ sin escala · medía 1.07×
   { name: 'ACON TIMBER', image: aconTimber, featured: true, visualScale: 1.05 }, // ↑ sin escala · medía 1.08×
-  { name: 'NutriCorrientes', textoCelular: 'text-xs', image: nutricorrientes, featured: true, visualScale: 1.04 }, // ↑ sin escala · medía 1.10×
+  { name: 'NutriCorrientes', textoTamanos: 'text-xs sm:text-2xl lg:text-3xl', image: nutricorrientes, featured: true, visualScale: 1.04 }, // ↑ sin escala · medía 1.10×
   { name: 'SolFrut', image: solfrut, featured: true, visualScale: 1.1 }, // ↓ 1.37 (−20%, Franco 13/08) · ver la nota de abajo: sale del grupo de destacados
   { name: 'Colven', image: colven, featured: true, visualScale: 0.8 }, // sin cambio: no está en ninguna de las dos listas
   { name: 'CHEP', image: chep, featured: true, visualScale: 1.84 }, // ↑ 1.45 · medía 0.74×

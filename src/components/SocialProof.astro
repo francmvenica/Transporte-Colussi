@@ -17,6 +17,12 @@ import { CLIENTS, CLIENTES_MODO, SECTORS, type Client } from '../config/clients'
 // fila de abajo y el cuadro inicial mostraba 11 principales en vez de 12.
 // Decisión de Franco: bajar la letra en celular antes que acortar nombres de
 // marca. En desktop (sm:text-4xl) quedan idénticos a Dorinka.
+// La excepción es NutriCorrientes, que no entra en ningún ancho al tamaño
+// general y lleva sus propias clases (`textoTamanos` en clients.ts, con las
+// medidas). 🔴 Para medir si un nombre entra, se compara el ancho del TEXTO
+// (Range) contra la celda `.vlogo`, NUNCA contra el propio `<p>`: el `<p>` se
+// estira al texto dentro del flex y la comparación da siempre que entra. Así
+// se publicó cortado en desktop el 14/09.
 // ⚠️ En modo logos la celda de Dorinka conserva text-2xl, para que volver a los
 // logos dé 0 diferencias contra lo publicado (scripts/extraer-cinta.mjs).
 const conLogos = CLIENTES_MODO === 'logos';
@@ -275,7 +281,7 @@ const columnas = Array.from({ length: COLUMNAS }, (_, col) => {
                   <p
                     class={conLogos
                       ? 'font-bold text-neutral-600 text-2xl sm:text-4xl text-center leading-tight px-1'
-                      : `font-bold text-neutral-600 ${cliente.textoCelular ?? 'text-xl'} sm:text-4xl text-center leading-tight px-1`}
+                      : `font-bold text-neutral-600 ${cliente.textoTamanos ?? 'text-xl sm:text-4xl'} text-center leading-tight px-1`}
                     aria-hidden={cliente.primera ? undefined : 'true'}
                   >
                     {conLogos ? cliente.name : (cliente.shortName ?? cliente.name)}
