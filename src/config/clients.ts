@@ -62,10 +62,17 @@
 import type { ImageMetadata } from 'astro';
 
 // ═════════════════════════════════════════════════════════════════════════════
-// 🔴 INTERRUPTOR DE LA CINTA DE CLIENTES: 'logos' o 'nombres'. TEMPORAL.
+// 🔴 INTERRUPTOR DE LA CINTA DE CLIENTES: 'logos' o 'nombres'.
 // ═════════════════════════════════════════════════════════════════════════════
 //
-// DESDE EL 14/09 LA CINTA MUESTRA NOMBRES, NO LOGOS. No hay autorización de uso
+// 🔁 DESDE EL 05/10 LA CINTA VUELVE A LOS LOGOS. El diseño de nombres no sirvió
+// (decisión de Franco) y ROMUALDO ASUME EL RIESGO de publicar las marcas SIN
+// autorización de uso (solo Nestlé autorizó). No es un olvido: se decidió así,
+// sabiendo lo que se publica. Si algún cliente objeta, volver a 'nombres' es
+// el mismo interruptor y el modo nombres sigue vivo entero.
+//
+// ── Historia (14/09 → 05/10) ──
+// El 14/09 LA CINTA PASÓ A NOMBRES, NO LOGOS. No hay autorización de uso
 // de marca de ninguno de los clientes (Nestlé, Arcor, Walmart…), y si alguno
 // objeta le cae a Romualdo. Mientras tanto cada cliente se ve escrito con el
 // mismo estilo con el que ya se veía Dorinka. Decisión de Franco (14/09).
@@ -86,7 +93,7 @@ import type { ImageMetadata } from 'astro';
 // No hay que reponer imágenes, descomentar código ni tocar otro archivo: todo
 // el modo logos (imports, visualScale, orden, posición de Dorinka) sigue vivo
 // en este archivo y en SocialProof.astro.
-export const CLIENTES_MODO: 'logos' | 'nombres' = 'nombres';
+export const CLIENTES_MODO: 'logos' | 'nombres' = 'logos';
 
 import nestle from '../assets/images/clientes/nestle.png';
 import arcor from '../assets/images/clientes/arcor.png';
