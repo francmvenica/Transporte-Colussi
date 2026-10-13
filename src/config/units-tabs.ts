@@ -224,16 +224,13 @@ export const TRAFFIC_COPY =
 // que ya publicaba el sitio en la spec eliminada, no afirmaciones nuevas.
 export const TRAFFIC_CHIPS = ['Centro de tráfico propio', 'Monitoreo satelital 24/7'];
 
-// 🔴 PLACEHOLDER VISIBLE A PROPÓSITO — Y ES BLOQUEANTE PARA PUBLICAR.
+// 📸 LA FOTO DEL CENTRO DE MONITOREO YA ESTÁ CARGADA (12/10). Entre el 27/08 y
+// el 12/10 hubo un placeholder punteado ("Foto del centro de monitoreo:
+// pendiente") a propósito, como recordatorio en la URL temporal de revisión; era
+// bloqueante para publicar en transportecolussi.com.ar. Se sacó con la foto.
+// No reponerlo.
 //
-// La foto del centro de monitoreo no existe: es uno de los insumos que Romualdo
-// debe pasar (tres operadoras de espaldas, mediodía). Franco decidió el 27/08
-// construir igual las tres pestañas y dejar el hueco A LA VISTA, para que en la
-// revisión conjunta funcione de recordatorio: "esto está, este hueco lo llenás
-// vos".
-//
-// ⛔ ESO VALE SOLO PARA LA URL TEMPORAL DE REVISIÓN. El día que el sitio se
-// publique en transportecolussi.com.ar, o llegó la foto, o esta pestaña sale.
-// Un placeholder en el sitio productivo del cliente no es un recordatorio: es un
-// sitio sin terminar.
-export const TRAFFIC_PHOTO_PENDING = 'Foto del centro de monitoreo: pendiente';
+// ⚠️ Ojo con qué foto es: el insumo pedido eran tres operadoras de espaldas, y
+// la que llegó es la toma real de la oficina con DOS operadoras agregadas con IA.
+// Detalle y cautelas en `IMAGES.traffic` (assets.ts). Pendiente: mostrársela a
+// Romualdo en la revisión conjunta antes de publicar en el dominio.

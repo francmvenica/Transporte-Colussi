@@ -68,6 +68,10 @@ import tallerMantenimiento from '../assets/images/mantenimiento/tractoras-coluss
 // pedirla. No borrarlo por "limpiar assets huérfanos" — al no estar importado
 // tampoco entra al build, así que no pesa en el sitio publicado.
 
+// Foto de la pestaña Gestión de la Flota (12/10). Llegó como `OFICINA-IA.jpeg`
+// en Temp/Colussi-material/ (2730×1536) y se redujo a 1800 px de ancho.
+import centroTraficoMonitoreo from '../assets/images/trafico/centro-trafico-monitoreo.jpg';
+
 export const IMAGES = {
   hero: {
     src: heroCamiones,
@@ -189,6 +193,29 @@ export const IMAGES = {
     taller: {
       src: tallerMantenimiento,
       alt: 'Dos tractoras Iveco de Transporte Colussi en servicio de mantenimiento preventivo, con los capós delanteros abiertos y un mecánico trabajando sobre una de ellas',
+    },
+  },
+  // PESTAÑA DE GESTIÓN DE LA FLOTA (12/10). Reemplazó el placeholder "Foto del
+  // centro de monitoreo: pendiente".
+  //
+  // 🔴 IMAGEN EDITADA, NO FOTOGRAFÍA DIRECTA. Es la toma real de la oficina de
+  // tráfico (la original, sin personas, es `IMAGEN-OFICINA.jpg` en
+  // Temp/Colussi-material/) con DOS operadoras de espaldas agregadas con IA.
+  // El insumo que se había pedido eran tres; son dos. Nada en los documentos
+  // dice que Romualdo haya visto esta versión: se le muestra en la revisión
+  // conjunta antes de publicar en el dominio.
+  //
+  // ⚠️ La edición también alteró la etiqueta del aire acondicionado (en la
+  // real dice "BGH Silent Air"). Se publica solo al tamaño servido (`widths`
+  // en Fleet.astro, máximo 1200 px). Mismo criterio que `patioOperacion`: NO la
+  // uses en lightbox, redes ni impresión; en ese caso se usa la foto real.
+  //
+  // ⚠️ El `alt` no nombra un lugar ni dice "nuestro" (tres homónimos disputan la
+  // identidad en buscadores) y no afirma nada que no se vea.
+  traffic: {
+    centro: {
+      src: centroTraficoMonitoreo,
+      alt: 'Centro de tráfico de Transporte Colussi con dos operadoras con auricular frente a monitores con mapa satelital y cámaras',
     },
   },
   // Logos pendientes del cliente — usar placeholders
