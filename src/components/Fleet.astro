@@ -78,13 +78,17 @@ import {
       </p>
     </div>
 
-    {/* Barra de pestañas. `flex-wrap` y no `overflow-x-auto`: con dos labels
-        largos, en 375 px un scroll horizontal esconde la tercera pestaña sin
-        que nada indique que está ahí. Envuelto, se ven las tres siempre. */}
+    {/* Barra de pestañas. Nunca `overflow-x-auto`: con labels largos un scroll
+        horizontal esconde la tercera pestaña sin que nada indique que está ahí.
+        🔴 En celular van APILADAS a ancho completo (12/10). Antes iban en
+        `flex-wrap`: a 320 y 360 px las tres pastillas caían en filas desparejas
+        (la tercera, "Gestión de la Flota", sola y centrada distinto) y Franco las
+        vio mal desde el celular. Apiladas se ven siempre las tres, alineadas, a
+        cualquier ancho. Desde `sm` vuelven a ir en una fila. */}
     <div
       role="tablist"
       aria-label="Secciones de unidades"
-      class="flex flex-wrap justify-center gap-2 sm:gap-3 mb-10 mx-auto w-fit bg-white rounded-3xl border border-neutral-200/80 shadow-sm p-2"
+      class="grid grid-cols-1 gap-2 w-full max-w-sm sm:flex sm:flex-wrap sm:justify-center sm:gap-3 sm:max-w-none sm:w-fit mb-10 mx-auto bg-white rounded-3xl border border-neutral-200/80 shadow-sm p-2"
       data-units-tablist
     >
       {UNIT_TABS.map((tab, i) => (
@@ -96,7 +100,7 @@ import {
           aria-selected={i === 0 ? 'true' : 'false'}
           tabindex={i === 0 ? 0 : -1}
           data-units-tab={tab.id}
-          class="px-4 py-2.5 sm:px-5 rounded-full text-sm font-bold border transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red aria-selected:bg-brand-red aria-selected:text-white aria-selected:border-brand-red bg-white text-neutral-800 border-neutral-200 hover:border-brand-red/40"
+          class="w-full sm:w-auto px-4 py-2.5 sm:px-5 rounded-full text-sm font-bold text-center border transition-colors duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-red aria-selected:bg-brand-red aria-selected:text-white aria-selected:border-brand-red bg-white text-neutral-800 border-neutral-200 hover:border-brand-red/40"
         >
           {tab.label}
         </button>
@@ -233,7 +237,7 @@ import {
               alt={IMAGES.traffic.centro.alt}
               class="w-full h-full object-cover"
               widths={[600, 900, 1200]}
-              sizes="(max-width: 1024px) 100vw, 540px"
+              sizes="(max-width: 639px) calc(100vw - 80px), (max-width: 1023px) calc(100vw - 96px), 540px"
               loading="lazy"
               quality={75}
             />
@@ -315,6 +319,38 @@ import {
 
       if (mueveFoco) tabs[indice]?.focus();
     };
+
+    // 🔴 PRECARGA DE LAS FOTOS DE LOS PANELES OCULTOS (12/10). Una imagen
+    // `loading="lazy"` dentro de un panel `hidden` NO se descarga hasta que el
+    // panel se muestra: la foto empezaba a bajar recién al tocar la pestaña y en
+    // el celular se veía el hueco unos segundos. Se pasan a `eager` cuando el
+    // navegador queda libre (o al primer toque sobre las pestañas, lo que pase
+    // antes). Solo los paneles ocultos al cargar (Mantenimiento y Gestión de la
+    // Flota: dos fotos de ~20-80 KB), no la galería de Flota, que tiene nueve.
+    const ocultosAlCargar = panels.filter((panel) => panel.hidden);
+    let precargado = false;
+    const precargar = () => {
+      if (precargado) return;
+      precargado = true;
+      ocultosAlCargar.forEach((panel) => {
+        panel
+          .querySelectorAll<HTMLImageElement>('img[loading="lazy"]')
+          .forEach((img) => {
+            img.loading = 'eager';
+          });
+      });
+    };
+    const alQuedarLibre = () => {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(precargar, { timeout: 4000 });
+      } else {
+        setTimeout(precargar, 2500);
+      }
+    };
+    if (document.readyState === 'complete') alQuedarLibre();
+    else window.addEventListener('load', alQuedarLibre, { once: true });
+    tablist.addEventListener('pointerdown', precargar, { once: true });
+    tablist.addEventListener('focusin', precargar, { once: true });
 
     tabs.forEach((tab, i) => {
       tab.addEventListener('click', () => activar(i, false));
